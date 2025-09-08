@@ -265,24 +265,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: userAssets.length,
-                  itemBuilder: (context, index) {
-                    final asset = userAssets[index];
-                    return AssetCard(asset: asset);
-                  },
-                ),
-              ),
+              //    Padding(
+              // padding: const EdgeInsets.symmetric(horizontal: 16),
+              // child: GridView.builder(
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 2,
+              //     crossAxisSpacing: 12,
+              //     mainAxisSpacing: 12,
+              //     childAspectRatio: 0.8,
+              //   ),
+              //   itemCount: userAssets.length,
+              //   itemBuilder: (context, index) {
+              //     final asset = userAssets[index];
+              //     return AssetCard(asset: asset);
+              //   },
+              // ),
+              //     ),
             ],
           ),
         ),
