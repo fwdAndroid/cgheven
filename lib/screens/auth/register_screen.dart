@@ -1,6 +1,7 @@
 import 'package:cgheven/screens/auth/login_screen.dart';
 import 'package:cgheven/screens/main_dashboard.dart';
 import 'package:cgheven/screens/utils/color.dart';
+import 'package:cgheven/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -11,9 +12,43 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  final AuthService _authService = AuthService();
+  bool isLoading = false;
+
+  Future<void> _register() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Passwords do not match")));
+      return;
+    }
+
+    try {
+      setState(() => isLoading = true);
+
+      final user = await _authService.registerWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        _nameController.text.trim(),
+      );
+
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => MainDashboard()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +133,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             style: TextStyle(color: Colors.white),
-                            controller: _emailController,
+                            controller: _nameController,
                             decoration: InputDecoration(
                               hintText: "User Name",
                               hintStyle: TextStyle(color: Colors.white),
@@ -192,7 +227,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             style: TextStyle(color: Colors.white),
-                            controller: _passwordController,
+                            controller: _confirmPasswordController,
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
                               hintText: "Re-enter Password",
@@ -226,30 +261,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
 
                         /// Login button
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => MainDashboard(),
+                        isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: _register,
+                                  child: Text(
+                                    "Register",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: btnColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    fixedSize: Size(335, 45),
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              "Register",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: btnColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                              fixedSize: Size(335, 45),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
 

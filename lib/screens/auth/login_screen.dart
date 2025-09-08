@@ -1,6 +1,7 @@
 import 'package:cgheven/screens/auth/register_screen.dart';
 import 'package:cgheven/screens/main_dashboard.dart';
 import 'package:cgheven/screens/utils/color.dart';
+import 'package:cgheven/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -15,6 +16,46 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  final AuthService _authService = AuthService();
+  bool isLoading = false;
+
+  Future<void> _login() async {
+    try {
+      setState(() => isLoading = true);
+
+      final user = await _authService.loginWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => MainDashboard()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<void> _googleLogin() async {
+    try {
+      final user = await _authService.signInWithGoogle();
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => MainDashboard()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,30 +228,38 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         /// Login button
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => MainDashboard(),
+                        isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_emailController.text.isEmpty ||
+                                        _passwordController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text("All Fields Required"),
+                                        ),
+                                      );
+                                    } else {
+                                      _login();
+                                    }
+                                  },
+                                  child: Text(
+                                    "Login",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: btnColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    fixedSize: Size(335, 45),
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: btnColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                              fixedSize: Size(335, 45),
-                            ),
-                          ),
-                        ),
 
                         /// Or Continue
                         Padding(
@@ -236,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: SignInButton(
                                 Buttons.google,
                                 textStyle: TextStyle(fontSize: 16),
-                                onPressed: () {},
+                                onPressed: _googleLogin,
                                 text: "Sign in with Google",
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
