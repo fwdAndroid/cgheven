@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "113629338304",
+    "project_id": "cgheven-a5740",
+    "storage_bucket": "cgheven-a5740.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113629338304:android:cd57599cd23c59f02b6b25",
+        "android_client_info": {
+          "package_name": "com.example.cgheven"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANNxiLEUVLiobW-WL9tqAT3H7Mcmn_5Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
