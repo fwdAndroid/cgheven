@@ -1,9 +1,8 @@
+import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
-import 'package:cgheven/screens/utils/color.dart';
-import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/asset_card.dart';
+import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,9 +12,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isFollowing = false;
-  String activeTab = 'assets';
-
   late final List<UserAsset> userAssets;
   late final List<Map<String, String>> stats;
 
@@ -83,210 +79,157 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: GradientBackground(
+        child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 30),
-              Center(
-                child: Container(
-                  width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Colors.teal, Colors.orange],
-                    ),
-                  ),
-
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage: AssetImage(
-                        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              GradientText(
-                "Ammar Khan",
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF2A7B9B),
-                    Color(0xFF57C785),
-                    Color(0xFFEDDD53),
-                  ],
-                  stops: [0.0, 0.5, 1.0],
-                ),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Creator of CGHEVEN VFX',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-              const SizedBox(height: 12),
-
-              // Follow Button and Socials
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Ink(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFF2A7B9B),
-                          Color(0xFF57C785),
-                          Color(0xFFEDDD53),
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        setState(() => isFollowing = !isFollowing);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                      icon: Icon(Icons.person_add, color: colorWhite),
-                      label: Text(
-                        isFollowing ? 'Following' : 'Follow',
-                        style: TextStyle(color: colorWhite),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Color(0xff1F2A33),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.instagram,
-                        size: 30.0, // Optional: Adjust the size
-                        color: Colors.grey, // Optional: Set a color
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Color(0xff1F2A33),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.youtube,
-                        size: 30.0, // Optional: Adjust the size
-                        color: Colors.grey, // Optional: Set a color
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Stats
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: stats
-                    .map(
-                      (s) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(
-                          children: [
-                            GradientText(
+              // Header
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      // Profile Section
+                      Column(
+                        children: [
+                          // Avatar
+                          Container(
+                            width: 128,
+                            height: 128,
+                            decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF2A7B9B),
-                                  Color(0xFF57C785),
-                                  Color(0xFFEDDD53),
-                                ],
-                                stops: [0.0, 0.5, 1.0],
+                                colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
                               ),
-                              s['value']!,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                              shape: BoxShape.circle,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: ClipOval(
+                              child: Image.network(
+                                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300',
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              s['label']!,
-                              style: const TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Name and Title
+                          Text(
+                            'Ammar Khan',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              foreground: Paint()
+                                ..shader =
+                                    LinearGradient(
+                                      colors: [
+                                        Color(0xFF14B8A6),
+                                        Color(0xFFF97316),
+                                      ],
+                                    ).createShader(
+                                      Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                    ),
                             ),
-                          ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Creator of CGHEVEN VFX',
+                            style: TextStyle(
+                              color: Color(0xFF9CA3AF),
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // Stats
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildStat('127', 'Assets'),
+                              _buildStat('45.2K', 'Downloads'),
+                              _buildStat('8.9K', 'Followers'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade900.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: Colors.grey.shade800),
+                          ),
+                          child: const Text(
+                            'Professional VFX artist and creator with over 8 years of experience in cinematic effects. '
+                            'Specializing in explosions, fire, smoke, and magical elements for film and television productions. '
+                            'Passionate about creating high-quality assets that bring stories to life.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                       ),
-                    )
-                    .toList(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade900.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.grey.shade800),
-                  ),
-                  child: const Text(
-                    'Professional VFX artist and creator with over 8 years of experience in cinematic effects. '
-                    'Specializing in explosions, fire, smoke, and magical elements for film and television productions. '
-                    'Passionate about creating high-quality assets that bring stories to life.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 0.8,
+                            ),
+                        itemCount: userAssets.length,
+                        itemBuilder: (context, index) {
+                          final userAsset = userAssets[index];
+
+                          // Convert UserAsset → Asset
+                          final asset = Asset(
+                            id: userAsset.id,
+                            title: userAsset.title,
+                            thumbnail: userAsset.thumbnail,
+                            downloads: userAsset.downloads,
+                            //  likes: userAsset.likes,
+                            category:
+                                "VFX", // add default category if UserAsset doesn’t have one
+                            isNew:
+                                false, // set default if UserAsset doesn’t track this
+                          );
+
+                          return AssetCard(asset: asset);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
-              //    Padding(
-              // padding: const EdgeInsets.symmetric(horizontal: 16),
-              // child: GridView.builder(
-              //   shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
-              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     crossAxisSpacing: 12,
-              //     mainAxisSpacing: 12,
-              //     childAspectRatio: 0.8,
-              //   ),
-              //   itemCount: userAssets.length,
-              //   itemBuilder: (context, index) {
-              //     final asset = userAssets[index];
-              //     return AssetCard(asset: asset);
-              //   },
-              // ),
-              //     ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildStat(String value, String label) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            foreground: Paint()
+              ..shader = LinearGradient(
+                colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+              ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+        ),
+      ],
     );
   }
 }

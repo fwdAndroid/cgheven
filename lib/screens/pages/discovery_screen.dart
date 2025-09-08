@@ -1,6 +1,7 @@
 import 'package:cgheven/model/category.dart';
 import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_color_utils.dart';
+import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
 
 class DiscoveryScreen extends StatefulWidget {
@@ -84,38 +85,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        title: GradientText(
-          "Discovery",
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2A7B9B), Color(0xFF57C785), Color(0xFFEDDD53)],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => setState(() => isGridView = true),
-            icon: Icon(
-              Icons.grid_view,
-              color: isGridView ? Colors.white : Colors.grey,
-            ),
-          ),
-          IconButton(
-            onPressed: () => setState(() => isGridView = false),
-            icon: Icon(
-              Icons.list,
-              color: !isGridView ? Colors.white : Colors.grey,
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+    return GradientBackground(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
         child: isGridView
             ? GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
