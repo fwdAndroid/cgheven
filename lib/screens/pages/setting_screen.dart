@@ -1,3 +1,4 @@
+import 'package:cgheven/screens/setting/edit_profile_screen.dart';
 import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
@@ -398,6 +399,25 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           title: const Text(
                             "Terms of Service",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) => EditProfileScreen(),
+                              ),
+                            );
+                          },
+                          leading: const Icon(Icons.edit, color: Colors.grey),
+                          title: const Text(
+                            "Edit Profile",
                             style: TextStyle(color: Colors.grey),
                           ),
                           trailing: const Icon(

@@ -2,10 +2,17 @@ import 'package:cgheven/firebase_options.dart';
 import 'package:cgheven/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Force portrait only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown, // optional (allows upside-down portrait)
+  ]);
+
   runApp(const MyApp());
 }
 
