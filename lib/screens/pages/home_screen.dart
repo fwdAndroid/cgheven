@@ -247,41 +247,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: ['New Assets', 'Trending Assets', 'News']
                               .map((section) {
                                 final isActive = activeAssetSection == section;
-                                return Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        activeAssetSection = section;
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        gradient: isActive
-                                            ? const LinearGradient(
-                                                colors: [
-                                                  Color(0xFF14B8A6),
-                                                  Color(0xFFF97316),
-                                                ],
-                                              )
-                                            : null,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        section,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: isActive
-                                              ? Colors.white
-                                              : const Color(0xFF9CA3AF),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      activeAssetSection = section;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal:
+                                          16, // add some horizontal padding
+                                    ),
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ), // <-- spacing
+                                    decoration: BoxDecoration(
+                                      gradient: isActive
+                                          ? const LinearGradient(
+                                              colors: [
+                                                Color(0xFF14B8A6),
+                                                Color(0xFFF97316),
+                                              ],
+                                            )
+                                          : null,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      section,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isActive
+                                            ? Colors.white
+                                            : const Color(0xFF9CA3AF),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
