@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //  ❌ User not signed in → Go to Login Selection
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+      MaterialPageRoute(builder: (context) => OnboardingScreen()),
     );
   }
 
