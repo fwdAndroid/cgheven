@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
@@ -323,13 +324,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             return AssetCard(
                               asset: asset,
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) =>
-                                //         const AssetDetailScreen(),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AssetDetailScreen(),
+                                  ),
+                                );
                               },
                             );
                           },
@@ -544,13 +545,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             asset: asset,
                             showBadge: false,
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         const AssetDetailScreen(),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AssetDetailScreen(),
+                                ),
+                              );
                             },
                           );
                         },
