@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
+import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
@@ -215,6 +216,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         child: TextField(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SearchPage(),
+                              ),
+                            );
+                          },
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Search effects, explosions, magic...',
