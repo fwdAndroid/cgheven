@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
+import 'package:cgheven/screens/favourite/favourite_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
@@ -206,41 +207,60 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Search Bar
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1F2937).withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF374151),
-                            width: 1,
-                          ),
-                        ),
-                        child: TextField(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SearchPage(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1F2937).withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFF374151),
+                                  width: 1,
+                                ),
                               ),
-                            );
-                          },
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search effects, explosions, magic...',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFF9CA3AF),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Color(0xFF9CA3AF),
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
+                              child: TextField(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SearchPage(),
+                                    ),
+                                  );
+                                },
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  hintText:
+                                      'Search effects, explosions, magic...',
+                                  hintStyle: const TextStyle(
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 16,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) => FavouriteScreen(),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.favorite, color: Colors.red),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
 
