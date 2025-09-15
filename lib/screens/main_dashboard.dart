@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'package:cgheven/screens/pages/community_screen.dart';
+import 'package:cgheven/screens/favourite/favourite_screen.dart';
 import 'package:cgheven/screens/pages/discovery_screen.dart';
-import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/pages/home_screen.dart';
 import 'package:cgheven/screens/pages/profile_screen.dart';
 import 'package:cgheven/screens/pages/setting_screen.dart';
@@ -23,7 +22,7 @@ class _MainDashboardState extends State<MainDashboard> {
   final List<Widget> _screens = [
     HomeScreen(),
     DiscoveryScreen(),
-    DownloadScreen(),
+    FavouriteScreen(),
     // CommunityScreen(),
     ProfileScreen(),
     SettingScreen(),
@@ -69,8 +68,8 @@ class _MainDashboardState extends State<MainDashboard> {
               label: "Discovery",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.download, size: 25),
-              label: "Downloads",
+              icon: Icon(Icons.favorite, size: 25),
+              label: "Favourites",
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.groups, size: 25), // 👈 Community icon

@@ -1,6 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
-import 'package:cgheven/screens/favourite/favourite_screen.dart';
+import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
@@ -254,11 +254,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (builder) => FavouriteScreen(),
+                                  builder: (builder) => DownloadScreen(),
                                 ),
                               );
                             },
-                            icon: Icon(Icons.favorite, color: Colors.red),
+                            icon: Icon(
+                              Icons.download,
+                              color: Color(0xff25b09f),
+                            ),
                           ),
                         ],
                       ),

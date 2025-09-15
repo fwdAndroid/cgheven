@@ -79,7 +79,7 @@ class _FavouriteScreenState extends State<FavouriteScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.black.withOpacity(0.5),
           elevation: 0,
           title: const Text(
