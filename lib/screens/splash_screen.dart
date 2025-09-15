@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cgheven/screens/onboarding/onboarding_screen.dart';
-import 'package:cgheven/screens/utils/color.dart';
+import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,8 +19,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _checkAuth() async {
     await Future.delayed(const Duration(seconds: 3)); // Splash time
-
-    //  ❌ User not signed in → Go to Login Selection
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -31,52 +29,53 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/bg.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Content in the center
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/logo.png', height: 300),
-                  ),
-                ),
-                Text(
-                  "Download Your CG Assets\n Premium and Free",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            // Progress indicator at the bottom
-            Positioned(
-              bottom:
-                  50, // Adjust this value to control the distance from bottom
-              left: 0,
-              right: 0,
-              child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(btnColor),
+      body: GradientBackground(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              // Center part (logo + text)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/logo.png', height: 300),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Download Your CG Assets\nPremium and Free",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+
+              // Bottom gradient loader
+              Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ).createShader(bounds),
+                  child: const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
