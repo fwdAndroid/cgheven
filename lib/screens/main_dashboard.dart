@@ -77,7 +77,7 @@ class _MainDashboardState extends State<MainDashboard> {
             // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person, size: 25),
-              label: "Profile",
+              label: "CGHEVEN",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings, size: 25),

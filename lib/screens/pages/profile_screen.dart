@@ -1,5 +1,7 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late final List<UserAsset> userAssets;
   late final List<Map<String, String>> stats;
+  bool isFollowing = false;
 
   @override
   void initState() {
@@ -139,7 +142,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 32),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GradientButton(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF14B8A6),
+                                    Color(0xFFF97316),
+                                  ],
+                                ),
 
+                                onPressed: () {
+                                  setState(() {
+                                    isFollowing = !isFollowing;
+                                  });
+                                },
+                                child: Text(
+                                  isFollowing ? "Following" : "Follow",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              IconButton(
+                                onPressed: () {},
+                                icon: FaIcon(
+                                  FontAwesomeIcons.instagram,
+                                  size: 30,
+                                  color: Colors.pinkAccent,
+                                ),
+                              ),
+
+                              //
+                              const SizedBox(width: 5),
+                              IconButton(
+                                onPressed: () {},
+                                icon: FaIcon(
+                                  FontAwesomeIcons.youtube,
+                                  size: 30,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              IconButton(
+                                onPressed: () {},
+                                icon: FaIcon(FontAwesomeIcons.tiktok, size: 30),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
                           // Stats
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -149,6 +203,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _buildStat('8.9K', 'Followers'),
                             ],
                           ),
+
+                          // Follow + Socials
+                          const SizedBox(height: 20),
                         ],
                       ),
                       Padding(

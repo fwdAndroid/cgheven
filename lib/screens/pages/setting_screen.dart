@@ -1,4 +1,5 @@
 import 'package:cgheven/screens/setting/edit_profile_screen.dart';
+import 'package:cgheven/screens/setting/user_profile.dart';
 import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
@@ -366,6 +367,25 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (builder) => ProfileScreen(),
+                              ),
+                            );
+                          },
+                          leading: const Icon(Icons.person, color: Colors.grey),
+                          title: const Text(
+                            "My Profile",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ),
                         ListTile(
                           leading: const Icon(Icons.delete, color: Colors.grey),
                           title: const Text(
