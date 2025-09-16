@@ -370,12 +370,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Spacer(),
-                    const Text(
-                      '2.4 GB of 8.0 GB used',
-                      style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
-                    ),
                   ],
+                ),
+                Text(
+                  '2.4 GB of 8.0 GB used',
+                  style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
                 ),
                 const SizedBox(height: 16),
                 Container(
