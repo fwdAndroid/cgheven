@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
+import 'package:cgheven/screens/pages/community_screen.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
@@ -209,6 +210,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Search Bar
                       Row(
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) => CommunityPage(),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.group, color: Color(0xff25b09f)),
+                          ),
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
