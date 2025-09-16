@@ -1,6 +1,7 @@
 import 'package:cgheven/model/category.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({super.key});
@@ -169,7 +170,7 @@ class CategoryCard extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         category.name,
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -178,7 +179,10 @@ class CategoryCard extends StatelessWidget {
                     ),
                     Text(
                       category.description,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Padding(
@@ -195,7 +199,7 @@ class CategoryCard extends StatelessWidget {
                         ),
                         child: Text(
                           category.assetCount,
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
                             color: Colors.grey,
                           ),

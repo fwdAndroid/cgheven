@@ -5,6 +5,7 @@ import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/services/auth_service.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Text(
                               "Skip",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -132,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         /// Welcome Text
                         Text(
                           "Welcome CGHEVEN",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -144,10 +145,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         /// Email Field
                         TextField(
                           controller: _emailController,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "Email",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: Icon(Icons.email, color: Colors.white),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -165,10 +168,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "Password",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
@@ -201,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {},
                             child: Text(
                               "Forgot Password?",
-                              style: TextStyle(color: Colors.white),
+                              style: GoogleFonts.poppins(color: Colors.white),
                             ),
                           ),
                         ),
@@ -217,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Center(
                                   child: Text(
                                     "Login",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
@@ -230,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         /// Or continue with
                         Text(
                           "Or Continue With",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -253,10 +258,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               gradient: AppTheme.fireGradient,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 'G',
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -309,14 +314,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text.rich(
                                 TextSpan(
                                   text: "Don't have an account? ",
-                                  style: TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: "Register",
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
@@ -372,7 +377,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(width: 12),
             Text(
               text,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: textColor,

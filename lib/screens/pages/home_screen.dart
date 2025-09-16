@@ -7,6 +7,7 @@ import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -240,11 +241,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                style: const TextStyle(color: Colors.white),
+                                style: GoogleFonts.poppins(color: Colors.white),
                                 decoration: InputDecoration(
                                   hintText:
                                       'Search effects, explosions, magic...',
-                                  hintStyle: const TextStyle(
+                                  hintStyle: GoogleFonts.poppins(
                                     color: Color(0xFF9CA3AF),
                                   ),
                                   prefixIcon: const Icon(
@@ -324,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(
                                       section,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         color: isActive
                                             ? Colors.white
                                             : const Color(0xFF9CA3AF),
@@ -375,8 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AssetDetailScreen(),
+                                    builder: (context) => AssetDetailScreen(),
                                   ),
                                 );
                               },
@@ -463,18 +463,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
+                                        Text(
                                           'Gas Explosion Pack – New Drop',
-                                          style: TextStyle(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.white,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        const Text(
+                                        Text(
                                           'Professional VFX assets ready for production',
-                                          style: TextStyle(
+                                          style: GoogleFonts.poppins(
                                             color: Color(0xFF9CA3AF),
                                             fontSize: 14,
                                           ),
@@ -496,9 +496,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'NEW',
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         color: Colors.white,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -559,7 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Text(
                                     category,
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       color: isActive
                                           ? Colors.white
                                           : const Color(0xFF9CA3AF),
@@ -596,8 +596,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AssetDetailScreen(),
+                                  builder: (context) => AssetDetailScreen(),
                                 ),
                               );
                             },

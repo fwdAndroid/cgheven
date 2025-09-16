@@ -3,9 +3,10 @@ import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cgheven/model/asset_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  const FavouriteScreen({super.key});
+  FavouriteScreen({super.key});
 
   @override
   State<FavouriteScreen> createState() => _FavouriteScreenState();
@@ -82,16 +83,16 @@ class _FavouriteScreenState extends State<FavouriteScreen>
           automaticallyImplyLeading: false,
           backgroundColor: Colors.black.withOpacity(0.5),
           elevation: 0,
-          title: const Text(
+          title: Text(
             "Favourite Assets",
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.poppins(color: Colors.white),
           ),
           bottom: TabBar(
             controller: _tabController,
             isScrollable: true,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -107,19 +108,19 @@ class _FavouriteScreenState extends State<FavouriteScreen>
             final assets = getCurrentAssets(category);
 
             if (assets.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   "No favourites in this category",
-                  style: TextStyle(color: Colors.white),
+                  style: GoogleFonts.poppins(color: Colors.white),
                 ),
               );
             }
 
             return Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: GridView.builder(
                 itemCount: assets.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,

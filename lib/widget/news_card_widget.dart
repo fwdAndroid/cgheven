@@ -1,6 +1,7 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NewsCard extends StatelessWidget {
   final NewsItem newsItem;
@@ -58,7 +59,7 @@ class NewsCard extends StatelessWidget {
                   children: [
                     Text(
                       newsItem.title,
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -69,7 +70,7 @@ class NewsCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       newsItem.description,
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         color: Color(0xFF9CA3AF),
                         fontSize: 12,
                       ),
@@ -79,7 +80,7 @@ class NewsCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       newsItem.date,
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         color: Color(0xFF6B7280),
                         fontSize: 11,
                       ),

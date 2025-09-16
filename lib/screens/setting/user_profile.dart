@@ -3,6 +3,7 @@ import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -79,9 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.black.withOpacity(0.5),
           elevation: 0,
-          title: const Text(
+          title: Text(
             "My Profile",
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.poppins(color: Colors.white),
           ),
           bottom: TabBar(
             controller: _tabController,
@@ -145,24 +146,24 @@ class _ProfileScreenState extends State<ProfileScreen>
       padding: const EdgeInsets.all(16),
       children: [
         if (activeDownloads.isNotEmpty) ...[
-          const Text(
+          Text(
             "Current Downloads",
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 12),
           ...activeDownloads.map((d) => _buildDownloadItem(d)),
           const SizedBox(height: 24),
         ],
-        const Text(
+        Text(
           "Download History",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
         ),
         const SizedBox(height: 12),
         if (completedDownloads.isEmpty)
-          const Center(
+          Center(
             child: Text(
               "No downloads yet",
-              style: TextStyle(color: Colors.white70),
+              style: GoogleFonts.poppins(color: Colors.white70),
             ),
           )
         else

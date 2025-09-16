@@ -2,6 +2,7 @@ import 'package:cgheven/model/search_model.dart';
 import 'package:cgheven/widget/search_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchResults extends StatelessWidget {
   final List<SearchItem> items;
@@ -18,7 +19,7 @@ class SearchResults extends StatelessWidget {
         children: [
           Text(
                 '${items.length} ${category.toLowerCase()} found',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

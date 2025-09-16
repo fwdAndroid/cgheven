@@ -48,46 +48,46 @@ class AppTheme {
       scaffoldBackgroundColor: darkBackground,
       primaryColor: fireStart,
       textTheme: GoogleFonts.interTextTheme(
-        const TextTheme(
-          displayLarge: TextStyle(
+        TextTheme(
+          displayLarge: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          displayMedium: TextStyle(
+          displayMedium: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          displaySmall: TextStyle(
+          displaySmall: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          headlineLarge: TextStyle(
+          headlineLarge: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          headlineMedium: TextStyle(
+          headlineMedium: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          headlineSmall: TextStyle(
+          headlineSmall: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.bold,
           ),
-          titleLarge: TextStyle(
+          titleLarge: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.w600,
           ),
-          titleMedium: TextStyle(
+          titleMedium: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.w600,
           ),
-          titleSmall: TextStyle(
+          titleSmall: GoogleFonts.poppins(
             color: textPrimary,
             fontWeight: FontWeight.w600,
           ),
-          bodyLarge: TextStyle(color: textPrimary),
-          bodyMedium: TextStyle(color: textPrimary),
-          bodySmall: TextStyle(color: textSecondary),
+          bodyLarge: GoogleFonts.poppins(color: textPrimary),
+          bodyMedium: GoogleFonts.poppins(color: textPrimary),
+          bodySmall: GoogleFonts.poppins(color: textSecondary),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

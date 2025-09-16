@@ -1,7 +1,7 @@
 import 'package:cgheven/model/search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Primary colors
@@ -160,7 +160,7 @@ class SearchItemCard extends StatelessWidget {
                 const SizedBox(width: 2),
                 Text(
                   item.rating.toString(),
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,

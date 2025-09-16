@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -118,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // Name and Title
                           Text(
                             'Ammar Khan',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                               foreground: Paint()
@@ -134,9 +135,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Creator of CGHEVEN VFX',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Color(0xFF9CA3AF),
                               fontSize: 18,
                             ),
@@ -160,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: Text(
                                   isFollowing ? "Following" : "Follow",
-                                  style: const TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
@@ -217,12 +218,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(color: Colors.grey.shade800),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Professional VFX artist and creator with over 8 years of experience in cinematic effects. '
                             'Specializing in explosions, fire, smoke, and magical elements for film and television productions. '
                             'Passionate about creating high-quality assets that bring stories to life.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                         ),
                       ),
@@ -272,7 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           value,
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             foreground: Paint()
@@ -284,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+          style: GoogleFonts.poppins(color: Color(0xFF9CA3AF), fontSize: 14),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CommunityPage extends StatefulWidget {
   @override
@@ -134,9 +135,9 @@ class _CommunityPageState extends State<CommunityPage> {
               const SizedBox(height: 16),
 
               // Announcements
-              const Text(
+              Text(
                 "Latest Announcements",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.teal,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -152,15 +153,15 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
                     title: Text(
                       a['title']!,
-                      style: const TextStyle(color: Colors.white),
+                      style: GoogleFonts.poppins(color: Colors.white),
                     ),
                     subtitle: Text(
                       a['body']!,
-                      style: const TextStyle(color: Colors.grey),
+                      style: GoogleFonts.poppins(color: Colors.grey),
                     ),
                     trailing: Text(
                       a['date']!,
-                      style: const TextStyle(color: Colors.grey),
+                      style: GoogleFonts.poppins(color: Colors.grey),
                     ),
                   ),
                 );
@@ -169,9 +170,9 @@ class _CommunityPageState extends State<CommunityPage> {
               const SizedBox(height: 20),
 
               // Polls
-              const Text(
+              Text(
                 "Community Polls",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.teal,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -188,7 +189,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       children: [
                         Text(
                           p['question']!.toString(),
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -208,7 +209,9 @@ class _CommunityPageState extends State<CommunityPage> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   opt['text'],
-                                  style: const TextStyle(color: Colors.white),
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -226,9 +229,9 @@ class _CommunityPageState extends State<CommunityPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "Feature Requests",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Colors.teal,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -243,9 +246,9 @@ class _CommunityPageState extends State<CommunityPage> {
                         showRequestForm = true;
                       });
                     },
-                    child: const Text(
+                    child: Text(
                       "Submit Request",
-                      style: TextStyle(color: Colors.white),
+                      style: GoogleFonts.poppins(color: Colors.white),
                     ),
                   ),
                 ],
@@ -257,25 +260,25 @@ class _CommunityPageState extends State<CommunityPage> {
                   child: ListTile(
                     title: Text(
                       r['title']!.toString(),
-                      style: const TextStyle(color: Colors.white),
+                      style: GoogleFonts.poppins(color: Colors.white),
                     ),
                     subtitle: Text(
                       r['description']!.toString(),
-                      style: const TextStyle(color: Colors.grey),
+                      style: GoogleFonts.poppins(color: Colors.grey),
                     ),
                     trailing: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           r['status']!.toString(),
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: getStatusColor(r['status']!.toString()),
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           "${r['votes']} votes",
-                          style: const TextStyle(color: Colors.grey),
+                          style: GoogleFonts.poppins(color: Colors.grey),
                         ),
                       ],
                     ),

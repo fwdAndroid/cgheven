@@ -1,6 +1,7 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AssetCard extends StatelessWidget {
   final Asset asset;
@@ -102,7 +103,7 @@ class AssetCard extends StatelessWidget {
                         ),
                         child: Text(
                           asset.category,
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Color(0xFF9CA3AF),
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
@@ -125,9 +126,9 @@ class AssetCard extends StatelessWidget {
                               color: const Color(0xFF10B981).withOpacity(0.8),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
+                            child: Text(
                               'NEW',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -150,7 +151,7 @@ class AssetCard extends StatelessWidget {
                             ),
                             child: Text(
                               asset.downloads!,
-                              style: const TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -171,7 +172,7 @@ class AssetCard extends StatelessWidget {
                 children: [
                   Text(
                     asset.title,
-                    style: const TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -180,9 +181,12 @@ class AssetCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Available in 1K, 2K, 4K',
-                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                    style: GoogleFonts.poppins(
+                      color: Color(0xFF9CA3AF),
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),

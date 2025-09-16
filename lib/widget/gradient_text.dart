@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GradientText extends StatelessWidget {
   final String text;
@@ -22,7 +23,9 @@ class GradientText extends StatelessWidget {
       },
       child: Text(
         text,
-        style: style.copyWith(color: Colors.white), // color needed for mask
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+        ), // color needed for mask
       ),
     );
   }

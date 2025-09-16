@@ -7,9 +7,10 @@ import 'package:cgheven/widget/featured_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -29,7 +30,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'Hundreds of professional explosion, fire, and energy effects ready for your projects',
       'image':
           'https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=600',
-      'gradient': const LinearGradient(
+      'gradient': LinearGradient(
         colors: [Color(0x4DFF6B00), Color(0x4DFF3C00)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -42,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'Seamless downloads in multiple formats with built-in library management',
       'image':
           'https://images.pexels.com/photos/590016/pexels-photo-590016.jpg?auto=compress&cs=tinysrgb&w=600',
-      'gradient': const LinearGradient(
+      'gradient': LinearGradient(
         colors: [Color(0x4D6B7280), Color(0x4D374151)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -55,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'Join the community, participate in challenges, and get the latest VFX updates',
       'image':
           'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=600',
-      'gradient': const LinearGradient(
+      'gradient': LinearGradient(
         colors: [Color(0x4D8B5CF6), Color(0x4DEC4899)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -69,7 +70,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         currentScreen++;
       });
       pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
@@ -81,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         currentSlide++;
       });
       featureController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
@@ -90,7 +91,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       });
       featureController.animateToPage(
         0,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
@@ -102,7 +103,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         currentSlide--;
       });
       featureController.previousPage(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
@@ -111,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       });
       featureController.animateToPage(
         features.length - 1,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
@@ -122,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: PageView(
         controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         children: [
           _buildWelcomeScreen(),
           _buildFeaturesScreen(),
@@ -137,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return AnimatedBackground(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -145,14 +146,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Container(
                     width: 120,
                     height: 120,
-                    margin: const EdgeInsets.only(bottom: 24),
+                    margin: EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
                       gradient: AppTheme.fireGradient,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: AppTheme.fireGlowShadow,
                     ),
                     child: Container(
-                      margin: const EdgeInsets.all(2),
+                      margin: EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         color: AppTheme.darkBackground,
                         borderRadius: BorderRadius.circular(22),
@@ -164,7 +165,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Center(
                         child: Text(
                           'CG',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             foreground: Paint()
@@ -184,9 +185,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ShaderMask(
                     shaderCallback: (bounds) =>
                         AppTheme.logoGradient.createShader(bounds),
-                    child: const Text(
+                    child: Text(
                       'CGHEVEN',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -197,12 +198,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   .slideY(begin: 0.3, duration: 800.ms, curve: Curves.easeOut)
                   .fadeIn(duration: 600.ms, delay: 200.ms),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Tagline
-              const Text(
+              Text(
                     'Free VFX Assets for Creators',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: AppTheme.textPrimary,
                       fontWeight: FontWeight.w300,
@@ -213,7 +214,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   .slideY(begin: 0.3, duration: 800.ms, curve: Curves.easeOut)
                   .fadeIn(duration: 600.ms, delay: 400.ms),
 
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
 
               // VFX Preview Cards
               Row(
@@ -227,7 +228,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       return Container(
                             width: 60,
                             height: 60,
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            margin: EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
@@ -258,7 +259,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       ),
                                     ),
                                   ),
-                                  const Center(
+                                  Center(
                                     child: Icon(
                                       Icons.play_arrow,
                                       color: Colors.white,
@@ -275,18 +276,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     }).toList(),
               ),
 
-              const SizedBox(height: 78),
+              SizedBox(height: 78),
 
               // Get Started Button
               GradientButton(
                     onPressed: nextScreen,
                     gradient: AppTheme.fireGradient,
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           'Get Started',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -301,12 +302,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   .slideY(begin: 0.3, duration: 800.ms, curve: Curves.easeOut)
                   .fadeIn(duration: 600.ms, delay: 800.ms),
 
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
 
               // Subtitle
               Text(
                 'Professional VFX • Always Free • No Watermarks',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   color: AppTheme.textSecondary.withOpacity(0.6),
                 ),
@@ -323,31 +324,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return AnimatedBackground(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0),
           child: Column(
             children: [
               // Header
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
                     AppTheme.logoGradient.createShader(bounds),
-                child: const Text(
+                child: Text(
                   'Why Choose CGHEVEN?',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'Professional VFX assets at your fingertips',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+                style: GoogleFonts.poppins(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16,
+                ),
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
 
               // Feature Carousel
               Expanded(
@@ -371,7 +375,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
 
               // Continue Button
               SizedBox(
@@ -379,13 +383,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: GradientButton(
                   onPressed: nextScreen,
                   gradient: AppTheme.fireGradient,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         'Continue',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -398,7 +402,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),
@@ -431,31 +435,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return AnimatedBackground(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0),
           child: Column(
             children: [
               // Header
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
                     AppTheme.logoGradient.createShader(bounds),
-                child: const Text(
+                child: Text(
                   'How It Works',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'Get started in 3 simple steps',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+                style: GoogleFonts.poppins(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16,
+                ),
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
 
               // Steps
               Expanded(
@@ -466,13 +473,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       final step = steps[index];
                       return AnimationConfiguration.staggeredList(
                         position: index,
-                        duration: const Duration(milliseconds: 600),
+                        duration: Duration(milliseconds: 600),
                         child: SlideAnimation(
                           verticalOffset: 50.0,
                           child: FadeInAnimation(
                             child: Container(
-                              margin: const EdgeInsets.only(bottom: 24),
-                              padding: const EdgeInsets.all(24),
+                              margin: EdgeInsets.only(bottom: 24),
+                              padding: EdgeInsets.all(24),
                               decoration: BoxDecoration(
                                 color: AppTheme.darkBackground.withOpacity(0.6),
                                 borderRadius: BorderRadius.circular(16),
@@ -519,7 +526,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           child: Center(
                                             child: Text(
                                               step['number'] as String,
-                                              style: const TextStyle(
+                                              style: GoogleFonts.poppins(
                                                 color: AppTheme.darkBackground,
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -530,7 +537,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: 16),
                                   // Step Content
                                   Expanded(
                                     child: Column(
@@ -539,16 +546,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       children: [
                                         Text(
                                           step['title'] as String,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                             color: AppTheme.textPrimary,
                                           ),
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(height: 8),
                                         Text(
                                           step['description'] as String,
-                                          style: TextStyle(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 14,
                                             color: AppTheme.textSecondary
                                                 .withOpacity(0.7),
@@ -570,8 +577,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
               // Premium Info
               // Container(
-              //   padding: const EdgeInsets.all(24),
-              //   margin: const EdgeInsets.only(bottom: 32),
+              //   padding:  EdgeInsets.all(24),
+              //   margin:  EdgeInsets.only(bottom: 32),
               //   decoration: BoxDecoration(
               //     color: AppTheme.darkBackground.withOpacity(0.6),
               //     borderRadius: BorderRadius.circular(16),
@@ -586,19 +593,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               //       ShaderMask(
               //         shaderCallback: (bounds) =>
               //             AppTheme.tealGradient.createShader(bounds),
-              //         child: const Text(
+              //         child:  Text(
               //           'Free forever (with ads)',
-              //           style: TextStyle(
+              //           style: GoogleFonts.poppins(
               //             fontSize: 18,
               //             fontWeight: FontWeight.w600,
               //             color: Colors.white,
               //           ),
               //         ),
               //       ),
-              //       const SizedBox(height: 8),
+              //        SizedBox(height: 8),
               //       Text(
               //         'Upgrade anytime for ad-free + HQ downloads',
-              //         style: TextStyle(
+              //         style: GoogleFonts.poppins(
               //           fontSize: 14,
               //           color: AppTheme.textSecondary.withOpacity(0.7),
               //         ),
@@ -607,18 +614,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               //     ],
               //   ),
               // ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Continue Button
               GradientButton(
                 onPressed: nextScreen,
                 gradient: AppTheme.fireGradient,
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'Continue',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -630,7 +637,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),
@@ -642,31 +649,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return AnimatedBackground(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0),
           child: Column(
             children: [
               // Header
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
                     AppTheme.logoGradient.createShader(bounds),
-                child: const Text(
+                child: Text(
                   'Get Started',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'Choose how you\'d like to continue',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+                style: GoogleFonts.poppins(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16,
+                ),
                 textAlign: TextAlign.center,
               ),
 
-              const Spacer(),
+              Spacer(),
 
               // Login Options
               Column(
@@ -688,10 +698,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         gradient: AppTheme.fireGradient,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           'G',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -702,7 +712,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     text: 'Continue with Google',
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Email Login
                   _buildLoginButton(
@@ -714,16 +724,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                     backgroundColor: AppTheme.darkBackground.withOpacity(0.6),
                     textColor: AppTheme.textPrimary,
-                    icon: const Icon(
-                      Icons.mail,
-                      color: AppTheme.tealStart,
-                      size: 24,
-                    ),
+                    icon: Icon(Icons.mail, color: AppTheme.tealStart, size: 24),
                     text: 'Continue with Email',
                     borderColor: AppTheme.tealStart.withOpacity(0.3),
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Guest Mode
                   SizedBox(
@@ -738,7 +744,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       },
                       gradient: AppTheme.fireGradient,
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -746,7 +752,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           SizedBox(width: 12),
                           Text(
                             'Continue as Guest',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -759,19 +765,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
 
-              const Spacer(),
+              Spacer(),
 
               // Footer Note
               Text(
                 'By continuing, you agree to our Terms of Service and Privacy Policy',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   color: AppTheme.textSecondary.withOpacity(0.4),
                 ),
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: 48),
+              SizedBox(height: 48),
             ],
           ),
         ),
@@ -794,7 +800,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: borderColor != null
@@ -807,10 +813,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             icon,
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(
               text,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: textColor,

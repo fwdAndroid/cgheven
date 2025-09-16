@@ -5,9 +5,10 @@ import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/services/auth_service.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  RegistrationScreen({super.key});
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -66,10 +67,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             // Scrollable form
             SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 20,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight:
@@ -95,7 +93,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             },
                             child: Text(
                               "Skip",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -104,7 +102,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
 
                         // Logo
                         Image.asset(
@@ -112,27 +110,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           height: 150,
                           fit: BoxFit.fitHeight,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
 
                         // Welcome Text
                         Text(
                           "Welcome CGHEVEN",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
 
                         // Name Field
                         TextField(
                           controller: _nameController,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "User Name",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: Icon(
                               Icons.person_outline,
                               color: Colors.white,
@@ -147,15 +147,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
 
                         // Email Field
                         TextField(
                           controller: _emailController,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "Email",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: Icon(Icons.email, color: Colors.white),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -167,16 +169,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
 
                         // Password Field
                         TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "Password",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
@@ -200,16 +204,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
 
                         // Confirm Password Field
                         TextField(
                           controller: _confirmPasswordController,
                           obscureText: _obscurePassword,
-                          style: TextStyle(color: Colors.white),
+                          style: GoogleFonts.poppins(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: "Re-enter Password",
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.white70,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
@@ -233,7 +239,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
 
                         // Register button
                         isLoading
@@ -246,7 +252,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 child: Center(
                                   child: Text(
                                     "Register",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
@@ -255,7 +261,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 ),
                               ),
 
-                        const Spacer(),
+                        Spacer(),
 
                         // Login link
                         GestureDetector(
@@ -266,19 +272,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             );
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding: EdgeInsets.symmetric(vertical: 16),
                             child: Center(
                               child: Text.rich(
                                 TextSpan(
                                   text: "Already have an account? ",
-                                  style: TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: "Login",
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
@@ -291,7 +297,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),

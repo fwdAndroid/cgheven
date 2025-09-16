@@ -5,6 +5,7 @@ import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -59,9 +60,12 @@ class _SettingScreenState extends State<SettingScreen> {
     return ListTile(
       title: Text(
         title,
-        style: TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
+        style: GoogleFonts.poppins(
+          color: colorWhite,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
+      subtitle: Text(subtitle, style: GoogleFonts.poppins(color: Colors.grey)),
       trailing: GradientSwitch(value: value, onChanged: (_) => onTap()),
     );
   }
@@ -76,7 +80,7 @@ class _SettingScreenState extends State<SettingScreen> {
               children: [
                 GradientText(
                   "Settings",
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -107,7 +111,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             SizedBox(width: 8),
                             Text(
                               "Notifications",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: colorWhite,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -146,7 +150,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             SizedBox(width: 8),
                             Text(
                               "Downloads",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 color: colorWhite,
                                 fontWeight: FontWeight.bold,
@@ -170,14 +174,14 @@ class _SettingScreenState extends State<SettingScreen> {
                         const SizedBox(height: 8),
                         Text(
                           "Default Download Quality",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: colorWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           "Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.",
-                          style: TextStyle(color: Colors.grey),
+                          style: GoogleFonts.poppins(color: Colors.grey),
                         ),
                         const SizedBox(height: 6),
                         Row(
@@ -211,7 +215,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   onPressed: () => setQuality(q),
                                   child: Text(
                                     q,
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       color: selected
                                           ? Colors.white
                                           : Colors.grey,
@@ -248,7 +252,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 const SizedBox(width: 8),
                                 Text(
                                   "Subscription",
-                                  style: TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 22,
                                     color: colorWhite,
                                     fontWeight: FontWeight.bold,
@@ -259,7 +263,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             const SizedBox(height: 6),
                             Text(
                               "Ad-Free Status",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 color: colorWhite,
                                 fontWeight: FontWeight.bold,
@@ -269,7 +273,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               adFree
                                   ? "Premium subscription active"
                                   : "Free tier - ads enabled",
-                              style: const TextStyle(color: Colors.grey),
+                              style: GoogleFonts.poppins(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -296,7 +300,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                             child: Text(
                               adFree ? "Manage" : "Upgrade",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: colorWhite,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -326,7 +330,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             SizedBox(width: 8),
                             Text(
                               "Language",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 color: colorWhite,
                                 fontWeight: FontWeight.bold,
@@ -341,7 +345,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             return ListTile(
                               title: Text(
                                 lang,
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   color: selected ? Colors.teal : Colors.grey,
                                 ),
                               ),
@@ -377,9 +381,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             );
                           },
                           leading: const Icon(Icons.person, color: Colors.grey),
-                          title: const Text(
+                          title: Text(
                             "My Profile",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
                             Icons.chevron_right,
@@ -388,9 +392,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         ListTile(
                           leading: const Icon(Icons.delete, color: Colors.grey),
-                          title: const Text(
+                          title: Text(
                             "Clear Cache",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           onTap: handleClearCache,
                           trailing: const Icon(
@@ -403,9 +407,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icons.security,
                             color: Colors.grey,
                           ),
-                          title: const Text(
+                          title: Text(
                             "Privacy Policy",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
                             Icons.chevron_right,
@@ -417,9 +421,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icons.description,
                             color: Colors.grey,
                           ),
-                          title: const Text(
+                          title: Text(
                             "Terms of Service",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
                             Icons.chevron_right,
@@ -436,9 +440,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             );
                           },
                           leading: const Icon(Icons.edit, color: Colors.grey),
-                          title: const Text(
+                          title: Text(
                             "Edit Profile",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
                             Icons.chevron_right,
@@ -450,9 +454,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icons.support,
                             color: Colors.grey,
                           ),
-                          title: const Text(
+                          title: Text(
                             "Contact Support",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
                             Icons.chevron_right,
@@ -461,9 +465,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         ListTile(
                           leading: const Icon(Icons.logout, color: Colors.grey),
-                          title: const Text(
+                          title: Text(
                             "Log Out",
-                            style: TextStyle(color: Colors.grey),
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           onTap: handleLogout,
                           trailing: const Icon(

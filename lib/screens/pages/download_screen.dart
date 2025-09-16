@@ -1,6 +1,7 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({super.key});
@@ -70,7 +71,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 padding: const EdgeInsets.all(24),
                 child: Text(
                   'Downloads',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     foreground: Paint()
@@ -144,7 +145,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: isActive ? Colors.white : const Color(0xFF9CA3AF),
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -172,7 +173,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
 
   Widget _buildCurrentDownloads() {
     if (activeDownloads.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -180,7 +181,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             SizedBox(height: 16),
             Text(
               'No Active Downloads',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: Color(0xFF9CA3AF),
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -189,7 +190,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
             SizedBox(height: 8),
             Text(
               'Your current downloads will appear here',
-              style: TextStyle(color: Color(0xFF6B7280), fontSize: 16),
+              style: GoogleFonts.poppins(
+                color: Color(0xFF6B7280),
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -208,7 +212,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
 
   Widget _buildHistory() {
     if (completedDownloads.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -216,7 +220,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             SizedBox(height: 16),
             Text(
               'No Download History',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: Color(0xFF9CA3AF),
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -225,7 +229,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
             SizedBox(height: 8),
             Text(
               'Completed downloads will appear here',
-              style: TextStyle(color: Color(0xFF6B7280), fontSize: 16),
+              style: GoogleFonts.poppins(
+                color: Color(0xFF6B7280),
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -238,9 +245,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'Download History',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -260,9 +267,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
                   color: Color(0xFFEF4444),
                   size: 16,
                 ),
-                label: const Text(
+                label: Text(
                   'Clear History',
-                  style: TextStyle(color: Color(0xFFEF4444), fontSize: 14),
+                  style: GoogleFonts.poppins(
+                    color: Color(0xFFEF4444),
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
@@ -299,9 +309,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Bulk Actions',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -362,9 +372,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       size: 24,
                     ),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       'Storage Management',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -374,7 +384,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 ),
                 Text(
                   '2.4 GB of 8.0 GB used',
-                  style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+                  style: GoogleFonts.poppins(
+                    color: Color(0xFF9CA3AF),
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -397,20 +410,29 @@ class _DownloadScreenState extends State<DownloadScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       '0 GB',
-                      style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                      style: GoogleFonts.poppins(
+                        color: Color(0xFF9CA3AF),
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       '30% used',
-                      style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                      style: GoogleFonts.poppins(
+                        color: Color(0xFF9CA3AF),
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       '8.0 GB',
-                      style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+                      style: GoogleFonts.poppins(
+                        color: Color(0xFF9CA3AF),
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -445,7 +467,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     color: color,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -511,7 +533,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     Expanded(
                       child: Text(
                         item.title,
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -521,7 +543,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     ),
                     Text(
                       item.size,
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         color: Color(0xFF9CA3AF),
                         fontSize: 14,
                       ),
@@ -539,7 +561,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'ETA: ${item.eta}',
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                           color: Color(0xFF9CA3AF),
                           fontSize: 12,
                         ),
@@ -560,7 +582,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                             item.status == DownloadStatus.failed
                                 ? 'Failed'
                                 : '${item.progress}%',
-                            style: const TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Color(0xFF9CA3AF),
                               fontSize: 12,
                             ),
@@ -568,7 +590,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                           if (item.error != null)
                             Text(
                               item.error!,
-                              style: const TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Color(0xFFEF4444),
                                 fontSize: 12,
                               ),
@@ -608,7 +630,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
+        style: GoogleFonts.poppins(color: Color(0xFF9CA3AF), fontSize: 12),
       ),
     );
   }

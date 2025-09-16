@@ -1,6 +1,7 @@
 import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeatureCard extends StatelessWidget {
   final Map<String, dynamic> feature;
@@ -112,7 +113,7 @@ class FeatureCard extends StatelessWidget {
               children: [
                 Text(
                   feature['title'],
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textPrimary,
@@ -122,7 +123,7 @@ class FeatureCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   feature['description'],
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: AppTheme.textSecondary.withOpacity(0.8),
                     height: 1.5,

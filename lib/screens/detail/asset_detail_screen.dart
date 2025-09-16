@@ -1,10 +1,11 @@
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AssetDetailScreen extends StatefulWidget {
-  const AssetDetailScreen({super.key});
+  AssetDetailScreen({super.key});
 
   @override
   State<AssetDetailScreen> createState() => _AssetDetailScreenState();
@@ -23,19 +24,19 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
             children: [
               // Header
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(24),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.arrow_back, color: Color(0xFF9CA3AF)),
                           SizedBox(width: 8),
                           Text(
                             'Back',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Color(0xFF9CA3AF),
                               fontSize: 16,
                             ),
@@ -43,7 +44,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                         ],
                       ),
                     ),
-                    const Spacer(),
+                    Spacer(),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -51,44 +52,44 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: isStarred
-                              ? const Color(0xFFFBBF24).withOpacity(0.2)
-                              : const Color(0xFF374151).withOpacity(0.5),
+                              ? Color(0xFFFBBF24).withOpacity(0.2)
+                              : Color(0xFF374151).withOpacity(0.5),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: isStarred
-                                ? const Color(0xFFFBBF24).withOpacity(0.3)
-                                : const Color(0xFF374151),
+                                ? Color(0xFFFBBF24).withOpacity(0.3)
+                                : Color(0xFF374151),
                             width: 1,
                           ),
                         ),
                         child: Icon(
                           isStarred ? Icons.star : Icons.star_border,
                           color: isStarred
-                              ? const Color(0xFFFBBF24)
-                              : const Color(0xFF9CA3AF),
+                              ? Color(0xFFFBBF24)
+                              : Color(0xFF9CA3AF),
                           size: 20,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     GestureDetector(
                       onTap: () {
                         shareApp();
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF374151).withOpacity(0.5),
+                          color: Color(0xFF374151).withOpacity(0.5),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF374151),
+                            color: Color(0xFF374151),
                             width: 1,
                           ),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.share,
                           color: Color(0xFF9CA3AF),
                           size: 20,
@@ -101,17 +102,17 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
 
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Video Player
                       Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1F2937).withOpacity(0.3),
+                          color: Color(0xFF1F2937).withOpacity(0.3),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: const Color(0xFF374151),
+                            color: Color(0xFF374151),
                             width: 1,
                           ),
                         ),
@@ -139,12 +140,12 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                 top: 16,
                                 left: 16,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
+                                    gradient: LinearGradient(
                                       colors: [
                                         Color(0xFF14B8A6),
                                         Color(0xFFF97316),
@@ -152,9 +153,9 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                     ),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     '✓ Includes Alpha',
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
@@ -195,17 +196,17 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32),
 
                       // Asset Info
                       Text(
                         'Gas Explosion 01',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           foreground: Paint()
                             ..shader =
-                                const LinearGradient(
+                                LinearGradient(
                                   colors: [
                                     Color(0xFF14B8A6),
                                     Color(0xFFF97316),
@@ -215,37 +216,37 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
+                      SizedBox(height: 16),
+                      Text(
                         'Professional high-quality gas explosion VFX element perfect for action sequences and cinematic productions. Shot at 120fps with alpha channel included.',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           color: Color(0xFF9CA3AF),
                           fontSize: 18,
                           height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
 
                       // Stats
                       Row(
                         children: [
                           _buildStat(Icons.visibility, '12.4K views'),
-                          const SizedBox(width: 24),
+                          SizedBox(width: 24),
                           _buildStat(Icons.download, '3.2K downloads'),
-                          const SizedBox(width: 24),
+                          SizedBox(width: 24),
                           _buildStat(Icons.favorite, '847 likes'),
                         ],
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32),
 
                       // Creator Info
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1F2937).withOpacity(0.3),
+                          color: Color(0xFF1F2937).withOpacity(0.3),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: const Color(0xFF374151),
+                            color: Color(0xFF374151),
                             width: 1,
                           ),
                         ),
@@ -255,7 +256,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                               width: 48,
                               height: 48,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
+                                gradient: LinearGradient(
                                   colors: [
                                     Color(0xFF14B8A6),
                                     Color(0xFFF97316),
@@ -263,7 +264,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                 ),
                                 shape: BoxShape.circle,
                               ),
-                              padding: const EdgeInsets.all(2),
+                              padding: EdgeInsets.all(2),
                               child: ClipOval(
                                 child: Image.network(
                                   'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
@@ -271,14 +272,14 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            const Expanded(
+                            SizedBox(width: 12),
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Created by Ammar Khan',
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -286,7 +287,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                   ),
                                   Text(
                                     'VFX Artist & Director',
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       color: Color(0xFF9CA3AF),
                                       fontSize: 14,
                                     ),
@@ -300,12 +301,12 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                                   Icons.camera_alt,
                                   Colors.pink,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 _buildSocialButton(
                                   Icons.play_circle,
                                   Colors.red,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 _buildSocialButton(
                                   Icons.alternate_email,
                                   Colors.blue,
@@ -315,7 +316,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 50),
+                      SizedBox(height: 50),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: GradientButton(
@@ -323,7 +324,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                           child: Center(
                             child: Text(
                               "Download Now",
-                              style: TextStyle(color: Colors.white),
+                              style: GoogleFonts.poppins(color: Colors.white),
                             ),
                           ),
                           gradient: LinearGradient(
@@ -345,11 +346,11 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   Widget _buildStat(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF9CA3AF), size: 16),
-        const SizedBox(width: 4),
+        Icon(icon, color: Color(0xFF9CA3AF), size: 16),
+        SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+          style: GoogleFonts.poppins(color: Color(0xFF9CA3AF), fontSize: 14),
         ),
       ],
     );
@@ -357,13 +358,13 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
 
   Widget _buildSocialButton(IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFF374151).withOpacity(0.5),
+        color: Color(0xFF374151).withOpacity(0.5),
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF374151), width: 1),
+        border: Border.all(color: Color(0xFF374151), width: 1),
       ),
-      child: Icon(icon, color: const Color(0xFF9CA3AF), size: 16),
+      child: Icon(icon, color: Color(0xFF9CA3AF), size: 16),
     );
   }
 
