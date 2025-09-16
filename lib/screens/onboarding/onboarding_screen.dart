@@ -1,4 +1,5 @@
 import 'package:cgheven/screens/auth/login_screen.dart';
+import 'package:cgheven/screens/main_dashboard.dart';
 import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/animated_background.dart';
@@ -732,7 +733,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (builder) => LoginScreen(),
+                            builder: (builder) => MainDashboard(),
                           ),
                         );
                       },

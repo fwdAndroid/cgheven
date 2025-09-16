@@ -1,5 +1,7 @@
+import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   const AssetDetailScreen({super.key});
@@ -72,20 +74,25 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF374151).withOpacity(0.5),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFF374151),
-                          width: 1,
+                    GestureDetector(
+                      onTap: () {
+                        shareApp();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF374151).withOpacity(0.5),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFF374151),
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: const Icon(
-                        Icons.share,
-                        color: Color(0xFF9CA3AF),
-                        size: 20,
+                        child: const Icon(
+                          Icons.share,
+                          color: Color(0xFF9CA3AF),
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -308,7 +315,22 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 50),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: GradientButton(
+                          onPressed: () {},
+                          child: Center(
+                            child: Text(
+                              "Download Now",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -343,5 +365,11 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
       ),
       child: Icon(icon, color: const Color(0xFF9CA3AF), size: 16),
     );
+  }
+
+  void shareApp() {
+    String appLink =
+        "https://play.google.com/store/apps/details?id=com.example.yourapp";
+    Share.share("Hey, check out this amazing app: $appLink");
   }
 }
