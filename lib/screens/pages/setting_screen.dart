@@ -2,7 +2,7 @@ import 'package:cgheven/screens/setting/edit_profile_screen.dart';
 import 'package:cgheven/screens/setting/user_profile.dart';
 import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_color_utils.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
 import 'package:flutter/material.dart';
 
@@ -69,7 +69,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(

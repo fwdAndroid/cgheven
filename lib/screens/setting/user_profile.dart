@@ -3,8 +3,6 @@ import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
-import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/model/asset_model.dart'; // for DownloadItem too
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

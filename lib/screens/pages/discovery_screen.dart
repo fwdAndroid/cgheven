@@ -1,7 +1,5 @@
 import 'package:cgheven/model/category.dart';
-import 'package:cgheven/screens/utils/color.dart';
-import 'package:cgheven/screens/utils/gradient_color_utils.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 
 class DiscoveryScreen extends StatefulWidget {
@@ -85,7 +83,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GradientBackground(
+    return AnimatedBackground(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
         child: isGridView

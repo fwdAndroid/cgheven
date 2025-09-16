@@ -1,5 +1,5 @@
 import 'package:cgheven/screens/utils/gradient_button.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 
 class CommunityPage extends StatefulWidget {
@@ -118,7 +118,7 @@ class _CommunityPageState extends State<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.all(16),

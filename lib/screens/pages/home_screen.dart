@@ -3,8 +3,8 @@ import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/screens/pages/community_screen.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/asset_card.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [

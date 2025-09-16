@@ -1,4 +1,4 @@
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 
 class AssetDetailScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [

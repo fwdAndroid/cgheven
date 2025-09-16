@@ -1,10 +1,6 @@
-import 'package:cgheven/screens/auth/login_screen.dart';
-import 'package:cgheven/screens/main_dashboard.dart';
 import 'package:cgheven/screens/utils/apptheme.dart';
-import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
-import 'package:cgheven/services/auth_service.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -26,7 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: Stack(
           children: [
             // Background

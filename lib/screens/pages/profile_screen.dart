@@ -1,9 +1,9 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -82,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [

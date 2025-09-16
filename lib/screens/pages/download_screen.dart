@@ -1,5 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
+import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 
 class DownloadScreen extends StatefulWidget {
@@ -61,7 +61,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [
