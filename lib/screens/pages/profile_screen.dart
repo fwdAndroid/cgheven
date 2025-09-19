@@ -1,6 +1,7 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
 import 'package:cgheven/widget/animated_background.dart';
+import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
@@ -18,6 +19,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final List<UserAsset> userAssets;
   late final List<Map<String, String>> stats;
   bool isFollowing = false;
+  bool isInstagramClicked = false;
+  bool isYoutubeClicked = false;
+  bool isTiktokClicked = false;
+  bool isTwitterClicked = false;
 
   @override
   void initState() {
@@ -83,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBackground(
+      body: GradientBackground(
         child: SafeArea(
           child: Column(
             children: [
@@ -146,51 +151,142 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              GradientButton(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFF14B8A6),
-                                    Color(0xFFF97316),
-                                  ],
-                                ),
+                              // GradientButton(
+                              //   gradient: LinearGradient(
+                              //     colors: [
+                              //       Color(0xFF14B8A6),
+                              //       Color(0xFFF97316),
+                              //     ],
+                              //   ),
 
-                                onPressed: () {
-                                  setState(() {
-                                    isFollowing = !isFollowing;
-                                  });
-                                },
-                                child: Text(
-                                  isFollowing ? "Following" : "Follow",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                              //   onPressed: () {
+                              //     setState(() {
+                              //       isFollowing = !isFollowing;
+                              //     });
+                              //   },
+                              //   child: Row(
+                              //     children: [
+                              //       Icon(
+                              //         isFollowing
+                              //             ? Icons.check
+                              //             : Icons.person_add,
+                              //         color: Colors.white,
+                              //       ),
+                              //       const SizedBox(width: 8),
+                              //       Text(
+                              //         isFollowing ? "Following" : "Follow",
+                              //         style: GoogleFonts.poppins(
+                              //           fontSize: 16,
+                              //           color: Colors.white,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // const SizedBox(width: 5),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade900.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isInstagramClicked = !isInstagramClicked;
+                                    });
+                                  },
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.instagram,
+                                    size: 30,
+                                    color: isInstagramClicked
+                                        ? Colors.pinkAccent
+                                        : Colors.white,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              IconButton(
-                                onPressed: () {},
-                                icon: FaIcon(
-                                  FontAwesomeIcons.instagram,
-                                  size: 30,
-                                  color: Colors.pinkAccent,
+
+                              const SizedBox(width: 10),
+
+                              // YouTube
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade900.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isYoutubeClicked = !isYoutubeClicked;
+                                    });
+                                  },
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.youtube,
+                                    size: 30,
+                                    color: isYoutubeClicked
+                                        ? Colors.red
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
 
-                              //
-                              const SizedBox(width: 5),
-                              IconButton(
-                                onPressed: () {},
-                                icon: FaIcon(
-                                  FontAwesomeIcons.youtube,
-                                  size: 30,
-                                  color: Colors.red,
+                              const SizedBox(width: 10),
+
+                              // TikTok
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade900.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isTiktokClicked = !isTiktokClicked;
+                                    });
+                                  },
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.tiktok,
+                                    size: 30,
+                                    color: isTiktokClicked
+                                        ? Colors.tealAccent
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              IconButton(
-                                onPressed: () {},
-                                icon: FaIcon(FontAwesomeIcons.tiktok, size: 30),
+
+                              const SizedBox(width: 10),
+
+                              // Twitter (X)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade900.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isTwitterClicked = !isTwitterClicked;
+                                    });
+                                  },
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.twitter,
+                                    size: 30,
+                                    color: isTwitterClicked
+                                        ? Colors.lightBlue
+                                        : Colors.white,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
