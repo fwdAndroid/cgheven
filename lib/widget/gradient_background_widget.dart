@@ -12,7 +12,7 @@ class GradientBackground extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment.topLeft,
           radius: 1.5,
-          colors: [Color(0xFF1F2937), Color(0xFF000000), Color(0xFF1F2937)],
+          colors: [Color(0xFF0A0A0A), Color(0xFF1E1E1E)],
         ),
       ),
       child: Stack(

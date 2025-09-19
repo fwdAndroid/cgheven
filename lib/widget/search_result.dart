@@ -29,9 +29,17 @@ class SearchResults extends StatelessWidget {
               .fadeIn(duration: 400.ms)
               .slideX(begin: -0.2, end: 0, duration: 400.ms),
           const SizedBox(height: 16),
+
+          // 🔹 GridView for search results
           Expanded(
-            child: ListView.builder(
+            child: GridView.builder(
               itemCount: items.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // 2 columns
+                crossAxisSpacing: 16, // horizontal spacing
+                mainAxisSpacing: 16, // vertical spacing
+                childAspectRatio: 0.8, // same ratio as home page assets
+              ),
               itemBuilder: (context, index) {
                 return SearchItemCard(item: items[index], index: index);
               },

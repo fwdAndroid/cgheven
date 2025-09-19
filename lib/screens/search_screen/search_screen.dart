@@ -3,6 +3,7 @@ import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -143,7 +144,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Search', style: TextStyle(color: Colors.white)),
+        title: Text('Search', style: GoogleFonts.poppins(color: Colors.white)),
         centerTitle: true,
       ),
       body: AnimatedBackground(
@@ -173,12 +174,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           border: Border.all(color: const Color(0xFF374151), width: 1),
         ),
         child: TextField(
-          style: TextStyle(color: Colors.white),
+          style: GoogleFonts.poppins(color: Colors.white),
           controller: _searchController,
           onChanged: _onSearchChanged,
           decoration: InputDecoration(
             hintText: 'Search effects, explosions, magic...',
-            hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+            hintStyle: GoogleFonts.poppins(color: Color(0xFF9CA3AF)),
             prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF)),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
@@ -237,7 +238,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 ),
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white.withOpacity(0.7),
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 tabs: _categories
                     .map((category) => Tab(text: category))
                     .toList(),
@@ -266,7 +267,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               _searchQuery.isEmpty
                   ? 'No ${_categories[_selectedTabIndex].toLowerCase()} available'
                   : 'No results found for "$_searchQuery"',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: Colors.white.withOpacity(0.7),
                 fontSize: 18,
               ),
