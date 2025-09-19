@@ -9,10 +9,13 @@ class GradientBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.topLeft,
-          radius: 1.5,
-          colors: [Color(0xFF0A0A0A), Color(0xFF1E1E1E)],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF0B1C24), // #0b1c24 at 0%
+            Color(0xFF1A0F0D), // #1a0f0d at 100%
+          ],
         ),
       ),
       child: Stack(
@@ -27,7 +30,7 @@ class GradientBackground extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF14B8A6).withOpacity(0.1),
+                    Color(0xFF14B8A6).withOpacity(0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -44,7 +47,7 @@ class GradientBackground extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFF97316).withOpacity(0.1),
+                    Color(0xFFF97316).withOpacity(0.1),
                     Colors.transparent,
                   ],
                 ),

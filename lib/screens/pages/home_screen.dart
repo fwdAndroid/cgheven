@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/screens/pages/community_screen.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
-import 'package:cgheven/widget/animated_background.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
+import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
@@ -199,415 +202,171 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
-        child: SafeArea(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0B1C24), // #0b1c24 at 0%
+              Color(0xFF1A0F0D), // #1a0f0d at 100%
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Search Bar
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => CommunityPage(),
-                                ),
-                              );
-                            },
-                            icon: Icon(Icons.group, color: Color(0xff25b09f)),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF1F2937).withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: const Color(0xFF374151),
-                                  width: 1,
-                                ),
-                              ),
-                              child: TextField(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SearchPage(),
-                                    ),
-                                  );
-                                },
-                                style: GoogleFonts.poppins(color: Colors.white),
-                                decoration: InputDecoration(
-                                  hintText:
-                                      'Search effects, explosions, magic...',
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: Color(0xFF9CA3AF),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                    color: Color(0xFF9CA3AF),
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (builder) => DownloadScreen(),
-                                ),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.download,
-                              color: Color(0xff25b09f),
-                            ),
-                          ),
-                        ],
+              const SizedBox(height: 60),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0d0c0b).withOpacity(.5),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFF374151),
+                      width: 1,
+                    ),
+                  ),
+                  child: TextField(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchPage(),
+                        ),
+                      );
+                    },
+                    style: GoogleFonts.poppins(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Search effects, explosions, magic...',
+                      hintStyle: GoogleFonts.poppins(color: Color(0xFF9CA3AF)),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xFF9CA3AF),
                       ),
-                      const SizedBox(height: 24),
-
-                      // Asset Section Buttons
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1F2937).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF374151),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: ['New Assets', 'Trending Assets', 'News']
-                              .map((section) {
-                                final isActive = activeAssetSection == section;
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      activeAssetSection = section;
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                      horizontal:
-                                          16, // add some horizontal padding
-                                    ),
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                    ), // <-- spacing
-                                    decoration: BoxDecoration(
-                                      gradient: isActive
-                                          ? const LinearGradient(
-                                              colors: [
-                                                Color(0xFF14B8A6),
-                                                Color(0xFFF97316),
-                                              ],
-                                            )
-                                          : null,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      section,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.poppins(
-                                        color: isActive
-                                            ? Colors.white
-                                            : const Color(0xFF9CA3AF),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              })
-                              .toList(),
-                        ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
                       ),
-                      const SizedBox(height: 24),
-
-                      // Asset Grid for Selected Section
-                      if (activeAssetSection == 'News')
-                        Column(
-                          children: getCurrentAssets()
-                              .cast<NewsItem>()
-                              .map(
-                                (item) => NewsCard(
-                                  newsItem: item,
-                                  onTap: () {
-                                    // Handle news item tap
-                                  },
-                                ),
-                              )
-                              .toList(),
-                        )
-                      else
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                childAspectRatio: 0.8,
-                              ),
-                          itemCount: getCurrentAssets().length,
-                          itemBuilder: (context, index) {
-                            final asset = getCurrentAssets()[index] as Asset;
-                            return AssetCard(
-                              asset: asset,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AssetDetailScreen(),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      const SizedBox(height: 24),
-
-                      // Featured Card
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1F2937).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: const Color(0xFF374151),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 192,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(24),
-                                ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(24),
-                                    ),
-                                    child: Image.network(
-                                      'https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=800',
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.transparent,
-                                          Colors.black.withOpacity(0.8),
-                                        ],
-                                      ),
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(24),
-                                      ),
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Container(
-                                      width: 64,
-                                      height: 64,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.3),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.play_arrow,
-                                        color: Colors.white,
-                                        size: 32,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Gas Explosion Pack – New Drop',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          'Professional VFX assets ready for production',
-                                          style: GoogleFonts.poppins(
-                                            color: Color(0xFF9CA3AF),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF14B8A6),
-                                          Color(0xFFF97316),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Text(
-                                      'NEW',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Category Filter Chips
-                      SizedBox(
-                        height: 48,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (context, index) {
-                            final category = categories[index];
-                            final isActive = activeCategory == category;
-                            return Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    activeCategory = category;
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: isActive
-                                        ? const LinearGradient(
-                                            colors: [
-                                              Color(0xFF14B8A6),
-                                              Color(0xFFF97316),
-                                            ],
-                                          )
-                                        : null,
-                                    color: isActive
-                                        ? null
-                                        : const Color(
-                                            0xFF374151,
-                                          ).withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(
-                                      color: isActive
-                                          ? Colors.transparent
-                                          : const Color(0xFF374151),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    category,
-                                    style: GoogleFonts.poppins(
-                                      color: isActive
-                                          ? Colors.white
-                                          : const Color(0xFF9CA3AF),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Main Asset Grid
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.8,
-                            ),
-                        itemCount: assets.length,
-                        itemBuilder: (context, index) {
-                          final asset = assets[index];
-                          return AssetCard(
-                            asset: asset,
-                            showBadge: false,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AssetDetailScreen(),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0d0c0b).withOpacity(.5),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFF374151),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: ['News\nAssets', 'Trending\nAssets', 'News'].map((
+                      section,
+                    ) {
+                      final isActive = activeAssetSection == section;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: GradientButton(
+                          gradient: isActive
+                              ? AppTheme.fireGradient
+                              : LinearGradient(
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                  ],
+                                ),
+                          onPressed: () {
+                            setState(() {
+                              activeAssetSection = section;
+                            });
+                          },
+                          child: SizedBox(
+                            height: 40,
+                            child: Center(
+                              child: Text(
+                                section,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: isActive
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                  color: isActive
+                                      ? Colors.white
+                                      : const Color(0xFFB0B0B0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              if (activeAssetSection == 'News')
+                Column(
+                  children: getCurrentAssets()
+                      .cast<NewsItem>()
+                      .map(
+                        (item) => NewsCard(
+                          newsItem: item,
+                          onTap: () {
+                            // Handle news item tap
+                          },
+                        ),
+                      )
+                      .toList(),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2.0,
+                  ), // almost flush
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.8,
+                        ),
+                    itemCount: getCurrentAssets().length,
+                    itemBuilder: (context, index) {
+                      final asset = getCurrentAssets()[index] as Asset;
+                      return AssetCard(
+                        asset: asset,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AssetDetailScreen(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              const SizedBox(height: 24),
             ],
           ),
         ),

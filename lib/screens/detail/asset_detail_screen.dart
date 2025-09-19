@@ -1,5 +1,5 @@
 import 'package:cgheven/screens/utils/gradient_button.dart';
-import 'package:cgheven/widget/animated_background.dart';
+import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,7 +18,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBackground(
+      body: GradientBackground(
         child: SafeArea(
           child: Column(
             children: [
@@ -328,7 +328,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                             ),
                           ),
                           gradient: LinearGradient(
-                            colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                            colors: [Color(0xFFF97316), Color(0xFFF97316)],
                           ),
                         ),
                       ),
