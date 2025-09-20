@@ -22,7 +22,8 @@ class AssetCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: const Color(0xFF0d0c0b), // inside card dark color
+        color: AppTheme.darkBackground.withOpacity(0.6),
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(

@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0d0c0b),
+                    color: AppTheme.darkBackground.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: const Color(0xFF00bcd4).withOpacity(.4),
@@ -263,7 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0d0c0b),
+                    color: AppTheme.darkBackground.withOpacity(0.6),
+
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: const Color(0xFF00bcd4).withOpacity(.4),
