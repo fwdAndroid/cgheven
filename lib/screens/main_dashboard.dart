@@ -23,9 +23,24 @@ class _MainDashboardState extends State<MainDashboard> {
     HomeScreen(),
     DiscoveryScreen(),
     FavouriteScreen(),
-    // CommunityScreen(),
     ProfileScreen(),
     SettingScreen(),
+  ];
+
+  final List<String> _labels = [
+    "Home",
+    "Discovery",
+    "Favourites",
+    "CGHEVEN",
+    "Settings",
+  ];
+
+  final List<IconData> _icons = [
+    Icons.home_outlined,
+    Icons.explore,
+    Icons.favorite,
+    Icons.person,
+    Icons.settings,
   ];
 
   @override
@@ -43,47 +58,58 @@ class _MainDashboardState extends State<MainDashboard> {
       },
       child: Scaffold(
         body: _screens[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: const Color(0xff171d27),
-          selectedItemColor: const Color(0xff25b09f),
-          unselectedItemColor: const Color(0xffd1d5db),
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
-          showSelectedLabels: true,
-          showUnselectedLabels: true, // 👈 Always show labels
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined, size: 25),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.explore, size: 25), // 👈 Discovery icon
-              label: "Discovery",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite, size: 25),
-              label: "Favourites",
-            ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.groups, size: 25), // 👈 Community icon
-            //   label: "Community",
-            // ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 25),
-              label: "CGHEVEN",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings, size: 25),
-              label: "Settings",
-            ),
-          ],
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(color: Colors.black),
+          child: BottomNavigationBar(
+            backgroundColor: const Color(0xff171d27),
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _currentIndex,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            selectedItemColor: const Color(0xff25b09f),
+            unselectedItemColor: const Color(0xffd1d5db),
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            items: List.generate(_labels.length, (index) {
+              final isActive = _currentIndex == index;
+              return BottomNavigationBarItem(
+                icon: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  padding: const EdgeInsets.all(8),
+                  decoration: isActive
+                      ? BoxDecoration(
+                          color: const Color(
+                            0xff25b09f,
+                          ).withOpacity(0.15), // faint glow inside
+                          borderRadius: BorderRadius.circular(
+                            12,
+                          ), // 👈 same radius as screenshot
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff25b09f).withOpacity(0.7),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        )
+                      : null,
+                  child: Icon(
+                    _icons[index],
+                    size: 26,
+                    color: isActive
+                        ? const Color(0xff25b09f)
+                        : const Color(0xffd1d5db),
+                  ),
+                ),
+                label: _labels[index],
+              );
+            }),
+          ),
         ),
       ),
     );
