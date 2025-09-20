@@ -2,13 +2,10 @@ import 'dart:ui';
 
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
-import 'package:cgheven/screens/pages/community_screen.dart';
-import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
 import 'package:cgheven/widget/asset_card.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:cgheven/widget/news_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -224,10 +221,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0d0c0b).withOpacity(.5),
+                    color: const Color(0xFF0d0c0b),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFF374151),
+                      color: const Color(0xFF00bcd4).withOpacity(.4),
                       width: 1,
                     ),
                   ),
@@ -266,10 +263,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0d0c0b).withOpacity(.5),
+                    color: const Color(0xFF0d0c0b),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFF374151),
+                      color: const Color(0xFF00bcd4).withOpacity(.4),
                       width: 1,
                     ),
                   ),

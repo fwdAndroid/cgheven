@@ -1,5 +1,4 @@
 import 'package:cgheven/model/category.dart';
-import 'package:cgheven/widget/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -84,32 +83,47 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBackground(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-        child: isGridView
-            ? GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 3,
-                  mainAxisSpacing: 16,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0B1C24), // #0b1c24 at 0%
+              Color(0xFF1A0F0D), // #1a0f0d at 100%
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+          child: isGridView
+              ? GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: 3,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return CategoryCard(category: category);
+                  },
+                )
+              : ListView.builder(
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: CategoryCard(category: category),
+                    );
+                  },
                 ),
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
-                  return CategoryCard(category: category);
-                },
-              )
-            : ListView.builder(
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: CategoryCard(category: category),
-                  );
-                },
-              ),
+        ),
       ),
     );
   }

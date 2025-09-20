@@ -76,33 +76,46 @@ class _FavouriteScreenState extends State<FavouriteScreen>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black.withOpacity(0.5),
-          elevation: 0,
-          title: Text(
-            "Favourite Assets",
-            style: GoogleFonts.poppins(color: Colors.white),
-          ),
-          bottom: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(10),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        title: Text(
+          "Favourite Assets",
+          style: GoogleFonts.poppins(color: Colors.white),
+        ),
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            tabs: categories.map((c) => Tab(text: c)).toList(),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          tabs: categories.map((c) => Tab(text: c)).toList(),
+        ),
+      ),
+
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0B1C24), // #0b1c24 at 0%
+              Color(0xFF1A0F0D), // #1a0f0d at 100%
+            ],
           ),
         ),
-        body: TabBarView(
+        child: TabBarView(
           controller: _tabController,
           children: categories.map((category) {
             final assets = getCurrentAssets(category);

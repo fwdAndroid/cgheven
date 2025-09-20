@@ -1,6 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +85,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0B1C24), // #0b1c24 at 0%
+              Color(0xFF1A0F0D), // #1a0f0d at 100%
+            ],
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [

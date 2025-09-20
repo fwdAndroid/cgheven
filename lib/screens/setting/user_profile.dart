@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/widget/asset_card.dart';
@@ -73,32 +72,44 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Colors.black.withOpacity(0.5),
-          elevation: 0,
-          title: Text(
-            "My Profile",
-            style: GoogleFonts.poppins(color: Colors.white),
-          ),
-          bottom: TabBar(
-            controller: _tabController,
-            indicator: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
-              ),
-              borderRadius: BorderRadius.circular(10),
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.black.withOpacity(0.5),
+        elevation: 0,
+        title: Text(
+          "My Profile",
+          style: GoogleFonts.poppins(color: Colors.white),
+        ),
+        bottom: TabBar(
+          controller: _tabController,
+          indicator: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
             ),
-            tabs: const [
-              Tab(text: "Favourites"),
-              Tab(text: "Downloads"),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          tabs: const [
+            Tab(text: "Favourites"),
+            Tab(text: "Downloads"),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0B1C24), // #0b1c24 at 0%
+              Color(0xFF1A0F0D), // #1a0f0d at 100%
             ],
           ),
         ),
-        body: TabBarView(
+        child: TabBarView(
           controller: _tabController,
           children: [_buildFavouriteTab(), _buildDownloadTab()],
         ),
