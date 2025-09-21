@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -103,7 +104,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     color: const Color(0xFF1F2937).withOpacity(0.3),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFF374151),
+                      color: const Color(0xFF00bcd4).withOpacity(.3),
                       width: 1,
                     ),
                   ),
@@ -139,11 +140,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            gradient: isActive
-                ? const LinearGradient(
-                    colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
-                  )
-                : null,
+            gradient: isActive ? AppTheme.fireGradient : null,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -316,7 +313,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF1F2937).withOpacity(0.3),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF374151), width: 1),
+              border: Border.all(
+                color: const Color(0xFF00bcd4).withOpacity(.3),
+                width: 1,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +371,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF1F2937).withOpacity(0.3),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF374151), width: 1),
+              border: Border.all(
+                color: const Color(0xFF00bcd4).withOpacity(.3),
+                width: 1,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,7 +464,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
       decoration: BoxDecoration(
         color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(
+          color: const Color(0xFF00bcd4).withOpacity(.3),
+          width: 1,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -500,7 +506,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF1F2937).withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF374151), width: 1),
+        border: Border.all(
+          color: const Color(0xFF00bcd4).withOpacity(.3),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [

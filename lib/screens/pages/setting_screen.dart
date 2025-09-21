@@ -90,21 +90,6 @@ class _SettingScreenState extends State<SettingScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                GradientText(
-                  "Settings",
-                  style: GoogleFonts.poppins(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF2A7B9B),
-                      Color(0xFF57C785),
-                      Color(0xFFEDDD53),
-                    ],
-                    stops: [0.0, 0.5, 1.0],
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -112,7 +97,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade800),
+                      border: Border.all(
+                        color: const Color(0xFF00bcd4).withOpacity(.4),
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,7 +139,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade800),
+                      border: Border.all(
+                        color: const Color(0xFF00bcd4).withOpacity(.4),
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +241,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade800),
+                      border: Border.all(
+                        color: const Color(0xFF00bcd4).withOpacity(.4),
+                        width: 1,
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -331,7 +325,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade800),
+                      border: Border.all(
+                        color: const Color(0xFF00bcd4).withOpacity(.4),
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,7 +376,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey.shade900.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade800),
+                      border: Border.all(
+                        color: const Color(0xFF00bcd4).withOpacity(.4),
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       children: [
