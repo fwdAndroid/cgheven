@@ -1,4 +1,5 @@
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:cgheven/widget/animated_background.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
@@ -91,13 +92,10 @@ class _FavouriteScreenState extends State<FavouriteScreen>
           isScrollable: true,
           indicatorSize: TabBarIndicatorSize.tab,
           indicator: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: AppTheme.fireGradient,
             borderRadius: BorderRadius.circular(10),
           ),
+          labelStyle: TextStyle(color: Colors.white),
           tabs: categories.map((c) => Tab(text: c)).toList(),
         ),
       ),

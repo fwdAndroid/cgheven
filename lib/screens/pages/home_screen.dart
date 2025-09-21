@@ -381,34 +381,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     final cardHeight = cardWidth * 1.25; // you can tweak this
                     final aspectRatio = cardWidth / cardHeight;
 
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                    return SizedBox(
+                      height: 400,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal, // 👈 horizontal grid
+
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: spacing,
+                          mainAxisSpacing: spacing,
+                          childAspectRatio: aspectRatio,
+                        ),
+                        itemCount: getCurrentAssets().length,
+                        itemBuilder: (context, index) {
+                          final asset = getCurrentAssets()[index] as Asset;
+                          return AssetCard(
+                            asset: asset,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AssetDetailScreen(),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: spacing,
-                        mainAxisSpacing: spacing,
-                        childAspectRatio: aspectRatio,
-                      ),
-                      itemCount: getCurrentAssets().length,
-                      itemBuilder: (context, index) {
-                        final asset = getCurrentAssets()[index] as Asset;
-                        return AssetCard(
-                          asset: asset,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AssetDetailScreen(),
-                              ),
-                            );
-                          },
-                        );
-                      },
                     );
                   },
                 ),
