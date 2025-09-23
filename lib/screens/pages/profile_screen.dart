@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/user_asset.dart';
+import 'package:cgheven/screens/pages/community_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +86,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => CommunityPage()),
+              );
+            },
+            icon: Icon(Icons.notifications, color: Color(0xFF14B8A6)),
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -199,7 +216,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey.shade900.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.grey.shade800,
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(.4),
+                                    width: 1,
                                   ),
                                 ),
                                 child: IconButton(
@@ -226,7 +246,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey.shade900.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.grey.shade800,
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(.4),
+                                    width: 1,
                                   ),
                                 ),
                                 child: IconButton(
@@ -253,7 +276,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey.shade900.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.grey.shade800,
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(.4),
+                                    width: 1,
                                   ),
                                 ),
                                 child: IconButton(
@@ -280,7 +306,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey.shade900.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.grey.shade800,
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(.4),
+                                    width: 1,
                                   ),
                                 ),
                                 child: IconButton(
@@ -322,7 +351,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             color: Colors.grey.shade900.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: Colors.grey.shade800),
+                            border: Border.all(
+                              color: const Color(0xFF00bcd4).withOpacity(.4),
+                              width: 1,
+                            ),
                           ),
                           child: Text(
                             'Professional VFX artist and creator with over 8 years of experience in cinematic effects. '
