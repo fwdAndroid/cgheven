@@ -4,6 +4,7 @@ import 'package:cgheven/screens/pages/discovery_screen.dart';
 import 'package:cgheven/screens/pages/home_screen.dart';
 import 'package:cgheven/screens/pages/profile_screen.dart';
 import 'package:cgheven/screens/pages/setting_screen.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -61,7 +62,7 @@ class _MainDashboardState extends State<MainDashboard> {
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(color: Colors.black),
           child: BottomNavigationBar(
-            backgroundColor: const Color(0xff171d27),
+            backgroundColor: AppTheme.darkBackground.withOpacity(0.6),
             type: BottomNavigationBarType.fixed,
             currentIndex: _currentIndex,
             showSelectedLabels: true,
@@ -89,18 +90,11 @@ class _MainDashboardState extends State<MainDashboard> {
                           borderRadius: BorderRadius.circular(
                             12,
                           ), // 👈 same radius as screenshot
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff25b09f).withOpacity(0.7),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                            ),
-                          ],
                         )
                       : null,
                   child: Icon(
                     _icons[index],
-                    size: 26,
+                    size: 20,
                     color: isActive
                         ? const Color(0xff25b09f)
                         : const Color(0xffd1d5db),

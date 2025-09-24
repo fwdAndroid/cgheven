@@ -223,38 +223,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppTheme.darkBackground.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF00bcd4).withOpacity(.4),
-                            width: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.darkBackground.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFF00bcd4).withOpacity(.4),
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: TextField(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SearchPage(),
+                          child: TextField(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SearchPage(),
+                                ),
+                              );
+                            },
+                            style: GoogleFonts.poppins(color: Colors.white),
+                            decoration: InputDecoration(
+                              hintText: 'Search effects, explosions, magic...',
+                              hintStyle: GoogleFonts.poppins(
+                                color: Color(0xFF9CA3AF),
+                                fontSize: 14,
                               ),
-                            );
-                          },
-                          style: GoogleFonts.poppins(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search effects, explosions, magic...',
-                            hintStyle: GoogleFonts.poppins(
-                              color: Color(0xFF9CA3AF),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Color(0xFF9CA3AF),
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Color(0xFF9CA3AF),
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
                             ),
                           ),
                         ),
@@ -317,20 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : null,
                                 color: isActive ? null : Colors.transparent,
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: isActive
-                                    ? [
-                                        BoxShadow(
-                                          color: AppTheme
-                                              .fireGradient
-                                              .colors
-                                              .first
-                                              .withOpacity(0.6),
-                                          blurRadius: 12,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 0),
-                                        ),
-                                      ]
-                                    : [],
                               ),
                               child: Center(
                                 child: Text(
@@ -378,48 +368,44 @@ class _HomeScreenState extends State<HomeScreen> {
                     final totalSpacing = spacing * (crossAxisCount + 1);
                     final cardWidth =
                         (screenWidth - totalSpacing) / crossAxisCount;
-                    final cardHeight = cardWidth * 1.25; // you can tweak this
+                    final cardHeight = cardWidth * 0.9; // smaller height
                     final aspectRatio = cardWidth / cardHeight;
 
-                    return SizedBox(
-                      height: 400,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal, // 👈 horizontal grid
+                    return GridView.builder(
+                      shrinkWrap: true,
 
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing,
-                          childAspectRatio: aspectRatio,
-                        ),
-                        itemCount: getCurrentAssets().length,
-                        itemBuilder: (context, index) {
-                          final asset = getCurrentAssets()[index] as Asset;
-                          return AssetCard(
-                            asset: asset,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AssetDetailScreen(),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: spacing,
+                        mainAxisSpacing: spacing,
+                        childAspectRatio: aspectRatio,
+                      ),
+                      itemCount: getCurrentAssets().length,
+                      itemBuilder: (context, index) {
+                        final asset = getCurrentAssets()[index] as Asset;
+                        return AssetCard(
+                          asset: asset,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AssetDetailScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
 
               // Featured Card
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 12),
+                margin: EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                   color: AppTheme.darkBackground.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(24),
@@ -597,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final totalSpacing = spacing * (crossAxisCount + 1);
                   final cardWidth =
                       (screenWidth - totalSpacing) / crossAxisCount;
-                  final cardHeight = cardWidth * 1.25; // you can tweak this
+                  final cardHeight = cardWidth * 0.9; // smaller height
                   final aspectRatio = cardWidth / cardHeight;
 
                   return GridView.builder(

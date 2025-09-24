@@ -36,7 +36,7 @@ class AssetCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
+                  top: Radius.circular(12),
                 ),
                 child: Stack(
                   fit: StackFit.expand,

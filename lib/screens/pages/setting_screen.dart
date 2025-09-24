@@ -3,6 +3,7 @@ import 'package:cgheven/screens/setting/user_profile.dart';
 import 'package:cgheven/screens/utils/color.dart';
 import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
+import 'package:cgheven/widget/search_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -90,6 +91,31 @@ class _SettingScreenState extends State<SettingScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // Inside build()
+                Container(
+                  height: 60,
+                  alignment: Alignment.center,
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [
+                        Color(0xFF2A7B9B), // teal-ish
+                        Color(0xFF57C785), // green-ish
+                        Color(0xFFEDDD53), // yellow-ish
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ).createShader(bounds),
+                    child: Text(
+                      "Setting",
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white, // important! this becomes mask
+                      ),
+                    ),
+                  ),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(

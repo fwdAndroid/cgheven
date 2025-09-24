@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,16 +16,16 @@ class NewsCard extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 4),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1F2937).withOpacity(0.3),
+        child: Card(
+          color: AppTheme.darkBackground.withOpacity(0.6),
+
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFF00bcd4).withOpacity(.4),
-              width: 1,
-            ),
+            side: const BorderSide(color: Color(0xFF00bcd4), width: .3),
           ),
+          margin: const EdgeInsets.only(bottom: 4),
+          shadowColor: Colors.black.withOpacity(0.5),
+
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
