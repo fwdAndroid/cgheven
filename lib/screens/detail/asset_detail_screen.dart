@@ -261,10 +261,10 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       SizedBox(height: 16),
                       Text(
                         'Professional high-quality gas explosion VFX element perfect for action sequences and cinematic productions. Shot at 120fps with alpha channel included.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           color: Color(0xFF9CA3AF),
-                          fontSize: 18,
-                          height: 1.5,
+                          fontSize: 16,
+                          height: 1,
                         ),
                       ),
                       SizedBox(height: 24),

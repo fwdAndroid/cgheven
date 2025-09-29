@@ -9,20 +9,10 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  List<String> votedPolls = [];
   List<String> votedRequests = [];
   bool showRequestForm = false;
   String requestTitle = '';
   String requestDescription = '';
-
-  void handlePollVote(String pollId, int optionIndex) {
-    if (!votedPolls.contains(pollId)) {
-      setState(() {
-        votedPolls.add(pollId);
-      });
-      debugPrint("Voted for option $optionIndex in poll $pollId");
-    }
-  }
 
   void handleRequestVote(String requestId) {
     setState(() {
@@ -69,32 +59,6 @@ class _CommunityPageState extends State<CommunityPage> {
     },
   ];
 
-  final polls = [
-    {
-      'id': 'poll1',
-      'question': 'Which VFX category should we expand next?',
-      'options': [
-        {'text': 'Water & Ocean Effects', 'votes': 234},
-        {'text': 'Weather & Storms', 'votes': 189},
-        {'text': 'Space & Cosmic', 'votes': 156},
-        {'text': 'Destruction & Debris', 'votes': 98},
-      ],
-      'totalVotes': 677,
-      'endsOn': 'Dec 15, 2024',
-    },
-    {
-      'id': 'poll2',
-      'question': 'Preferred default download quality?',
-      'options': [
-        {'text': '1K (Fast Download)', 'votes': 145},
-        {'text': '2K (Balanced)', 'votes': 298},
-        {'text': '4K (Best Quality)', 'votes': 187},
-      ],
-      'totalVotes': 630,
-      'endsOn': 'Dec 20, 2024',
-    },
-  ];
-
   final requests = [
     {
       'id': 'req1',
@@ -131,304 +95,161 @@ class _CommunityPageState extends State<CommunityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-      ),
-
-      backgroundColor: Colors.black,
-      body: Stack(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 100),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 100),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 60),
-                // Announcements
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 60),
-
-                      Text(
-                        "Latest Announcements",
-                        style: GoogleFonts.poppins(
-                          color: Colors.tealAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ...announcements.map(
-                        (a) => Card(
-                          color: Colors.grey[900],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-                              ),
-                            ),
-                            title: Text(
-                              a['title']!,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              a['body']!,
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                            trailing: Image.network(
-                              a['thumbnail']!,
-                              width: 50,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                Text(
+                  "Latest Announcements",
+                  style: GoogleFonts.poppins(
+                    color: Colors.tealAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
-
-                // Polls
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Community Polls",
-                        style: GoogleFonts.poppins(
-                          color: Colors.tealAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                const SizedBox(height: 10),
+                ...announcements.map(
+                  (a) => Card(
+                    color: Colors.grey[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: const BorderSide(
+                        color: Color(0xFF00bcd4),
+                        width: .3,
+                      ),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      ...polls.map((poll) {
-                        final hasVoted = votedPolls.contains(poll['id']);
-                        return Card(
-                          color: Colors.grey[900],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  poll['question']!.toString(),
+                      title: Text(
+                        a['title']!,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        a['body']!,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: Image.network(
+                        a['thumbnail']!,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Polls
+
+          // Requests
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Feature Requests",
+                  style: GoogleFonts.poppins(
+                    color: Colors.tealAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ...requests.map((r) {
+                  final voted = votedRequests.contains(r['id']);
+                  return Card(
+                    color: Colors.grey[900],
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: Color(0xFF00bcd4),
+                        width: .3,
+                      ),
+
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  r['title']!.toString(),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                ...(poll['options'] as List).asMap().entries.map(
-                                  (entry) {
-                                    final index = entry.key;
-                                    final option = entry.value;
-                                    final percent =
-                                        ((option['votes'] /
-                                                    poll['totalVotes']) *
-                                                100)
-                                            .round();
-
-                                    return GestureDetector(
-                                      onTap: () => handlePollVote(
-                                        poll['id']!.toString(),
-                                        index,
-                                      ),
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          vertical: 6,
-                                        ),
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: hasVoted
-                                              ? Colors.grey[800]
-                                              : Colors.grey[850],
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  option['text'],
-                                                  style: TextStyle(
-                                                    color: hasVoted
-                                                        ? Colors.grey[300]
-                                                        : Colors.white,
-                                                  ),
-                                                ),
-                                                if (hasVoted)
-                                                  Text(
-                                                    "$percent%",
-                                                    style: const TextStyle(
-                                                      color: Colors.tealAccent,
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                            if (hasVoted)
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                  top: 6,
-                                                ),
-                                                height: 6,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: Colors.tealAccent
-                                                      .withOpacity(0.3),
-                                                ),
-                                                child: FractionallySizedBox(
-                                                  widthFactor: percent / 100.0,
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8,
-                                                          ),
-                                                      gradient:
-                                                          const LinearGradient(
-                                                            colors: [
-                                                              Colors.teal,
-                                                              Colors.orange,
-                                                            ],
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
                                 ),
-                              ],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: getStatusColor(
+                                    r['status']!.toString(),
+                                  ).withOpacity(0.2),
+                                ),
+                                child: Text(
+                                  r['status']!.toString(),
+                                  style: TextStyle(
+                                    color: getStatusColor(
+                                      r['status']!.toString(),
+                                    ),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            r['description']!.toString(),
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: voted
+                                  ? Colors.teal.withOpacity(0.3)
+                                  : Colors.grey[850],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () =>
+                                handleRequestVote(r['id']!.toString()),
+                            icon: const Icon(
+                              Icons.people,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            label: Text(
+                              "${r['votes'].toString()}",
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-
-                // Requests
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Feature Requests",
-                        style: GoogleFonts.poppins(
-                          color: Colors.tealAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      ...requests.map((r) {
-                        final voted = votedRequests.contains(r['id']);
-                        return Card(
-                          color: Colors.grey[900],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        r['title']!.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: getStatusColor(
-                                          r['status']!.toString(),
-                                        ).withOpacity(0.2),
-                                      ),
-                                      child: Text(
-                                        r['status']!.toString(),
-                                        style: TextStyle(
-                                          color: getStatusColor(
-                                            r['status']!.toString(),
-                                          ),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  r['description']!.toString(),
-                                  style: const TextStyle(color: Colors.white70),
-                                ),
-                                const SizedBox(height: 12),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: voted
-                                        ? Colors.teal.withOpacity(0.3)
-                                        : Colors.grey[850],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  onPressed: () =>
-                                      handleRequestVote(r['id']!.toString()),
-                                  icon: const Icon(
-                                    Icons.people,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  label: Text(
-                                    "${r['votes'].toString()}",
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                }),
               ],
             ),
           ),
@@ -511,12 +332,13 @@ class _CommunityPageState extends State<CommunityPage> {
                 ),
               ),
             ),
+
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () => setState(() => showRequestForm = true),
+          //   backgroundColor: Colors.teal,
+          //   child: const Icon(Icons.add),
+          // ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() => showRequestForm = true),
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.add),
       ),
     );
   }
