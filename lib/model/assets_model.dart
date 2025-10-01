@@ -5,6 +5,7 @@ class Asset {
   final String thumbnail;
   final DateTime publishedAt;
   bool isFavorite; // local state
+  final List<String> subCategories; // ✅ added subCategories
 
   Asset({
     required this.id,
@@ -13,6 +14,7 @@ class Asset {
     required this.thumbnail,
     required this.publishedAt,
     this.isFavorite = false,
+    this.subCategories = const [],
   });
 
   bool get isNew {
@@ -32,6 +34,9 @@ class Asset {
       publishedAt: DateTime.parse(
         json['attributes'] ?? DateTime.now().toIso8601String(),
       ),
+      subCategories: (json['sub_categories'] != null)
+          ? List<String>.from(json['sub_categories'])
+          : [],
     );
   }
 }
