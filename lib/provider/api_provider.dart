@@ -18,7 +18,9 @@ class AssetProvider with ChangeNotifier {
 
     try {
       final result = await AssetService.fetchAssets();
-      _assets = result;
+
+      // ✅ Only keep assets where category == "VFX"
+      _assets = result.where((asset) => asset.category == "VFX").toList();
     } catch (e) {
       _error = e.toString();
     }
