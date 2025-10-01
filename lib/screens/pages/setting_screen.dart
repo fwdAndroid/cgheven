@@ -1,11 +1,9 @@
-import 'package:cgheven/screens/setting/edit_profile_screen.dart';
-import 'package:cgheven/screens/setting/user_profile.dart';
+import 'package:cgheven/provider/language_provider.dart';
 import 'package:cgheven/screens/utils/color.dart';
-import 'package:cgheven/screens/utils/gradient_color_utils.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
-import 'package:cgheven/widget/search_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -72,6 +70,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(
+      context,
+    ); // Access the provider
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -106,7 +108,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       end: Alignment.bottomRight,
                     ).createShader(bounds),
                     child: Text(
-                      "Setting",
+                      languageProvider.localizedStrings['Setting'] ?? "Setting",
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
@@ -136,7 +138,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icon(Icons.notifications, color: teal),
                             SizedBox(width: 8),
                             Text(
-                              "Notifications",
+                              languageProvider
+                                      .localizedStrings['Notifications'] ??
+                                  "Notifications",
                               style: GoogleFonts.poppins(
                                 color: colorWhite,
                                 fontSize: 22,
@@ -146,8 +150,13 @@ class _SettingScreenState extends State<SettingScreen> {
                           ],
                         ),
                         buildSwitchTile(
-                          title: "Announcements",
+                          title:
+                              languageProvider
+                                  .localizedStrings['Announcements'] ??
+                              "Announcements",
                           subtitle:
+                              languageProvider
+                                  .localizedStrings['Get notified about new challenges and updates'] ??
                               "Get notified about new challenges and updates",
                           value: notifications,
                           onTap: () => toggleSetting('notifications'),
@@ -178,7 +187,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icon(Icons.download, color: Colors.teal),
                             SizedBox(width: 8),
                             Text(
-                              "Downloads",
+                              languageProvider.localizedStrings['Downloads'] ??
+                                  "Downloads",
                               style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 color: colorWhite,
@@ -188,28 +198,43 @@ class _SettingScreenState extends State<SettingScreen> {
                           ],
                         ),
                         buildSwitchTile(
-                          title: "Wi-Fi Only",
-                          subtitle: "Download only when connected to \nWi-Fi",
+                          title:
+                              languageProvider.localizedStrings['Wi-Fi Only'] ??
+                              "Wi-Fi Only",
+                          subtitle:
+                              languageProvider
+                                  .localizedStrings['Download only when connected to \nWi-Fi'] ??
+                              "Download only when connected to \nWi-Fi",
                           value: wifiOnly,
                           onTap: () => toggleSetting('wifiOnly'),
                         ),
                         buildSwitchTile(
-                          title: "Auto-download Previews",
-                          subtitle: "Automatically cache preview thumbnails",
+                          title:
+                              languageProvider
+                                  .localizedStrings['Auto-download Previews'] ??
+                              "Auto-download Previews",
+                          subtitle:
+                              languageProvider
+                                  .localizedStrings['Automatically cache preview thumbnails'] ??
+                              "Automatically cache preview thumbnails",
                           value: autoDownloadPreviews,
                           onTap: () => toggleSetting('autoDownloadPreviews'),
                         ),
 
                         const SizedBox(height: 8),
                         Text(
-                          "Default Download Quality",
+                          languageProvider
+                                  .localizedStrings['Default Download Quality'] ??
+                              "Default Download Quality",
                           style: GoogleFonts.poppins(
                             color: colorWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          "Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.",
+                          languageProvider
+                                  .localizedStrings['Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.'] ??
+                              "Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.",
                           style: GoogleFonts.poppins(color: Colors.grey),
                         ),
                         const SizedBox(height: 6),
@@ -283,7 +308,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 Icon(Icons.subscriptions, color: teal),
                                 const SizedBox(width: 8),
                                 Text(
-                                  "Subscription",
+                                  languageProvider
+                                          .localizedStrings['Subscription'] ??
+                                      "Subscription",
                                   style: GoogleFonts.poppins(
                                     fontSize: 22,
                                     color: colorWhite,
@@ -294,7 +321,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              "Ad-Free Status",
+                              languageProvider
+                                      .localizedStrings['Ad-Free Status'] ??
+                                  "Ad-Free Status",
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 color: colorWhite,
@@ -303,8 +332,12 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                             Text(
                               adFree
-                                  ? "Premium subscription active"
-                                  : "Free tier - ads enabled",
+                                  ? languageProvider
+                                            .localizedStrings['Premium subscription active'] ??
+                                        "Premium subscription active"
+                                  : languageProvider
+                                            .localizedStrings['Free tier - ads enabled'] ??
+                                        "Free tier - ads enabled",
                               style: GoogleFonts.poppins(color: Colors.grey),
                             ),
                           ],
@@ -331,7 +364,13 @@ class _SettingScreenState extends State<SettingScreen> {
                               ),
                             ),
                             child: Text(
-                              adFree ? "Manage" : "Upgrade",
+                              adFree
+                                  ? languageProvider
+                                            .localizedStrings['Manage'] ??
+                                        "Manage"
+                                  : languageProvider
+                                            .localizedStrings['Upgrade'] ??
+                                        "Upgrade",
                               style: GoogleFonts.poppins(
                                 color: colorWhite,
                                 fontWeight: FontWeight.bold,
@@ -364,7 +403,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Icon(Icons.language, color: Colors.teal),
                             SizedBox(width: 8),
                             Text(
-                              "Language",
+                              languageProvider.localizedStrings['Lanuage'] ??
+                                  "Language",
                               style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 color: colorWhite,
@@ -374,22 +414,55 @@ class _SettingScreenState extends State<SettingScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Column(
-                          children: ["English", "Urdu"].map((lang) {
-                            final selected = language == lang;
-                            return ListTile(
-                              title: Text(
-                                lang,
-                                style: GoogleFonts.poppins(
-                                  color: selected ? Colors.teal : Colors.grey,
-                                ),
-                              ),
-                              trailing: selected
-                                  ? const Icon(Icons.check, color: Colors.teal)
-                                  : null,
-                              onTap: () => setLanguage(lang),
-                            );
-                          }).toList(),
+                        ListTile(
+                          onTap: () {
+                            languageProvider.changeLanguage(
+                              'en',
+                            ); // Switch to English
+                          },
+                          trailing: Icon(
+                            languageProvider.currentLanguage == 'en'
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_off,
+                            color:
+                                Colors.teal, // use teal for active consistency
+                            size: 20,
+                          ),
+                          title: Text(
+                            languageProvider.localizedStrings['English'] ??
+                                "English",
+                            style: GoogleFonts.poppins(
+                              color: languageProvider.currentLanguage == 'en'
+                                  ? Colors
+                                        .teal // highlight active lang
+                                  : Colors.grey, // inactive lang
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            languageProvider.changeLanguage(
+                              'ur',
+                            ); // Switch to Urdu
+                          },
+                          trailing: Icon(
+                            languageProvider.currentLanguage == 'ur'
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_off,
+                            color: Colors.teal,
+                            size: 20,
+                          ),
+                          title: Text(
+                            languageProvider.localizedStrings['Urdu'] ?? "Urdu",
+                            style: GoogleFonts.poppins(
+                              color: languageProvider.currentLanguage == 'ur'
+                                  ? Colors
+                                        .teal // active
+                                  : Colors.grey, // inactive
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -410,28 +483,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => ProfileScreen(),
-                              ),
-                            );
-                          },
-                          leading: const Icon(Icons.person, color: Colors.grey),
-                          title: Text(
-                            "My Profile",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        ListTile(
                           leading: const Icon(Icons.delete, color: Colors.grey),
                           title: Text(
-                            "Clear Cache",
+                            languageProvider.localizedStrings['Clear Cache'] ??
+                                "Clear Cache",
                             style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           onTap: handleClearCache,
@@ -446,7 +501,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             color: Colors.grey,
                           ),
                           title: Text(
-                            "Privacy Policy",
+                            languageProvider
+                                    .localizedStrings['Privacy Policy'] ??
+                                "Privacy Policy",
                             style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
@@ -460,7 +517,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             color: Colors.grey,
                           ),
                           title: Text(
-                            "Terms of Service",
+                            languageProvider
+                                    .localizedStrings['Terms of Service'] ??
+                                "Terms of Service",
                             style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
@@ -468,32 +527,16 @@ class _SettingScreenState extends State<SettingScreen> {
                             color: Colors.grey,
                           ),
                         ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => EditProfileScreen(),
-                              ),
-                            );
-                          },
-                          leading: const Icon(Icons.edit, color: Colors.grey),
-                          title: Text(
-                            "Edit Profile",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
-                        ),
+
                         ListTile(
                           leading: const Icon(
                             Icons.support,
                             color: Colors.grey,
                           ),
                           title: Text(
-                            "Contact Support",
+                            languageProvider
+                                    .localizedStrings['Contact Support'] ??
+                                "Contact Support",
                             style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           trailing: const Icon(
@@ -504,7 +547,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         ListTile(
                           leading: const Icon(Icons.logout, color: Colors.grey),
                           title: Text(
-                            "Log Out",
+                            languageProvider.localizedStrings['Log Out'] ??
+                                "Log Out",
                             style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                           onTap: handleLogout,
