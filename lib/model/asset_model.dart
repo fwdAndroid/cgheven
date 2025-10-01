@@ -1,23 +1,3 @@
-class Asset {
-  final int id;
-  final String title;
-  final String thumbnail;
-  final String category;
-  final String? downloads;
-  final String? duration;
-  final bool isNew;
-
-  Asset({
-    required this.id,
-    required this.title,
-    required this.thumbnail,
-    required this.category,
-    this.downloads,
-    this.duration,
-    this.isNew = false,
-  });
-}
-
 class NewsItem {
   final int id;
   final String title;

@@ -16,23 +16,23 @@ class _ProfileScreenState extends State<ProfileScreen>
   late TabController _tabController;
 
   // Example favourites
-  final List<Asset> allAssets = [
-    Asset(
-      id: 11,
-      title: "Sci-Fi Explosion",
-      thumbnail:
-          "https://images.pexels.com/photos/7974/fire-orange-emergency-burning.jpg",
-      category: "VFX",
-      isNew: true,
-    ),
-    Asset(
-      id: 12,
-      title: "Lowpoly Car",
-      thumbnail:
-          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg",
-      category: "Lowpoly",
-    ),
-  ];
+  // final List<Asset> allAssets = [
+  //   Asset(
+  //     id: 11,
+  //     title: "Sci-Fi Explosion",
+  //     thumbnail:
+  //         "https://images.pexels.com/photos/7974/fire-orange-emergency-burning.jpg",
+  //     category: "VFX",
+  //     isNew: true,
+  //   ),
+  //   Asset(
+  //     id: 12,
+  //     title: "Lowpoly Car",
+  //     thumbnail:
+  //         "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg",
+  //     category: "Lowpoly",
+  //   ),
+  // ];
 
   final List<String> categories = ["VFX", "Lowpoly", "3D Models"];
 
@@ -119,29 +119,30 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   /// Favourite Tab
   Widget _buildFavouriteTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: GridView.builder(
-        itemCount: allAssets.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) {
-          return AssetCard(
-            asset: allAssets[index],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (builder) => AssetDetailScreen()),
-              );
-            },
-          );
-        },
-      ),
-    );
+    return Text("data");
+    // return Padding(
+    //   padding: const EdgeInsets.all(16.0),
+    //   child: GridView.builder(
+    //     //itemCount: allAssets.length,
+    //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //       crossAxisCount: 2,
+    //       crossAxisSpacing: 16,
+    //       mainAxisSpacing: 16,
+    //       childAspectRatio: 0.8,
+    //     ),
+    //     itemBuilder: (context, index) {
+    //       return AssetCard(
+    //         asset: allAssets[index],
+    //         onTap: () {
+    //           Navigator.push(
+    //             context,
+    //             MaterialPageRoute(builder: (builder) => AssetDetailScreen()),
+    //           );
+    //         },
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   /// Downloads Tab

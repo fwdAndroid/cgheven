@@ -1,26 +1,41 @@
-import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cgheven/model/assets_model.dart';
+import 'package:cgheven/screens/utils/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/screens/utils/apptheme.dart';
 
-class AssetCard extends StatelessWidget {
+class AssetCard extends StatefulWidget {
   final Asset asset;
   final VoidCallback? onTap;
-  final bool showBadge;
 
-  const AssetCard({
-    super.key,
-    required this.asset,
-    this.onTap,
-    this.showBadge = true,
-  });
+  const AssetCard({super.key, required this.asset, this.onTap});
+
+  @override
+  State<AssetCard> createState() => _AssetCardState();
+}
+
+class _AssetCardState extends State<AssetCard> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.asset.isFavorite;
+  }
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+      widget.asset.isFavorite = isFavorite;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final asset = widget.asset;
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Card(
         color: AppTheme.darkBackground.withOpacity(0.6),
         shape: RoundedRectangleBorder(
@@ -32,7 +47,6 @@ class AssetCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image with badge overlays
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
@@ -41,23 +55,19 @@ class AssetCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // Background Image
+                    // Thumbnail
                     CachedNetworkImage(
                       imageUrl: asset.thumbnail,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: const Color(0xFF374151),
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF14B8A6),
-                          ),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF14B8A6),
                         ),
                       ),
-                      errorWidget: (context, url, error) => Container(
-                        color: const Color(0xFF374151),
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error, color: Colors.red),
                     ),
+
                     // Gradient Overlay
                     Positioned.fill(
                       child: Container(
@@ -70,8 +80,9 @@ class AssetCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // NEW badge (top-left)
-                    if (showBadge)
+
+                    // NEW badge
+                    if (asset.isNew)
                       Positioned(
                         top: 8,
                         left: 8,
@@ -94,26 +105,44 @@ class AssetCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                    // Category pill (top-right)
+
+                    // Category + Favorite Row (top-right)
                     Positioned(
                       top: 8,
                       right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          asset.category,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 10,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              asset.category,
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 6),
+                          GestureDetector(
+                            onTap: toggleFavorite,
+                            child: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite
+                                  ? Colors.redAccent
+                                  : Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -121,7 +150,7 @@ class AssetCard extends StatelessWidget {
               ),
             ),
 
-            // Title and availability
+            // Title + Resolution Info
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
