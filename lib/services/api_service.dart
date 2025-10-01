@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cgheven/model/assets_model.dart';
+import 'package:cgheven/model/category.dart';
 import 'package:http/http.dart' as http;
 
 class AssetService {
@@ -23,6 +24,21 @@ class AssetService {
       return assetsJson.map((e) => Asset.fromJson(e)).toList();
     } else {
       throw Exception("Failed to fetch assets: ${response.body}");
+    }
+  }
+
+  static Future<List<Category>> fetchCategories() async {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {"Authorization": token, "Accept": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final List categoriesJson = jsonData["data"];
+      return categoriesJson.map((e) => Category.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to fetch categories: ${response.body}");
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/provider/category_provider.dart';
 import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
@@ -17,14 +18,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String activeAssetSection = 'New\n Assets'; // default active tab
+  String? activeCategory; // ✅ add this line
 
   @override
   void initState() {
     super.initState();
     // Fetch assets when HomeScreen is created
-    Future.microtask(
-      () => Provider.of<AssetProvider>(context, listen: false).fetchAssets(),
-    );
+    Future.microtask(() {
+      Provider.of<AssetProvider>(context, listen: false).fetchAssets();
+      Provider.of<CategoryProvider>(
+        context,
+        listen: false,
+      ).fetchCategories(); // ✅ fetch categories
+    });
   }
 
   @override
@@ -228,6 +234,180 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: assetProvider.assets.length,
                     itemBuilder: (context, index) {
                       final asset = assetProvider.assets[index];
+                      return AssetCard(
+                        asset: asset,
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         AssetDetailScreen(asset: asset),
+                          //   ),
+                          // );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+
+              // Category Filter Chips
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Consumer<CategoryProvider>(
+                  builder: (context, categoryProvider, child) {
+                    if (categoryProvider.isLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(color: Colors.cyan),
+                      );
+                    }
+
+                    if (categoryProvider.error != null) {
+                      return Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          "Error: ${categoryProvider.error}",
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+
+                    if (categoryProvider.categories.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          "No categories found",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+
+                        child: Wrap(
+                          alignment:
+                              WrapAlignment.start, // ✅ chips start from left
+
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: categoryProvider.categories.map((category) {
+                            final isActive = activeCategory == category.name;
+
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  activeCategory = category.name;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: isActive
+                                      ? AppTheme.fireGradient
+                                      : null,
+                                  color: isActive
+                                      ? null
+                                      : const Color(
+                                          0xFF374151,
+                                        ).withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(.4),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Text(
+                                  category.name,
+                                  style: GoogleFonts.poppins(
+                                    color: isActive
+                                        ? Colors.white
+                                        : const Color(0xFF9CA3AF),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              /// 🔹 Assets Grid
+              Consumer<AssetProvider>(
+                builder: (context, assetProvider, child) {
+                  if (assetProvider.isLoading) {
+                    return const Padding(
+                      padding: EdgeInsets.all(40),
+                      child: CircularProgressIndicator(color: Colors.cyan),
+                    );
+                  }
+
+                  if (assetProvider.error != null) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        "Error: ${assetProvider.error}",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  if (assetProvider.assets.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        "No assets found",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    );
+                  }
+
+                  // ✅ Filter assets according to selected category
+                  final filteredAssets = activeCategory == null
+                      ? assetProvider.assets
+                      : assetProvider.assets
+                            .where((asset) => asset.category == activeCategory)
+                            .toList();
+
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  const crossAxisCount = 2;
+                  const spacing = 16.0;
+                  final totalSpacing = spacing * (crossAxisCount + 1);
+                  final cardWidth =
+                      (screenWidth - totalSpacing) / crossAxisCount;
+                  final cardHeight = cardWidth * 0.9;
+                  final aspectRatio = cardWidth / cardHeight;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: spacing,
+                      mainAxisSpacing: spacing,
+                      childAspectRatio: aspectRatio,
+                    ),
+                    itemCount: filteredAssets.length,
+                    itemBuilder: (context, index) {
+                      final asset = filteredAssets[index];
                       return AssetCard(
                         asset: asset,
                         onTap: () {

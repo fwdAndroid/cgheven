@@ -1,5 +1,6 @@
 import 'package:cgheven/firebase_options.dart';
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/provider/category_provider.dart';
 import 'package:cgheven/provider/language_provider.dart' show LanguageProvider;
 import 'package:cgheven/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,7 @@ void main() async {
         //Language
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => AssetProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ],
 
       child: const MyApp(),
