@@ -1,4 +1,5 @@
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/provider/sub_categories_provider.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/screens/utils/apptheme.dart';
@@ -17,18 +18,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String activeAssetSection = 'New\n Assets';
   String? activeCategory;
+  String? activeSubCategory; // 👈 Add this line
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       Provider.of<AssetProvider>(context, listen: false).fetchAssets();
+      Provider.of<SubCategoryProvider>(
+        context,
+        listen: false,
+      ).fetchSubCategories();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -73,27 +80,37 @@ class _HomeScreenState extends State<HomeScreen> {
               /// 🔹 Assets Grid
               Consumer<AssetProvider>(
                 builder: (context, assetProvider, child) {
+                  final screenHeight = MediaQuery.of(context).size.height;
+
                   if (assetProvider.isLoading) {
-                    return const Padding(
-                      padding: EdgeInsets.all(40),
-                      child: CircularProgressIndicator(color: Colors.cyan),
-                    );
-                  }
-                  if (assetProvider.error != null) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        "Error: ${assetProvider.error}",
-                        style: const TextStyle(color: Colors.red),
+                    return SizedBox(
+                      height: screenHeight * 0.7, // fills most of screen
+                      child: const Center(
+                        child: CircularProgressIndicator(color: Colors.cyan),
                       ),
                     );
                   }
+
+                  if (assetProvider.error != null) {
+                    return SizedBox(
+                      height: screenHeight * 0.6,
+                      child: Center(
+                        child: Text(
+                          "Error: ${assetProvider.error}",
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    );
+                  }
+
                   if (assetProvider.assets.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Text(
-                        "No assets found",
-                        style: TextStyle(color: Colors.white70),
+                    return SizedBox(
+                      height: screenHeight * 0.6,
+                      child: const Center(
+                        child: Text(
+                          "No assets found",
+                          style: TextStyle(color: Colors.white70),
+                        ),
                       ),
                     );
                   }
@@ -120,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return Column(
                     children: [
-                      // Grid
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -140,11 +156,136 @@ class _HomeScreenState extends State<HomeScreen> {
                           return AssetCard(asset: asset, onTap: () {});
                         },
                       ),
-
                       const SizedBox(height: 24),
+                      if (activeCategory?.toLowerCase() == 'vfx') ...[
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Subcategories",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
 
-                      const SizedBox(height: 40),
+                        const SizedBox(height: 20),
+                      ],
                     ],
+                  );
+                },
+              ),
+
+              Consumer<SubCategoryProvider>(
+                builder: (context, subCatProvider, child) {
+                  if (subCatProvider.isLoading)
+                    return const Center(child: CircularProgressIndicator());
+                  if (subCatProvider.subCategories.isEmpty)
+                    return const SizedBox(); // nothing to show
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: subCatProvider.subCategories.map((subCat) {
+                        final isActive = activeSubCategory == subCat;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              activeSubCategory = isActive ? null : subCat;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: isActive ? AppTheme.fireGradient : null,
+                              color: isActive
+                                  ? null
+                                  : const Color(0xFF374151).withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: const Color(0xFF00bcd4).withOpacity(.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              subCat,
+                              style: GoogleFonts.poppins(
+                                color: isActive
+                                    ? Colors.white
+                                    : const Color(0xFF9CA3AF),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              Consumer<AssetProvider>(
+                builder: (context, assetProvider, child) {
+                  // Only show assets that match the active category and subcategory
+                  final filteredAssets = assetProvider.assets
+                      .where(
+                        (asset) =>
+                            asset.category.toLowerCase() ==
+                                (activeCategory ?? '').toLowerCase() &&
+                            asset.subCategories.contains(activeSubCategory),
+                      )
+                      .toList();
+
+                  if (filteredAssets.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          "No assets found for this subcategory",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                    );
+                  }
+
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  const crossAxisCount = 2;
+                  const spacing = 16.0;
+                  final totalSpacing = spacing * (crossAxisCount + 1);
+                  final cardWidth =
+                      (screenWidth - totalSpacing) / crossAxisCount;
+                  final cardHeight = cardWidth * 0.9;
+                  final aspectRatio = cardWidth / cardHeight;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    itemCount: filteredAssets.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: spacing,
+                      mainAxisSpacing: spacing,
+                      childAspectRatio: aspectRatio,
+                    ),
+                    itemBuilder: (context, index) {
+                      final asset = filteredAssets[index];
+                      return AssetCard(asset: asset, onTap: () {});
+                    },
                   );
                 },
               ),

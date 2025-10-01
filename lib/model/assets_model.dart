@@ -5,8 +5,7 @@ class Asset {
   final String thumbnail;
   final DateTime publishedAt;
   bool isFavorite; // local state
-  final List<String> subCategories; // ✅ added subCategories
-
+  final List<String> subCategories; // ✅ Add this
   Asset({
     required this.id,
     required this.title,
@@ -34,9 +33,11 @@ class Asset {
       publishedAt: DateTime.parse(
         json['attributes'] ?? DateTime.now().toIso8601String(),
       ),
-      subCategories: (json['sub_categories'] != null)
-          ? List<String>.from(json['sub_categories'])
-          : [],
+      subCategories:
+          (json['sub_categories'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [], // ✅ safely parse list
     );
   }
 }

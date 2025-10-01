@@ -26,19 +26,4 @@ class AssetService {
       throw Exception("Failed to fetch assets: ${response.body}");
     }
   }
-
-  static Future<List<Category>> fetchCategories() async {
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {"Authorization": token, "Accept": "application/json"},
-    );
-
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      final List categoriesJson = jsonData["data"];
-      return categoriesJson.map((e) => Category.fromJson(e)).toList();
-    } else {
-      throw Exception("Failed to fetch categories: ${response.body}");
-    }
-  }
 }
