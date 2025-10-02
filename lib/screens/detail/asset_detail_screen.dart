@@ -1,11 +1,14 @@
+import 'package:cgheven/model/assets_model.dart';
 import 'package:cgheven/screens/utils/gradient_button.dart';
-import 'package:cgheven/widget/gradient_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
 
 class AssetDetailScreen extends StatefulWidget {
-  AssetDetailScreen({super.key});
+  final Asset asset;
+
+  AssetDetailScreen({super.key, required this.asset});
 
   @override
   State<AssetDetailScreen> createState() => _AssetDetailScreenState();
@@ -14,36 +17,42 @@ class AssetDetailScreen extends StatefulWidget {
 class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool isPlaying = false;
   bool isStarred = false;
-  final List<Map<String, String>> relatedAssets = [
-    {
-      'id': '1',
-      'title': 'Fire Explosion 02',
-      'thumbnail':
-          'https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'duration': '0:08',
-    },
-    {
-      'id': '2',
-      'title': 'Smoke Trail',
-      'thumbnail':
-          'https://images.pexels.com/photos/590016/pexels-photo-590016.jpg?auto=compress&cs=tinysrgb&w=400',
-      'duration': '0:12',
-    },
-    {
-      'id': '3',
-      'title': 'Lightning Strike',
-      'thumbnail':
-          'https://images.pexels.com/photos/1446076/pexels-photo-1446076.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'duration': '0:06',
-    },
-    {
-      'id': '4',
-      'title': 'Magic Sparkles',
-      'thumbnail':
-          'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'duration': '0:15',
-    },
-  ];
+
+  late VideoPlayerController _controller;
+  int currentVideoIndex = 0;
+  late List<VideoPlayerController> _controllers;
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize video controllers for all files
+    _controllers = widget.asset.files.map((url) {
+      final controller = VideoPlayerController.network(url)
+        ..initialize().then((_) {
+          setState(() {}); // refresh UI once initialized
+        });
+      return controller;
+    }).toList();
+
+    if (_controllers.isNotEmpty) {
+      _controllers[0].play();
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _playPauseCurrentVideo() {
+    final controller = _controllers[currentVideoIndex];
+    setState(() {
+      controller.value.isPlaying ? controller.pause() : controller.play();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,100 +158,122 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Video Player
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF1F2937).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: const Color(0xFF00bcd4).withOpacity(.4),
-                            width: 1,
+                      // Video Carousel
+                      if (_controllers.isNotEmpty)
+                        Container(
+                          margin: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF1F2937).withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: const Color(0xFF00bcd4).withOpacity(.4),
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(24),
-                                child: Image.network(
-                                  'https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200',
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.3),
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                              ),
-                              // Alpha Channel Badge
-                              Positioned(
-                                top: 16,
-                                left: 16,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF14B8A6),
-                                        Color(0xFFF97316),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Text(
-                                    '✓ Includes Alpha',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Play Button
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Stack(
+                              children: [
+                                PageView.builder(
+                                  itemCount: _controllers.length,
+                                  onPageChanged: (index) {
                                     setState(() {
-                                      isPlaying = !isPlaying;
+                                      _controllers[currentVideoIndex].pause();
+                                      currentVideoIndex = index;
+                                      _controllers[currentVideoIndex].play();
                                     });
                                   },
-                                  child: Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.3),
-                                        width: 1,
+                                  itemBuilder: (context, index) {
+                                    final controller = _controllers[index];
+                                    if (!controller.value.isInitialized) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.cyan,
+                                        ),
+                                      );
+                                    }
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: VideoPlayer(controller),
+                                    );
+                                  },
+                                ),
+                                // Overlay Play/Pause button
+                                Center(
+                                  child: GestureDetector(
+                                    onTap: _playPauseCurrentVideo,
+                                    child: Container(
+                                      width: 80,
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.3),
+                                          width: 1,
+                                        ),
                                       ),
-                                    ),
-                                    child: Icon(
-                                      isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      color: Colors.white,
-                                      size: 40,
+                                      child: Icon(
+                                        _controllers[currentVideoIndex]
+                                                .value
+                                                .isPlaying
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                // Dots Indicator
+                                Positioned(
+                                  bottom: 8,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      _controllers.length,
+                                      (index) => Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        width: currentVideoIndex == index
+                                            ? 12
+                                            : 8,
+                                        height: currentVideoIndex == index
+                                            ? 12
+                                            : 8,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentVideoIndex == index
+                                              ? Colors.cyan
+                                              : Colors.white54,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else
+                        Container(
+                          height: 200,
+                          child: Center(
+                            child: Text(
+                              'No videos available',
+                              style: TextStyle(color: Colors.white70),
+                            ),
                           ),
                         ),
-                      ),
+
                       SizedBox(height: 32),
 
                       // Asset Info
                       Text(
-                        'Gas Explosion 01',
+                        widget.asset.title,
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -260,7 +291,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        'Professional high-quality gas explosion VFX element perfect for action sequences and cinematic productions. Shot at 120fps with alpha channel included.',
+                        widget.asset.description,
                         style: GoogleFonts.inter(
                           color: Color(0xFF9CA3AF),
                           fontSize: 16,
@@ -859,172 +890,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          "Related Assets",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 160,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: relatedAssets.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(width: 12),
-                          itemBuilder: (_, idx) {
-                            final asset = relatedAssets[idx];
-                            return SizedBox(
-                              width: 180,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            14,
-                                          ),
-                                          border: Border.all(
-                                            color: const Color(
-                                              0xFF00bcd4,
-                                            ).withOpacity(.4),
-                                            width: 1,
-                                          ),
-                                          color: Colors.white10,
-                                        ),
-                                        child: Stack(
-                                          children: [
-                                            Positioned.fill(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                child: Image.network(
-                                                  asset['thumbnail']!,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned.fill(
-                                              child: Container(
-                                                color: Colors.black.withOpacity(
-                                                  0.35,
-                                                ),
-                                              ),
-                                            ),
-                                            Center(
-                                              child: Container(
-                                                width: 44,
-                                                height: 44,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white24,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        999,
-                                                      ),
-                                                ),
-                                                child: const Icon(
-                                                  Icons.play_arrow,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 8,
-                                              right: 8,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.6),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  asset['duration']!,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      asset['title']!,
-                                      style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
 
-                      // Builder(
-                      //   builder: (context) {
-                      //     final screenWidth = MediaQuery.of(context).size.width;
-                      //     const crossAxisCount = 2;
-                      //     const spacing = 16.0;
-
-                      //     final totalSpacing = spacing * (crossAxisCount + 1);
-                      //     final cardWidth =
-                      //         (screenWidth - totalSpacing) / crossAxisCount;
-                      //     final cardHeight =
-                      //         cardWidth * 1.25; // you can tweak this
-                      //     final aspectRatio = cardWidth / cardHeight;
-
-                      //     return GridView.builder(
-                      //       shrinkWrap: true,
-                      //       physics: const NeverScrollableScrollPhysics(),
-                      //       padding: const EdgeInsets.symmetric(
-                      //         horizontal: 12,
-                      //         vertical: 8,
-                      //       ),
-                      //       gridDelegate:
-                      //           SliverGridDelegateWithFixedCrossAxisCount(
-                      //             crossAxisCount: crossAxisCount,
-                      //             crossAxisSpacing: spacing,
-                      //             mainAxisSpacing: spacing,
-                      //             childAspectRatio: aspectRatio,
-                      //           ),
-                      //       itemBuilder: (context, index) {
-                      //         return AssetCard(
-                      //           asset: asset,
-                      //           onTap: () {
-                      //             Navigator.push(
-                      //               context,
-                      //               MaterialPageRoute(
-                      //                 builder: (context) => AssetDetailScreen(),
-                      //               ),
-                      //             );
-                      //           },
-                      //         );
-                      //       },
-                      //     );
-                      //   },
-                      // ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(

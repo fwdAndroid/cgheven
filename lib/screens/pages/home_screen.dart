@@ -1,5 +1,6 @@
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/sub_categories_provider.dart';
+import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/screens/pages/download_screen.dart';
 import 'package:cgheven/screens/search_screen/search_screen.dart';
 import 'package:cgheven/screens/utils/apptheme.dart';
@@ -153,35 +154,45 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: filteredAssets.length,
                         itemBuilder: (context, index) {
                           final asset = filteredAssets[index];
-                          return AssetCard(asset: asset, onTap: () {});
+                          return AssetCard(
+                            asset: asset,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (builder) =>
+                                      AssetDetailScreen(asset: asset),
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                       const SizedBox(height: 24),
-                      if (activeCategory?.toLowerCase() == 'vfx') ...[
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Subcategories",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        const SizedBox(height: 20),
-                      ],
                     ],
                   );
                 },
               ),
+              if (activeCategory?.toLowerCase() == 'vfx') ...[
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Subcategories",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
 
+                const SizedBox(height: 20),
+              ],
               Consumer<SubCategoryProvider>(
                 builder: (context, subCatProvider, child) {
                   if (subCatProvider.isLoading)
