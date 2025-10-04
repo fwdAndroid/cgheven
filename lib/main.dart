@@ -14,18 +14,7 @@ void main() async {
     DeviceOrientation.portraitDown, // optional (allows upside-down portrait)
   ]);
 
-  runApp(
-    MultiProvider(
-      providers: [
-        //Language
-        // ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        // ChangeNotifierProvider(create: (_) => AssetProvider()),
-        // ChangeNotifierProvider(create: (_) => SubCategoryProvider()),
-      ],
-
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -694,7 +694,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   // Guest Mode
                   SizedBox(
-                    width: MediaQuery.of(context).size.width,
+                    width: double.infinity,
                     child: GradientButton(
                       onPressed: () {
                         Navigator.push(
