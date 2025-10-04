@@ -1,4 +1,5 @@
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             return AssetCard(
                               asset: asset,
                               onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) =>
+                                        AssetDetailScreen(asset: asset),
+                                  ),
+                                );
                                 // You can navigate to detail screen later
                               },
                             );
