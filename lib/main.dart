@@ -1,9 +1,4 @@
 import 'package:cgheven/firebase_options.dart';
-import 'package:cgheven/model/assets_model.dart';
-import 'package:cgheven/provider/api_provider.dart';
-import 'package:cgheven/provider/language_provider.dart' show LanguageProvider;
-import 'package:cgheven/provider/sub_categories_provider.dart';
-import 'package:cgheven/screens/detail/asset_detail_screen.dart';
 import 'package:cgheven/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +18,9 @@ void main() async {
     MultiProvider(
       providers: [
         //Language
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => AssetProvider()),
-        ChangeNotifierProvider(create: (_) => SubCategoryProvider()),
+        // ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        // ChangeNotifierProvider(create: (_) => AssetProvider()),
+        // ChangeNotifierProvider(create: (_) => SubCategoryProvider()),
       ],
 
       child: const MyApp(),
