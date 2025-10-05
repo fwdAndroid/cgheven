@@ -134,6 +134,7 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
+                        fixedSize: Size(100, 75),
                         side: const BorderSide(color: Color(0xFF374151)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

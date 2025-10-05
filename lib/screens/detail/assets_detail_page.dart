@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
 import 'package:cgheven/widget/download_selector_widget.dart';
 import 'package:flutter/material.dart';
@@ -381,13 +382,78 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   horizontal: 12,
                 ),
                 child: DownloadSelector(
-                  titleText: "MP4",
+                  titleText: "ProRes 444",
                   options: [
-                    Mp4Option(quality: "1K", size: "125 MB"),
-                    Mp4Option(quality: "2K", size: "280 MB", isRewarded: true),
-                    Mp4Option(quality: "4K", size: "650 MB", isRewarded: true),
+                    Mp4Option(quality: "1K", size: "890 MB", isRewarded: true),
+                    Mp4Option(quality: "2K", size: "1.8 GB", isRewarded: true),
+                    Mp4Option(quality: "4K", size: "4.2 GB", isRewarded: true),
                   ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 12,
+                ),
+                child: Text(
+                  "Related Assets",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Builder(
+                builder: (context) {
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  const crossAxisCount = 2;
+                  const spacing = 16.0;
+                  final totalSpacing = spacing * (crossAxisCount + 1);
+                  final cardWidth =
+                      (screenWidth - totalSpacing) / crossAxisCount;
+                  final cardHeight = cardWidth * 0.9;
+                  final aspectRatio = cardWidth / cardHeight;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(12),
+                    itemCount: 2,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: spacing,
+                      mainAxisSpacing: spacing,
+                      childAspectRatio: aspectRatio,
+                    ),
+                    itemBuilder: (context, index) {
+                      return AssetCard(
+                        asset: AssetModel(
+                          id: 1,
+                          title: "Fire Boom",
+                          description: "",
+                          thumbnail:
+                              "https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200",
+                          publishedAt: DateTime.now(),
+                          files: [],
+                          previews: "",
+                          isPatreonLocked: false,
+                          tags: [],
+                        ),
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (builder) =>
+                          //         AssetDetailScreen(asset: asset),
+                          //   ),
+                          // );
+                          // You can navigate to detail screen later
+                        },
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 60),
             ],
