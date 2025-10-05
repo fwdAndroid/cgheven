@@ -1,9 +1,10 @@
 import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/widget/gradient_button.dart';
+import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/build_stats_widget.dart';
+import 'package:cgheven/widget/download_selector_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:video_player/video_player.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final AssetModel asset;
@@ -17,42 +18,6 @@ class AssetDetailScreen extends StatefulWidget {
 class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool isPlaying = false;
   bool isStarred = false;
-
-  late VideoPlayerController _controller;
-  int currentVideoIndex = 0;
-  late List<VideoPlayerController> _controllers;
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialize video controllers for all files
-    _controllers = widget.asset.files.map((url) {
-      final controller = VideoPlayerController.network(url)
-        ..initialize().then((_) {
-          setState(() {}); // refresh UI once initialized
-        });
-      return controller;
-    }).toList();
-
-    if (_controllers.isNotEmpty) {
-      _controllers[0].play();
-    }
-  }
-
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  void _playPauseCurrentVideo() {
-    final controller = _controllers[currentVideoIndex];
-    setState(() {
-      controller.value.isPlaying ? controller.pause() : controller.play();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +35,13 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
             ],
           ),
         ),
-        child: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+              const SizedBox(height: 60),
               Padding(
-                padding: EdgeInsets.all(24),
+                padding: EdgeInsets.all(12),
                 child: Row(
                   children: [
                     GestureDetector(
@@ -150,742 +116,113 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 12, top: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppTheme.darkBackground.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFF00bcd4),
+                      width: 0.3,
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: Alignment
+                        .center, // ✅ ensures play button is perfectly centered
 
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Video Player
-                      // Video Carousel
-                      if (_controllers.isNotEmpty)
-                        Container(
-                          margin: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF1F2937).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: const Color(0xFF00bcd4).withOpacity(.4),
-                              width: 1,
-                            ),
-                          ),
-                          child: AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: Stack(
-                              children: [
-                                PageView.builder(
-                                  itemCount: _controllers.length,
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      _controllers[currentVideoIndex].pause();
-                                      currentVideoIndex = index;
-                                      _controllers[currentVideoIndex].play();
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    final controller = _controllers[index];
-                                    if (!controller.value.isInitialized) {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.cyan,
-                                        ),
-                                      );
-                                    }
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: VideoPlayer(controller),
-                                    );
-                                  },
-                                ),
-                                // Overlay Play/Pause button
-                                Center(
-                                  child: GestureDetector(
-                                    onTap: _playPauseCurrentVideo,
-                                    child: Container(
-                                      width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.3),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        _controllers[currentVideoIndex]
-                                                .value
-                                                .isPlaying
-                                            ? Icons.pause
-                                            : Icons.play_arrow,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // Dots Indicator
-                                Positioned(
-                                  bottom: 8,
-                                  left: 0,
-                                  right: 0,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(
-                                      _controllers.length,
-                                      (index) => Container(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 4,
-                                        ),
-                                        width: currentVideoIndex == index
-                                            ? 12
-                                            : 8,
-                                        height: currentVideoIndex == index
-                                            ? 12
-                                            : 8,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: currentVideoIndex == index
-                                              ? Colors.cyan
-                                              : Colors.white54,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      else
-                        Container(
-                          height: 200,
-                          child: Center(
-                            child: Text(
-                              'No videos available',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ),
-                        ),
-
-                      SizedBox(height: 32),
-
-                      // Asset Info
-                      Text(
-                        widget.asset.title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          foreground: Paint()
-                            ..shader =
-                                LinearGradient(
-                                  colors: [
-                                    Color(0xFF14B8A6),
-                                    Color(0xFFF97316),
-                                  ],
-                                ).createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        widget.asset.description,
-                        style: GoogleFonts.inter(
-                          color: Color(0xFF9CA3AF),
-                          fontSize: 16,
-                          height: 1,
-                        ),
-                      ),
-                      SizedBox(height: 24),
-
-                      // Stats
-                      Row(
-                        children: [
-                          _buildStat(Icons.visibility, '12.4K views'),
-                          SizedBox(width: 24),
-                          _buildStat(Icons.download, '3.2K downloads'),
-                          SizedBox(width: 24),
-                          _buildStat(Icons.favorite, '847 likes'),
-                        ],
-                      ),
-                      SizedBox(height: 32),
-
-                      // Creator Info
-                      Container(
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF1F2937).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF00bcd4).withOpacity(.4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFF14B8A6),
-                                    Color(0xFFF97316),
-                                  ],
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                              padding: EdgeInsets.all(2),
-                              child: ClipOval(
-                                child: Image.network(
-                                  'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Created by Ammar Khan',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    'VFX Artist & Director',
-                                    style: GoogleFonts.poppins(
-                                      color: Color(0xFF9CA3AF),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                _buildSocialButton(
-                                  Icons.camera_alt,
-                                  Colors.pink,
-                                ),
-                                SizedBox(width: 8),
-                                _buildSocialButton(
-                                  Icons.play_circle,
-                                  Colors.red,
-                                ),
-                                SizedBox(width: 8),
-                                _buildSocialButton(
-                                  Icons.alternate_email,
-                                  Colors.blue,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Download Options
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          "Download Options",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                      AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            "https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200",
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF1F2937).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF00bcd4).withOpacity(.4),
-                            width: 1,
-                          ),
-                        ),
-                        child: // MP4 Section
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "MP4",
-                                style: GoogleFonts.poppins(
-                                  color: Color(0xFF14B8A6),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff0d2b33),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(
-                                        0xFF00bcd4,
-                                      ).withOpacity(.4),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "1 K",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "125 MB",
-                                          style: GoogleFonts.inter(
-                                            color: Color(0xff7b8f98),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Download",
-                                          style: GoogleFonts.inter(
-                                            color: Color(0xff41afa4),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(""),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff201f1d),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(
-                                        0xFF503b2b,
-                                      ).withOpacity(.4),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "2 K",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "280 MB",
-                                          style: GoogleFonts.inter(
-                                            color: Color(0xff7b8f98),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "* Rewarded",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.orangeAccent,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Download",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.orangeAccent,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff201f1d),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(
-                                        0xFF503b2b,
-                                      ).withOpacity(.4),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "4 K",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "650 MB",
-                                          style: GoogleFonts.inter(
-                                            color: Color(0xff7b8f98),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "* Rewarded",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.orangeAccent,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Download",
-                                          style: GoogleFonts.inter(
-                                            color: Colors.orangeAccent,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
+                      Positioned(
+                        top: 12,
+                        left: 12,
                         child: Container(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: Color(0xFF1F2937).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF00bcd4).withOpacity(.4),
-                              width: 1,
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF00E676), Color(0xFFFF7043)],
                             ),
                           ),
-                          child: // MP4 Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: const Text(
+                            '✓ Includes Alpha',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPlaying = !isPlaying;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white24,
+                              border: Border.all(color: Colors.white30),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Icon(
+                              isPlaying ? Icons.pause : Icons.play_arrow,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "PRORES 444",
-                                  style: GoogleFonts.poppins(
-                                    color: Color(0xFF14B8A6),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                              Expanded(
+                                child: Container(
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  child: FractionallySizedBox(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: 0.3,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Colors.teal, Colors.orange],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff201f1d),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(
-                                          0xFF503b2b,
-                                        ).withOpacity(.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "1 K",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "650 MB",
-                                            style: GoogleFonts.inter(
-                                              color: Color(0xff7b8f98),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "* Rewarded",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Download",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff201f1d),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(
-                                          0xFF503b2b,
-                                        ).withOpacity(.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "2 K",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "1.7 GB",
-                                            style: GoogleFonts.inter(
-                                              color: Color(0xff7b8f98),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "* Rewarded",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Download",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff201f1d),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(
-                                          0xFF503b2b,
-                                        ).withOpacity(.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "4 K",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "2 GB",
-                                            style: GoogleFonts.inter(
-                                              color: Color(0xff7b8f98),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "* Rewarded",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Download",
-                                            style: GoogleFonts.inter(
-                                              color: Colors.orangeAccent,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(width: 8),
+                              const Text(
+                                "0:03 / 0:08",
+                                style: TextStyle(color: Colors.white70),
                               ),
                             ],
-                          ),
-                        ),
-                      ),
-                      // Ad Banner
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF1F2937).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xFF00bcd4).withOpacity(.4),
-                              width: 1,
-                            ),
-                          ),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Advertisement",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Ad Banner Space",
-                                    style: GoogleFonts.inter(
-                                      color: Color(0xffCDD5E2),
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width,
-                                      60,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    backgroundColor: Color(0xff3C4556),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
                         ),
                       ),
@@ -893,35 +230,170 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 12, top: 8),
+                child: Text(
+                  widget.asset.title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..shader = LinearGradient(
+                        colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                      ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 12.0,
+                  right: 12,
+                  top: 8,
+                  bottom: 12,
+                ),
+                child: const Text(
+                  "Professional high-quality gas explosion VFX element perfect for action sequences, destruction scenes, and cinematic productions. Shot at 120fps for smooth slow-motion playback with alpha channel included for seamless compositing.",
+                  style: TextStyle(color: Colors.white70, height: 1.4),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 12.0,
+                  right: 12,
+                  top: 4,
+                  bottom: 12,
+                ),
+                child: Row(
+                  children: [
+                    buildStat(Icons.visibility, '12.4K views'),
+                    SizedBox(width: 24),
+                    buildStat(Icons.download, '3.2K downloads'),
+                    SizedBox(width: 24),
+                    buildStat(Icons.favorite, '847 likes'),
+                  ],
+                ),
+              ),
+
+              // Creator Info
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 12.0,
+                  right: 12,
+                  top: 8,
+                  bottom: 12,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF1F2937).withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFF00bcd4).withOpacity(.4),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(2),
+                        child: ClipOval(
+                          child: Image.network(
+                            'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Created by Ammar Khan',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'VFX Artist & Director',
+                              style: GoogleFonts.poppins(
+                                color: Color(0xFF9CA3AF),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          buildSocialButton(Icons.camera_alt, Colors.pink),
+                          SizedBox(width: 8),
+                          buildSocialButton(Icons.play_circle, Colors.red),
+                          SizedBox(width: 8),
+                          buildSocialButton(Icons.alternate_email, Colors.blue),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 12,
+                ),
+                child: Text(
+                  "Download Options",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 12,
+                ),
+                child: DownloadSelector(
+                  titleText: "MP4",
+                  options: [
+                    Mp4Option(quality: "1K", size: "125 MB"),
+                    Mp4Option(quality: "2K", size: "280 MB", isRewarded: true),
+                    Mp4Option(quality: "4K", size: "650 MB", isRewarded: true),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 12,
+                ),
+                child: DownloadSelector(
+                  titleText: "MP4",
+                  options: [
+                    Mp4Option(quality: "1K", size: "125 MB"),
+                    Mp4Option(quality: "2K", size: "280 MB", isRewarded: true),
+                    Mp4Option(quality: "4K", size: "650 MB", isRewarded: true),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 60),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildStat(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, color: Color(0xFF9CA3AF), size: 16),
-        SizedBox(width: 4),
-        Text(
-          text,
-          style: GoogleFonts.poppins(color: Color(0xFF9CA3AF), fontSize: 14),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialButton(IconData icon, Color color) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Color(0xFF374151).withOpacity(0.5),
-        shape: BoxShape.circle,
-        border: Border.all(color: Color(0xFF374151), width: 1),
-      ),
-      child: Icon(icon, color: Color(0xFF9CA3AF), size: 16),
     );
   }
 
