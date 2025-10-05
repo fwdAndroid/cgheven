@@ -3,10 +3,11 @@ import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
+import 'package:cgheven/widget/search_box_widget.dart';
+import 'package:cgheven/widget/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,10 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 _buildSearchAndDownload(),
                 _buildSections(),
+
+                /// 🔹 Consumer for assets and subcategories
                 Consumer<AssetProvider>(
                   builder: (context, provider, child) {
                     if (provider.isLoading && provider.assets.isEmpty) {
-                      return _buildShimmerGrid();
+                      return buildShimmerGrid();
                     }
 
                     if (provider.error != null) {
@@ -72,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
 
-                    // ✅ Get unique subcategories for category == VFX
+                    // ✅ Get unique subcategories for category == "VFX"
                     final Set<String> uniqueSubs = {};
                     for (final asset in provider.assets) {
                       if (asset.categorie.toLowerCase() == 'vfx') {
@@ -82,9 +85,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     }
 
+                    // ✅ Filter assets by selected subcategory
+                    final filteredAssets = selectedChip == null
+                        ? <AssetModel>[]
+                        : provider.assets.where((asset) {
+                            return asset.subcategories.any(
+                              (sub) => sub.name == selectedChip,
+                            );
+                          }).toList();
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // 🔹 Always show main grid
                         _buildGrid(provider.assets),
 
                         if (uniqueSubs.isNotEmpty) ...[
@@ -102,19 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ? null
                                           : sub; // toggle
                                     });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          isSelected
-                                              ? 'Unselected $sub'
-                                              : 'Selected $sub',
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                        duration: const Duration(
-                                          milliseconds: 800,
-                                        ),
-                                      ),
-                                    );
                                   },
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
@@ -152,6 +152,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           const SizedBox(height: 20),
+
+                          // 🔹 Show filtered grid only when a chip is selected
+                          if (selectedChip != null) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 4,
+                              ),
+                              child: Text(
+                                'Showing results for "$selectedChip"',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            _buildGrid(filteredAssets),
+                          ],
                         ],
                       ],
                     );
@@ -165,12 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// 🔹 Search bar + download icon
   Widget _buildSearchAndDownload() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
       child: Row(
         children: [
-          Expanded(child: _buildSearchBox(context)),
+          Expanded(child: buildSearchBox(context)),
           IconButton(
             icon: const Icon(
               Icons.download,
@@ -184,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// 🔹 Top category tabs (New, Trending, News)
   Widget _buildSections() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -243,37 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildShimmerGrid() {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 6,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1,
-        ),
-        itemBuilder: (context, index) => Shimmer.fromColors(
-          baseColor: Colors.white10,
-          highlightColor: Colors.white24,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white12,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFF00bcd4).withOpacity(.2),
-                width: 0.5,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
+  /// 🔹 Grid layout for displaying assets
   Widget _buildGrid(List<AssetModel> assets) {
     final screenWidth = MediaQuery.of(context).size.width;
     const crossAxisCount = 2;
@@ -308,35 +299,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildSearchBox(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.darkBackground.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF00bcd4).withOpacity(.4),
-          width: 1,
-        ),
-      ),
-      child: TextField(
-        style: GoogleFonts.poppins(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: 'Search effects, explosions, magic...',
-          hintStyle: GoogleFonts.poppins(
-            color: const Color(0xFF9CA3AF),
-            fontSize: 14,
-          ),
-          prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF)),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-      ),
     );
   }
 }
