@@ -19,12 +19,9 @@ class AssetProvider with ChangeNotifier {
     try {
       final result = await AssetApiService().fetchNewAssets();
 
-      // ✅ Filter: keep assets whose tags list contains "vfx"
+      // ✅ Filter: keep assets whose category name is "VFX"
       _assets = result
-          .where(
-            (asset) =>
-                asset.tags.any((tag) => tag.toLowerCase().contains('vfx')),
-          )
+          .where((asset) => asset.categorie.toLowerCase() == 'vfx')
           .toList();
 
       debugPrint('✅ Loaded ${_assets.length} VFX assets');

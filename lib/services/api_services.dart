@@ -3,7 +3,8 @@ import 'package:cgheven/model/asset_model.dart';
 import 'package:http/http.dart' as http;
 
 class AssetApiService {
-  static const String newAssetUrl = 'https://api.cgheven.com/api/assets/';
+  static const String newAssetUrl =
+      'https://api.cgheven.com/api/assets?populate=*';
   //    'https://api.cgheven.com/api/assets?sort=createdAt:desc';
 
   static const String token =

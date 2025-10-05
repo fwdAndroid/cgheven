@@ -105,7 +105,7 @@ class _AssetCardState extends State<AssetCard> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          asset.category.toString(),
+                          asset.categorie.toString(),
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 10,

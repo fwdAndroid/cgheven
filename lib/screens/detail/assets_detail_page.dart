@@ -429,6 +429,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                     itemBuilder: (context, index) {
                       return AssetCard(
                         asset: AssetModel(
+                          categorie: "VFX",
                           id: 1,
                           title: "Fire Boom",
                           description: "",
