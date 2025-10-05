@@ -128,4 +128,6 @@ class AppTheme {
       offset: const Offset(0, 4),
     ),
   ];
+
+  final colorWhite = Colors.white;
 }
