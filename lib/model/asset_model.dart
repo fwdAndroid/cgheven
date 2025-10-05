@@ -1,3 +1,5 @@
+import 'package:cgheven/model/sub_category_model.dart';
+
 class AssetModel {
   final int id;
   final String title;
@@ -10,6 +12,7 @@ class AssetModel {
   final String categorie;
   final String? slug;
   final List<String> tags;
+  final List<SubcategoryModel> subcategories; // ✅ Added
 
   AssetModel({
     required this.id,
@@ -23,13 +26,19 @@ class AssetModel {
     required this.tags,
     required this.categorie,
     this.slug,
+    required this.subcategories,
   });
 
   factory AssetModel.fromJson(Map<String, dynamic> json) {
     final categorie = json['categorie']; // ✅ Extract category first
-
+    final subcategories =
+        (json['subcategories'] as List?)
+            ?.map((s) => SubcategoryModel.fromJson(s))
+            .toList() ??
+        [];
     return AssetModel(
       id: json['id'] ?? 0,
+      subcategories: subcategories,
       title: json['Title'] ?? '',
       description:
           (json['Description'] != null && json['Description'].isNotEmpty)
