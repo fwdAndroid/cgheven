@@ -3,6 +3,7 @@ import 'package:cgheven/utils/app_theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +13,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  /// 🔗 Helper function to launch external URLs safely
+  Future<void> _launchURL(String url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        debugPrint('Could not launch $url');
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+    }
+  }
+
   late final List<Map<String, String>> stats;
   bool isFollowing = false;
   bool isInstagramClicked = false;
@@ -158,10 +171,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isInstagramClicked = !isInstagramClicked;
-                                    });
+                                  onPressed: () async {
+                                    setState(
+                                      () => isInstagramClicked =
+                                          !isInstagramClicked,
+                                    );
+                                    await _launchURL(
+                                      'https://www.instagram.com/ammarkhaanim',
+                                    );
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.instagram,
@@ -187,10 +204,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isYoutubeClicked = !isYoutubeClicked;
-                                    });
+                                  onPressed: () async {
+                                    setState(
+                                      () =>
+                                          isYoutubeClicked = !isYoutubeClicked,
+                                    );
+                                    await _launchURL(
+                                      'https://www.youtube.com/AmmarKhanim',
+                                    );
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.youtube,
@@ -217,10 +238,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isTiktokClicked = !isTiktokClicked;
-                                    });
+                                  onPressed: () async {
+                                    setState(
+                                      () => isTiktokClicked = !isTiktokClicked,
+                                    );
+                                    await _launchURL(
+                                      'https://www.tiktok.com/@ammarkhaanim',
+                                    );
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.tiktok,
@@ -247,10 +271,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isTwitterClicked = !isTwitterClicked;
-                                    });
+                                  onPressed: () async {
+                                    setState(
+                                      () =>
+                                          isTwitterClicked = !isTwitterClicked,
+                                    );
+                                    await _launchURL(
+                                      'https://x.com/ammarkhaanim',
+                                    );
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.twitter,
