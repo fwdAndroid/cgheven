@@ -1,6 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/api_provider.dart';
-import 'package:cgheven/provider/video_provider.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:video_player/video_player.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final AssetModel asset;
@@ -25,55 +23,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool isStarred = false;
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final asset = widget.asset;
-
-      // ✅ Filter MP4 files only
-      final mp4Files = asset.files
-          .where((file) => file.toLowerCase().endsWith('.mp4'))
-          .toList();
-
-      debugPrint("🎬 Total files from API: ${asset.files.length}");
-      debugPrint("🎞️ MP4 Files (${mp4Files.length} found):");
-      for (var file in mp4Files) {
-        debugPrint("➡️ $file");
-      }
-
-      if (mp4Files.isEmpty) {
-        debugPrint("⚠️ No MP4 videos found for ${asset.title}");
-      }
-
-      // ✅ Sort by resolution (lowest to highest)
-      mp4Files.sort((a, b) {
-        final getRes = (url) {
-          if (url.contains('1k')) return 1;
-          if (url.contains('2k')) return 2;
-          if (url.contains('4k')) return 3;
-          return 0;
-        };
-        return getRes(a).compareTo(getRes(b));
-      });
-
-      // ✅ Pick the first available / lowest-res video
-      final playableFiles = mp4Files
-          .take(2)
-          .toList(); // load 1K + 2K for safety
-
-      context.read<VideoProvider>().initializeVideos(playableFiles);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final videoProvider = context.watch<VideoProvider>();
-    final controllers = videoProvider.controllers;
-
-    final controller = controllers.first;
-    final isPlaying = controller.value.isPlaying;
-
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -189,7 +139,10 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                         aspectRatio: 16 / 9,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: VideoPlayer(controller),
+                          child: Image.network(
+                            "https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -220,7 +173,9 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            videoProvider.togglePlayPause(0);
+                            setState(() {
+                              isPlaying = !isPlaying;
+                            });
                           },
                           child: Container(
                             padding: const EdgeInsets.all(20),
@@ -246,29 +201,29 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: VideoProgressIndicator(
-                                  controller,
-                                  allowScrubbing: true,
-                                  colors: const VideoProgressColors(
-                                    playedColor: Colors.teal,
-                                    bufferedColor: Colors.white24,
-                                    backgroundColor: Colors.grey,
+                                child: Container(
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  child: FractionallySizedBox(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: 0.3,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Colors.teal, Colors.orange],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              ValueListenableBuilder(
-                                valueListenable: controller,
-                                builder: (_, VideoPlayerValue value, __) {
-                                  final pos = _formatDuration(value.position);
-                                  final dur = _formatDuration(value.duration);
-                                  return Text(
-                                    "$pos / $dur",
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                    ),
-                                  );
-                                },
+                              const Text(
+                                "0:03 / 0:08",
+                                style: TextStyle(color: Colors.white70),
                               ),
                             ],
                           ),
@@ -510,11 +465,6 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
         ),
       ),
     );
-  }
-
-  String _formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return "${twoDigits(d.inMinutes)}:${twoDigits(d.inSeconds.remainder(60))}";
   }
 
   void shareApp() {
