@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final AssetModel asset;
@@ -22,6 +23,20 @@ class AssetDetailScreen extends StatefulWidget {
 class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool isPlaying = false;
   bool isStarred = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _incrementAssetViewCount(widget.asset.id);
+  }
+
+  Future<void> _incrementAssetViewCount(dynamic assetId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'asset_views_${assetId.toString()}'; // ✅ convert safely
+    int currentCount = prefs.getInt(key) ?? 0;
+    await prefs.setInt(key, currentCount + 1);
+  }
 
   @override
   Widget build(BuildContext context) {
