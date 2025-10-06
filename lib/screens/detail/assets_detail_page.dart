@@ -1,5 +1,6 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
@@ -65,35 +66,41 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       ),
                     ),
                     Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isStarred = !isStarred;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isStarred
-                              ? Color(0xFFFBBF24).withOpacity(0.2)
-                              : Color(0xFF374151).withOpacity(0.5),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isStarred
-                                ? Color(0xFFFBBF24).withOpacity(0.3)
-                                : Color(0xFF374151),
-                            width: 1,
+                    Consumer<FavouriteProvider>(
+                      builder: (context, favProvider, _) {
+                        final isFavourite = favProvider.isFavourite(
+                          widget.asset,
+                        );
+                        return GestureDetector(
+                          onTap: () {
+                            favProvider.toggleFavourite(widget.asset);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: isFavourite
+                                  ? Color(0xFFFBBF24).withOpacity(0.2)
+                                  : Color(0xFF374151).withOpacity(0.5),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isFavourite
+                                    ? Color(0xFFFBBF24).withOpacity(0.3)
+                                    : Color(0xFF374151),
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              isFavourite ? Icons.star : Icons.star_border,
+                              color: isFavourite
+                                  ? Color(0xFFFBBF24)
+                                  : Color(0xFF9CA3AF),
+                              size: 20,
+                            ),
                           ),
-                        ),
-                        child: Icon(
-                          isStarred ? Icons.star : Icons.star_border,
-                          color: isStarred
-                              ? Color(0xFFFBBF24)
-                              : Color(0xFF9CA3AF),
-                          size: 20,
-                        ),
-                      ),
+                        );
+                      },
                     ),
+
                     SizedBox(width: 12),
                     GestureDetector(
                       onTap: () {
