@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/model/polls_model.dart';
 import 'package:http/http.dart' as http;
 
 class AssetApiService {
   static const String newAssetUrl =
       'https://api.cgheven.com/api/assets?populate=*';
+  static const String pollUrl = "https://api.cgheven.com/api/polls/";
   //    'https://api.cgheven.com/api/assets?sort=createdAt:desc';
 
   static const String token =
@@ -25,6 +27,22 @@ class AssetApiService {
       return data.map((e) => AssetModel.fromJson(e)).toList();
     } else {
       throw Exception('Failed to load assets');
+    }
+  }
+
+  //Polls
+  Future<List<PollModel>> fetchPolls() async {
+    final response = await http.get(
+      Uri.parse(pollUrl),
+      headers: {"Authorization": token, "Accept": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List data = jsonData['data'];
+      return data.map((e) => PollModel.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load polls');
     }
   }
 }
