@@ -1,10 +1,12 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
 import 'package:cgheven/widget/download_selector_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AssetDetailScreen extends StatefulWidget {
@@ -404,59 +406,59 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ),
                 ),
               ),
-              Builder(
-                builder: (context) {
-                  final screenWidth = MediaQuery.of(context).size.width;
-                  const crossAxisCount = 2;
-                  const spacing = 16.0;
-                  final totalSpacing = spacing * (crossAxisCount + 1);
-                  final cardWidth =
-                      (screenWidth - totalSpacing) / crossAxisCount;
-                  final cardHeight = cardWidth * 0.9;
-                  final aspectRatio = cardWidth / cardHeight;
+              Consumer<AssetProvider>(
+                builder: (context, provider, child) {
+                  final relatedAssets = provider.assets
+                      .where(
+                        (a) =>
+                            a.categorie == widget.asset.categorie &&
+                            a.id != widget.asset.id,
+                      )
+                      .toList();
 
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(12),
-                    itemCount: 2,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: spacing,
-                      mainAxisSpacing: spacing,
-                      childAspectRatio: aspectRatio,
+                  if (relatedAssets.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        "No related assets found.",
+                        style: TextStyle(color: Colors.white54),
+                      ),
+                    );
+                  }
+
+                  return SizedBox(
+                    height: 220, // Adjust height to fit your AssetCard
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      scrollDirection: Axis.horizontal, // ✅ horizontal scroll
+                      itemCount: relatedAssets.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 16),
+                      itemBuilder: (context, index) {
+                        final asset = relatedAssets[index];
+                        return SizedBox(
+                          width: 180, // ✅ Adjust width as needed
+                          child: AssetCard(
+                            asset: asset,
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AssetDetailScreen(asset: asset),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      return AssetCard(
-                        asset: AssetModel(
-                          subcategories: [],
-                          categorie: "VFX",
-                          id: 1,
-                          title: "Fire Boom",
-                          description: "",
-                          thumbnail:
-                              "https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200",
-                          publishedAt: DateTime.now(),
-                          files: [],
-                          previews: "",
-                          isPatreonLocked: false,
-                          tags: [],
-                        ),
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (builder) =>
-                          //         AssetDetailScreen(asset: asset),
-                          //   ),
-                          // );
-                          // You can navigate to detail screen later
-                        },
-                      );
-                    },
                   );
                 },
               ),
+
               const SizedBox(height: 60),
             ],
           ),
