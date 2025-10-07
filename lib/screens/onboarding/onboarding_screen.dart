@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cgheven/screens/auth/login_screen.dart';
 import 'package:cgheven/screens/main/main_dashboard.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -16,7 +18,8 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with SingleTickerProviderStateMixin {
   int currentScreen = 0;
   int currentSlide = 0;
   PageController pageController = PageController();
@@ -693,10 +696,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   SizedBox(height: 16),
 
                   // Guest Mode
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: GradientButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (builder) => MainDashboard(),
+                  //         ),
+                  //       );
+                  //     },
+                  //     gradient: AppTheme.fireGradient,
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       mainAxisSize: MainAxisSize.min,
+                  //       children: [
+                  //         Icon(Icons.person, color: Colors.white),
+                  //         SizedBox(width: 12),
+                  //         Text(
+                  //           'Continue as Guest',
+                  //           style: GoogleFonts.poppins(
+                  //             fontSize: 16,
+                  //             fontWeight: FontWeight.w600,
+                  //             color: Colors.white,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(
+                    height: 56,
                     width: double.infinity,
-                    child: GradientButton(
-                      onPressed: () {
+                    child: GestureDetector(
+                      onTapDown: (_) => setState(() => _pressed = true),
+                      onTapUp: (_) {
+                        Future.delayed(const Duration(milliseconds: 150), () {
+                          setState(() => _pressed = false);
+                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -704,22 +742,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         );
                       },
-                      gradient: AppTheme.fireGradient,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.person, color: Colors.white),
-                          SizedBox(width: 12),
-                          Text(
-                            'Continue as Guest',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                      onTapCancel: () => setState(() => _pressed = false),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.easeOut,
+                        decoration: BoxDecoration(
+                          gradient: AppTheme.fireGradient,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            if (_pressed)
+                              BoxShadow(
+                                color: AppTheme.fireGradient.colors.first
+                                    .withOpacity(0.6),
+                                blurRadius: 20,
+                                spreadRadius: 4,
+                              ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 28,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.person, color: Colors.white),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Continue as Guest',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -745,6 +803,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
+
+  bool _pressed = false;
 
   Widget _buildLoginButton({
     required VoidCallback onPressed,
