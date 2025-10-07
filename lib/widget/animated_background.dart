@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,56 +14,36 @@ class AnimatedBackground extends StatelessWidget {
       decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
       child: Stack(
         children: [
-          // Animated Background Elements
+          // Blurred Animated Background Circles
           Positioned(
             top: MediaQuery.of(context).size.height * 0.25,
             left: MediaQuery.of(context).size.width * 0.25,
-            child:
-                Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.fireGradient,
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                    )
-                    .animate(onPlay: (controller) => controller.repeat())
-                    .fadeIn(duration: 2000.ms)
-                    .fadeOut(duration: 2000.ms, delay: 2000.ms),
+            child: _blurredCircle(
+              gradient: AppTheme.fireGradient,
+              size: 120,
+              duration: 2000,
+              delay: 0,
+            ),
           ),
-
           Positioned(
             bottom: MediaQuery.of(context).size.height * 0.33,
             right: MediaQuery.of(context).size.width * 0.25,
-            child:
-                Container(
-                      width: 160,
-                      height: 160,
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.tealGradient,
-                        borderRadius: BorderRadius.circular(80),
-                      ),
-                    )
-                    .animate(onPlay: (controller) => controller.repeat())
-                    .fadeIn(duration: 2000.ms, delay: 1000.ms)
-                    .fadeOut(duration: 2000.ms, delay: 3000.ms),
+            child: _blurredCircle(
+              gradient: AppTheme.tealGradient,
+              size: 160,
+              duration: 2000,
+              delay: 1000,
+            ),
           ),
-
           Positioned(
             top: MediaQuery.of(context).size.height * 0.5,
             left: MediaQuery.of(context).size.width * 0.5,
-            child:
-                Container(
-                      width: 96,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.logoGradient,
-                        borderRadius: BorderRadius.circular(48),
-                      ),
-                    )
-                    .animate(onPlay: (controller) => controller.repeat())
-                    .fadeIn(duration: 2000.ms, delay: 2000.ms)
-                    .fadeOut(duration: 2000.ms, delay: 4000.ms),
+            child: _blurredCircle(
+              gradient: AppTheme.logoGradient,
+              size: 96,
+              duration: 2000,
+              delay: 2000,
+            ),
           ),
 
           // Floating Particles
@@ -92,10 +73,35 @@ class AnimatedBackground extends StatelessWidget {
             );
           }),
 
-          // Main Content
+          // Foreground Content
           child,
         ],
       ),
     );
+  }
+
+  /// Helper to create a blurred, fading, animated circle
+  Widget _blurredCircle({
+    required Gradient gradient,
+    required double size,
+    required int duration,
+    required int delay,
+  }) {
+    return ClipOval(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+            child: Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                gradient: gradient,
+                borderRadius: BorderRadius.circular(size / 2),
+              ),
+            ),
+          ),
+        )
+        .animate(onPlay: (controller) => controller.repeat())
+        .fadeIn(duration: duration.ms, delay: delay.ms)
+        .fadeOut(duration: duration.ms, delay: (delay + 2000).ms);
   }
 }
