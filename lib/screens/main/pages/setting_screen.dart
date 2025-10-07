@@ -1,4 +1,6 @@
 import 'package:cgheven/provider/language_provider.dart';
+import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/gradient_button.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -242,37 +244,18 @@ class _SettingScreenState extends State<SettingScreen> {
                             final selected = defaultQuality == q;
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                  gradient: selected
-                                      ? const LinearGradient(
-                                          colors: [
-                                            Color(0xFF2A7B9B),
-                                            Color(0xFF57C785),
-                                            Color(0xFFEDDD53),
-                                          ],
-                                          stops: [0.0, 0.5, 1.0],
-                                        )
-                                      : null,
-                                  color: selected ? null : Colors.grey.shade800,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    shadowColor: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  onPressed: () => setQuality(q),
-                                  child: Text(
-                                    q,
-                                    style: GoogleFonts.poppins(
-                                      color: selected
-                                          ? Colors.white
-                                          : Colors.grey,
-                                    ),
+                              child: GradientButton(
+                                gradient: AppTheme.fireGradient,
+                                onPressed: () => setQuality(q),
+                                child: Text(
+                                  q,
+                                  style: GoogleFonts.poppins(
+                                    color: selected
+                                        ? Colors.white
+                                        : Colors.grey,
+                                    fontWeight: selected
+                                        ? FontWeight.bold
+                                        : FontWeight.w600,
                                   ),
                                 ),
                               ),

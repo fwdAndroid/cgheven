@@ -1,9 +1,4 @@
-import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:cgheven/provider/favourite_provider.dart';
-import 'package:cgheven/widget/asset_card.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class FavouriteScreen extends StatelessWidget {
   const FavouriteScreen({super.key});
@@ -11,80 +6,68 @@ class FavouriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1C24),
-      appBar: AppBar(
-        title: Text(
-          'Favourites',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
+            begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0B1C24), // #0b1c24 at 0%
-              Color(0xFF1A0F0D), // #1a0f0d at 100%
-            ],
+            colors: [Color(0xFF0B1C24), Color(0xFF1A0F0D)],
           ),
         ),
-        child: Consumer<FavouriteProvider>(
-          builder: (context, favProvider, _) {
-            final favourites = favProvider.favourites;
-
-            if (favourites.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No favourites yet 💫',
-                  style: TextStyle(color: Colors.white54),
-                ),
-              );
-            }
-
-            return Builder(
-              builder: (context) {
-                final screenWidth = MediaQuery.of(context).size.width;
-                const crossAxisCount = 2;
-                const spacing = 16.0;
-                final totalSpacing = spacing * (crossAxisCount + 1);
-                final cardWidth =
-                    (screenWidth - totalSpacing - 24) /
-                    crossAxisCount; // subtract 24px for global padding
-                final cardHeight = cardWidth * 0.9;
-                final aspectRatio = cardWidth / cardHeight;
-                return GridView.builder(
-                  padding: const EdgeInsets.all(12),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: spacing,
-                    mainAxisSpacing: spacing,
-                    childAspectRatio: aspectRatio,
-                  ),
-                  itemCount: favourites.length,
-                  itemBuilder: (context, index) {
-                    final asset = favourites[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) =>
-                                AssetDetailScreen(asset: asset),
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.arrow_back, color: Color(0xFF9CA3AF)),
+                        SizedBox(width: 8),
+                        Text(
+                          'Back',
+                          style: TextStyle(
+                            color: Color(0xFF9CA3AF),
+                            fontSize: 16,
                           ),
-                        );
-                      },
-                      child: AssetCard(asset: asset),
-                    );
-                  },
-                );
-              },
-            );
-          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    'Discover',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      foreground: Paint()
+                        ..shader = LinearGradient(
+                          colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
+                        ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'Discovery Page',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
