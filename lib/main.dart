@@ -1,4 +1,5 @@
 import 'package:cgheven/firebase_options.dart';
+import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/provider/language_provider.dart';
@@ -25,7 +26,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
         ChangeNotifierProvider(create: (_) => PollProvider()),
+        ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
       ],
+
       child: const MyApp(),
     ),
   );

@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     final Map<String, int> viewCounts = {};
 
-    // Collect view counts from SharedPreferences
+    // Collect view counts
     for (String key in prefs.getKeys()) {
       if (key.startsWith('asset_views_')) {
         final assetId = key.replaceFirst('asset_views_', '');
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground, // ✅ consistent app background
+      backgroundColor: AppTheme.darkBackground,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -83,182 +84,291 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   _buildSections(),
 
-                  /// 🔹 Consumer for assets and subcategories
-                  Consumer<AssetProvider>(
-                    builder: (context, provider, child) {
-                      if (provider.isLoading && provider.assets.isEmpty) {
-                        return buildShimmerGrid();
-                      }
+                  /// 🔹 News Section via AnnouncementProvider
+                  if (activeAssetSection == 'News')
+                    Consumer<AnnouncementProvider>(
+                      builder: (context, provider, _) {
+                        if (provider.isLoading) {
+                          return const Padding(
+                            padding: EdgeInsets.all(32),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.tealAccent,
+                              ),
+                            ),
+                          );
+                        }
 
-                      if (provider.error != null) {
-                        return Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(
-                            'Error: ${provider.error}',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
+                        if (provider.announcements.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              "No announcements available.",
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          );
+                        }
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                left: 8,
+                                bottom: 8,
+                              ),
+                              child: Text(
+                                "📰 Latest Announcements",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            ...provider.announcements.map((a) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 6.0,
+                                ),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.25),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: const Color(
+                                      0xFF00bcd4,
+                                    ).withOpacity(0.3),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: NetworkImage(
+                                        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            a.title,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            a.content.isNotEmpty
+                                                ? a.content
+                                                : "No description available",
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 13,
+                                              height: 1.4,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ],
                         );
-                      }
+                      },
+                    )
+                  /// 🔹 Assets (New / Trending)
+                  else
+                    Consumer<AssetProvider>(
+                      builder: (context, provider, child) {
+                        if (provider.isLoading && provider.assets.isEmpty) {
+                          return buildShimmerGrid();
+                        }
 
-                      if (provider.assets.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            'No assets found.',
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        );
-                      }
+                        if (provider.error != null) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              'Error: ${provider.error}',
+                              style: const TextStyle(color: Colors.redAccent),
+                            ),
+                          );
+                        }
 
-                      // Determine which list to show
-                      final assetsToShow =
-                          activeAssetSection == 'Trending\n Assets'
-                          ? _trendingAssets
-                          : provider.assets;
+                        if (provider.assets.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              'No assets found.',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          );
+                        }
 
-                      // ✅ Trending Grid Display
-                      if (activeAssetSection == 'Trending\n Assets') {
+                        final assetsToShow =
+                            activeAssetSection == 'Trending\n Assets'
+                            ? _trendingAssets
+                            : provider.assets;
+
+                        // ✅ Trending Section
+                        if (activeAssetSection == 'Trending\n Assets') {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(top: 10, bottom: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                    '🔥 Trending Assets',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                if (_trendingAssets.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Text(
+                                      'No trending assets yet. Watch some assets to make them trend!',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  _buildGrid(_trendingAssets),
+                              ],
+                            ),
+                          );
+                        }
+
+                        // ✅ Default (New Assets)
+                        final Set<String> uniqueSubs = {};
+                        for (final asset in provider.assets) {
+                          if (asset.categorie.toLowerCase() == 'vfx') {
+                            for (final sub in asset.subcategories) {
+                              uniqueSubs.add(sub.name);
+                            }
+                          }
+                        }
+
+                        final filteredAssets = selectedChip == null
+                            ? <AssetModel>[]
+                            : provider.assets.where((asset) {
+                                return asset.subcategories.any(
+                                  (sub) => sub.name == selectedChip,
+                                );
+                              }).toList();
+
                         return Container(
                           width: double.infinity,
-                          color: AppTheme.darkBackground, // ✅ fixes white gap
-                          padding: const EdgeInsets.only(top: 10, bottom: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                              _buildGrid(assetsToShow),
+                              if (uniqueSubs.isNotEmpty) ...[
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: uniqueSubs.map((sub) {
+                                    final isSelected = selectedChip == sub;
+                                    return GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedChip = isSelected
+                                              ? null
+                                              : sub;
+                                        });
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: const Duration(
+                                          milliseconds: 200,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: isSelected
+                                              ? AppTheme.fireGradient
+                                              : null,
+                                          color: isSelected
+                                              ? null
+                                              : const Color(
+                                                  0xFF374151,
+                                                ).withOpacity(0.5),
+                                          borderRadius: BorderRadius.circular(
+                                            24,
+                                          ),
+                                          border: Border.all(
+                                            color: const Color(
+                                              0xFF00bcd4,
+                                            ).withOpacity(.4),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          sub,
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
-                                child: Text(
-                                  '🔥 Trending Assets',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              if (_trendingAssets.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Text(
-                                    'No trending assets yet. Watch some assets to make them trend!',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white70,
-                                      fontSize: 14,
+                                const SizedBox(height: 20),
+                                if (selectedChip != null) ...[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    child: Text(
+                                      'Showing results for "$selectedChip"',
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
-                                )
-                              else
-                                _buildGrid(_trendingAssets),
+                                  _buildGrid(filteredAssets),
+                                ],
+                              ],
                             ],
                           ),
                         );
-                      }
-
-                      // ✅ Get unique subcategories for "VFX"
-                      final Set<String> uniqueSubs = {};
-                      for (final asset in provider.assets) {
-                        if (asset.categorie.toLowerCase() == 'vfx') {
-                          for (final sub in asset.subcategories) {
-                            uniqueSubs.add(sub.name);
-                          }
-                        }
-                      }
-
-                      // ✅ Filter assets by selected subcategory
-                      final filteredAssets = selectedChip == null
-                          ? <AssetModel>[]
-                          : provider.assets.where((asset) {
-                              return asset.subcategories.any(
-                                (sub) => sub.name == selectedChip,
-                              );
-                            }).toList();
-
-                      // ✅ Default (non-trending) grid section
-                      return Container(
-                        width: double.infinity,
-                        color: AppTheme.darkBackground, // ✅ consistent BG
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildGrid(assetsToShow),
-
-                            if (uniqueSubs.isNotEmpty) ...[
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: uniqueSubs.map((sub) {
-                                  final isSelected = selectedChip == sub;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedChip = isSelected ? null : sub;
-                                      });
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 200,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 14,
-                                        vertical: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        gradient: isSelected
-                                            ? AppTheme.fireGradient
-                                            : null,
-                                        color: isSelected
-                                            ? null
-                                            : const Color(
-                                                0xFF374151,
-                                              ).withOpacity(0.5),
-                                        borderRadius: BorderRadius.circular(24),
-                                        border: Border.all(
-                                          color: const Color(
-                                            0xFF00bcd4,
-                                          ).withOpacity(.4),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        sub,
-                                        style: GoogleFonts.inter(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(height: 20),
-
-                              if (selectedChip != null) ...[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                  ),
-                                  child: Text(
-                                    'Showing results for "$selectedChip"',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                _buildGrid(filteredAssets),
-                              ],
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                      },
+                    ),
                 ],
               ),
             ),
@@ -281,17 +391,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// 🔹 Top category tabs (New, Trending, News)
+  /// 🔹 Tabs (New, Trending, News)
   Widget _buildSections() {
     return Container(
       height: 90,
       decoration: BoxDecoration(
         color: AppTheme.darkBackground.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF00bcd4).withOpacity(.3),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF00bcd4).withOpacity(.3)),
       ),
       child: Row(
         children: ['New\n Assets', 'Trending\n Assets', 'News'].map((section) {
@@ -304,11 +411,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   listen: false,
                 );
+                final announcementProvider = Provider.of<AnnouncementProvider>(
+                  context,
+                  listen: false,
+                );
 
                 if (section == 'New\n Assets') {
                   assetProvider.getNewAssets();
                 } else if (section == 'Trending\n Assets') {
                   await _loadTrendingAssets(assetProvider);
+                } else if (section == 'News') {
+                  announcementProvider.loadAnnouncements();
                 }
               },
               child: AnimatedContainer(

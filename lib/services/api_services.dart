@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cgheven/model/announcement_model.dart';
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/model/polls_model.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,9 @@ class AssetApiService {
   static const String newAssetUrl =
       'https://api.cgheven.com/api/assets?populate=*';
   static const String pollUrl = "https://api.cgheven.com/api/polls/";
+
+  static const String annoucementUrl =
+      "https://api.cgheven.com/api/announcements/";
   //    'https://api.cgheven.com/api/assets?sort=createdAt:desc';
 
   static const String token =
@@ -43,6 +47,22 @@ class AssetApiService {
       return data.map((e) => PollModel.fromJson(e)).toList();
     } else {
       throw Exception('Failed to load polls');
+    }
+  }
+
+  // ----------- Announcements -----------
+  Future<List<AnnouncementModel>> fetchAnnouncements() async {
+    final response = await http.get(
+      Uri.parse(annoucementUrl),
+      headers: {"Authorization": token, "Accept": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List data = jsonData['data'];
+      return data.map((e) => AnnouncementModel.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load announcements');
     }
   }
 }
