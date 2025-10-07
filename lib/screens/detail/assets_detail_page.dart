@@ -6,10 +6,12 @@ import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
 import 'package:cgheven/widget/download_selector_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AssetDetailScreen extends StatefulWidget {
   final AssetModel asset;
@@ -37,6 +39,23 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
     int currentCount = prefs.getInt(key) ?? 0;
     await prefs.setInt(key, currentCount + 1);
   }
+
+  /// 🔗 Helper function to launch external URLs safely
+  Future<void> _launchURL(String url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        debugPrint('Could not launch $url');
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+    }
+  }
+
+  bool isInstagramClicked = false;
+  bool isYoutubeClicked = false;
+  bool isTiktokClicked = false;
+  bool isTwitterClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -361,11 +380,45 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                       ),
                       Row(
                         children: [
-                          buildSocialButton(Icons.camera_alt, Colors.pink),
+                          _socialButton(
+                            color: Colors.pinkAccent,
+                            clicked: isInstagramClicked,
+                            icon: FontAwesomeIcons.instagram,
+                            onPressed: () async {
+                              setState(
+                                () => isInstagramClicked = !isInstagramClicked,
+                              );
+                              await _launchURL(
+                                'https://www.instagram.com/ammarkhaanim',
+                              );
+                            },
+                          ),
                           SizedBox(width: 8),
-                          buildSocialButton(Icons.play_circle, Colors.red),
+                          _socialButton(
+                            color: Colors.lightBlue,
+                            clicked: isTwitterClicked,
+                            icon: FontAwesomeIcons.twitter,
+                            onPressed: () async {
+                              setState(
+                                () => isTwitterClicked = !isTwitterClicked,
+                              );
+                              await _launchURL('https://x.com/ammarkhaanim');
+                            },
+                          ),
                           SizedBox(width: 8),
-                          buildSocialButton(Icons.alternate_email, Colors.blue),
+                          _socialButton(
+                            color: Colors.teal,
+                            clicked: isTiktokClicked,
+                            icon: FontAwesomeIcons.tiktok,
+                            onPressed: () async {
+                              setState(
+                                () => isTiktokClicked = !isTiktokClicked,
+                              );
+                              await _launchURL(
+                                'https://www.tiktok.com/@ammarkhaanim',
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ],
@@ -485,6 +538,31 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _socialButton({
+    required IconData icon,
+    required Color color,
+    required bool clicked,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey.shade900.withOpacity(0.3),
+        // borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFF00bcd4).withOpacity(.4),
+          width: 1,
+        ),
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: FaIcon(icon, size: 20, color: clicked ? color : Colors.white),
       ),
     );
   }
