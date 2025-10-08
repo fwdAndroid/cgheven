@@ -212,81 +212,152 @@ class _DownloadSelectorState extends State<DownloadSelector> {
 
           // Row of MP4 options
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // equal spacing
             children: List.generate(widget.options.length, (index) {
               final option = widget.options[index];
               final bool isSelected = selectedIndex == index;
 
+              // 🎨 Colors per index
+              final innerColor = index == 0
+                  ? const Color(0xFF0C2B31) // 1st container inner
+                  : const Color(0xFF211D1A); // others inner
+              final borderColor = index == 0
+                  ? const Color(0xFF0C2A31) // 1st border
+                  : const Color(0xFF201B18); // others border
+
+              // ✨ Glow color based on border
+              final glowColor = index == 0
+                  ? const Color(0xFF00BCD4).withOpacity(0.6)
+                  : const Color(0xFFF97316).withOpacity(0.6);
+
               return GestureDetector(
                 onTap: () {
                   setState(() => selectedIndex = index);
-                  _showRewardedSheet(context, option);
+                  // small delay before showing sheet for glow effect
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    _showRewardedSheet(context, option);
+                  });
                 },
-                child: Container(
-                  width: 110,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff201f1d),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF00BCD4)
-                          : const Color(0xFF503b2b).withOpacity(.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        option.quality,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Main container
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 105, // same width for all
+                      height: 150,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                      ), // even spacing
+
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          if (isSelected)
+                            BoxShadow(
+                              color: glowColor,
+                              blurRadius: 15,
+                              spreadRadius: 3,
+                              offset: const Offset(0, 0),
+                            )
+                          else
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                        ],
+
+                        color: innerColor,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? (index == 0
+                                    ? const Color(
+                                        0xFF00BCD4,
+                                      ) // 🔹 cyan border for first
+                                    : const Color(
+                                        0xFFF97316,
+                                      )) // 🔸 orange border for others
+                              : borderColor, // default border
+                          width: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        option.size,
-                        style: GoogleFonts.inter(
-                          color: const Color(0xff7b8f98),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (option.isRewarded)
-                        Text(
-                          "🎁 Rewarded",
-                          style: GoogleFonts.inter(
-                            color: Colors.orangeAccent,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      const SizedBox(height: 6),
-                      Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.download,
-                            color: Colors.orangeAccent,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 4),
                           Text(
-                            "Download",
+                            option.quality,
                             style: GoogleFonts.inter(
-                              color: Colors.orangeAccent,
-                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            option.size,
+                            style: GoogleFonts.inter(
+                              color: const Color(0xff7b8f98),
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          const SizedBox(height: 8),
+                          if (option.isRewarded)
+                            Text(
+                              "🎁 Rewarded",
+                              style: GoogleFonts.inter(
+                                color: Colors.orangeAccent,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.download,
+                                color: Colors.orangeAccent,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "Download",
+                                style: GoogleFonts.inter(
+                                  color: Colors.orangeAccent,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // 🔴 Top-right circle (only for 2nd and 3rd containers)
+                    if (index != 0)
+                      Positioned(
+                        top: -8,
+                        right: 2,
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: const BoxDecoration(
+                            color: Color(0xffF97316),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.info_outline,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               );
             }),

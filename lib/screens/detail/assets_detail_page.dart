@@ -481,6 +481,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ),
                 ),
               ),
+
               Consumer<AssetProvider>(
                 builder: (context, provider, child) {
                   final relatedAssets = provider.assets
