@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyANNxiLEUVLiobW-WL9tqAT3H7Mcmn_5Bk',
-    appId: '1:113629338304:android:cd57599cd23c59f02b6b25',
-    messagingSenderId: '113629338304',
-    projectId: 'cgheven-a5740',
-    storageBucket: 'cgheven-a5740.firebasestorage.app',
+    apiKey: 'AIzaSyDCrFc0ii620JOH47nhRxjX0cvYxfPByYQ',
+    appId: '1:706898271839:android:044425135774b0d47105ea',
+    messagingSenderId: '706898271839',
+    projectId: 'cgheven-2a5a1',
+    storageBucket: 'cgheven-2a5a1.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCs9pqrPz-1hqrbYc1LnM7jjLRpenA0ZM0',
-    appId: '1:113629338304:ios:529259df31aa99552b6b25',
-    messagingSenderId: '113629338304',
-    projectId: 'cgheven-a5740',
-    storageBucket: 'cgheven-a5740.firebasestorage.app',
+    apiKey: 'AIzaSyC8KKIAgRreAXSRjQyyQQ6ySUYUvPhXR48',
+    appId: '1:706898271839:ios:4be1152664edca237105ea',
+    messagingSenderId: '706898271839',
+    projectId: 'cgheven-2a5a1',
+    storageBucket: 'cgheven-2a5a1.firebasestorage.app',
     iosBundleId: 'com.example.cgheven',
   );
 }
