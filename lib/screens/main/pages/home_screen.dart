@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';

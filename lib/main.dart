@@ -1,4 +1,5 @@
 import 'package:cgheven/firebase_options.dart';
+import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
@@ -25,6 +26,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AssetProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+        ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
+
         ChangeNotifierProvider(create: (_) => PollProvider()),
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
       ],
@@ -40,6 +43,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final analyticsProvider = Provider.of<AnalyticsProvider>(
+      context,
+      listen: false,
+    );
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -60,6 +68,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      navigatorObservers: [analyticsProvider.routeObserver],
       home: SplashScreen(),
     );
   }

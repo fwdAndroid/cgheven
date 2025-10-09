@@ -1,3 +1,4 @@
+import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/poll_provider.dart';
 import 'package:cgheven/screens/tab/community_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -36,6 +37,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() {
+      final analytics = Provider.of<AnalyticsProvider>(context, listen: false);
+      analytics.logProfileVisit();
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<PollProvider>(context, listen: false).fetchPolls();
     });

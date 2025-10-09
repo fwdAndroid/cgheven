@@ -1,4 +1,5 @@
 import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -30,6 +31,9 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final analytics = Provider.of<AnalyticsProvider>(context, listen: false);
+    analytics.logAssetView(widget.asset.id.toString(), widget.asset.title);
+
     _incrementAssetViewCount(widget.asset.id);
   }
 
