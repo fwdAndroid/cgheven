@@ -5,6 +5,7 @@ import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/provider/language_provider.dart';
 import 'package:cgheven/provider/poll_provider.dart';
+import 'package:cgheven/provider/promo_provider.dart';
 import 'package:cgheven/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
         ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
-
+        ChangeNotifierProvider(create: (_) => PromoProvider()),
         ChangeNotifierProvider(create: (_) => PollProvider()),
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
       ],

@@ -1,12 +1,13 @@
 import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/provider/promo_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/search_box_widget.dart';
 import 'package:cgheven/widget/shimmer_widget.dart';
+import 'package:cgheven/widget/youtube_player_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     Future.microtask(() {
       Provider.of<AssetProvider>(context, listen: false).getNewAssets();
+      Provider.of<PromoProvider>(context, listen: false).fetchPromos();
     });
   }
 
@@ -65,8 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: Colors.transparent,
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -295,6 +299,161 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildGrid(assetsToShow),
+                              Consumer<PromoProvider>(
+                                builder: (context, promoProvider, _) {
+                                  if (promoProvider.isLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.tealAccent,
+                                      ),
+                                    );
+                                  }
+
+                                  if (promoProvider.promos.isEmpty)
+                                    return const SizedBox.shrink();
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        "🎬 Current Promos",
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SizedBox(
+                                          height: 200,
+                                          child: ListView.separated(
+                                            scrollDirection: Axis.horizontal,
+                                            separatorBuilder: (_, __) =>
+                                                const SizedBox(width: 12),
+                                            itemCount:
+                                                promoProvider.promos.length,
+                                            itemBuilder: (context, index) {
+                                              final promo =
+                                                  promoProvider.promos[index];
+                                              final isYouTube =
+                                                  promo.youtubeEmbedUrl !=
+                                                      null &&
+                                                  promo
+                                                      .youtubeEmbedUrl!
+                                                      .isNotEmpty;
+
+                                              return Center(
+                                                child: Container(
+                                                  width: 380,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: AppTheme
+                                                        .darkBackground
+                                                        .withOpacity(0.5),
+
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          16,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                        0xFF00BCD4,
+                                                      ).withOpacity(0.3),
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        blurRadius: 4,
+                                                        offset: const Offset(
+                                                          0,
+                                                          3,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          16,
+                                                        ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Expanded(
+                                                          child: isYouTube
+                                                              ? YoutubePlayerWidget(
+                                                                  embedUrl: promo
+                                                                      .youtubeEmbedUrl!,
+                                                                )
+                                                              : Image.network(
+                                                                  promo
+                                                                      .bannerUrl,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  width: double
+                                                                      .infinity,
+                                                                ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                8.0,
+                                                              ),
+                                                          child: Text(
+                                                            promo.title,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 8.0,
+                                                              ),
+                                                          child: Text(
+                                                            promo.description,
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .white70,
+                                                                  fontSize: 12,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 6,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                               if (uniqueSubs.isNotEmpty) ...[
                                 Wrap(
                                   spacing: 8,
