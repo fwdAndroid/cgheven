@@ -245,7 +245,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: GradientButton(
-                                gradient: AppTheme.fireGradient,
+                                gradient: selected
+                                    ? AppTheme.fireGradient
+                                    : AppTheme.greyGradeubt,
                                 onPressed: () => setQuality(q),
                                 child: Text(
                                   q,
@@ -287,7 +289,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.subscriptions, color: Colors.teal),
+                                Icon(Icons.money, color: Colors.teal),
                                 const SizedBox(width: 8),
                                 Text(
                                   languageProvider
@@ -324,39 +326,14 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                           ],
                         ),
-                        Ink(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFF2A7B9B),
-                                Color(0xFF57C785),
-                                Color(0xFFEDDD53),
-                              ],
-                              stops: [0.0, 0.5, 1.0],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              adFree
-                                  ? languageProvider
-                                            .localizedStrings['Manage'] ??
-                                        "Manage"
-                                  : languageProvider
-                                            .localizedStrings['Upgrade'] ??
-                                        "Upgrade",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        GradientButton(
+                          gradient: AppTheme.fireGradient,
+                          onPressed: () {},
+                          child: Text(
+                            "Upgrade",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -396,53 +373,72 @@ class _SettingScreenState extends State<SettingScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        ListTile(
-                          onTap: () {
-                            languageProvider.changeLanguage(
-                              'en',
-                            ); // Switch to English
-                          },
-                          trailing: Icon(
-                            languageProvider.currentLanguage == 'en'
-                                ? Icons.radio_button_checked
-                                : Icons.radio_button_off,
-                            color:
-                                Colors.teal, // use teal for active consistency
-                            size: 20,
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.grey.withOpacity(.3),
+                            ),
                           ),
-                          title: Text(
-                            languageProvider.localizedStrings['English'] ??
-                                "English",
-                            style: GoogleFonts.poppins(
-                              color: languageProvider.currentLanguage == 'en'
-                                  ? Colors
-                                        .teal // highlight active lang
-                                  : Colors.grey, // inactive lang
-                              fontWeight: FontWeight.w500,
+                          child: ListTile(
+                            onTap: () {
+                              languageProvider.changeLanguage(
+                                'en',
+                              ); // Switch to English
+                            },
+                            trailing: Icon(
+                              languageProvider.currentLanguage == 'en'
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_off,
+                              color: Colors
+                                  .teal, // use teal for active consistency
+                              size: 20,
+                            ),
+                            title: Text(
+                              languageProvider.localizedStrings['English'] ??
+                                  "English",
+                              style: GoogleFonts.poppins(
+                                color: languageProvider.currentLanguage == 'en'
+                                    ? Colors
+                                          .teal // highlight active lang
+                                    : Colors.grey, // inactive lang
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
-                        ListTile(
-                          onTap: () {
-                            languageProvider.changeLanguage(
-                              'ur',
-                            ); // Switch to Urdu
-                          },
-                          trailing: Icon(
-                            languageProvider.currentLanguage == 'ur'
-                                ? Icons.radio_button_checked
-                                : Icons.radio_button_off,
-                            color: Colors.teal,
-                            size: 20,
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.grey.withOpacity(.3),
+                            ),
                           ),
-                          title: Text(
-                            languageProvider.localizedStrings['Urdu'] ?? "Urdu",
-                            style: GoogleFonts.poppins(
-                              color: languageProvider.currentLanguage == 'ur'
-                                  ? Colors
-                                        .teal // active
-                                  : Colors.grey, // inactive
-                              fontWeight: FontWeight.w500,
+                          child: ListTile(
+                            onTap: () {
+                              languageProvider.changeLanguage(
+                                'ur',
+                              ); // Switch to Urdu
+                            },
+                            trailing: Icon(
+                              languageProvider.currentLanguage == 'ur'
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_off,
+                              color: Colors.teal,
+                              size: 20,
+                            ),
+                            title: Text(
+                              languageProvider.localizedStrings['Urdu'] ??
+                                  "Urdu",
+                              style: GoogleFonts.poppins(
+                                color: languageProvider.currentLanguage == 'ur'
+                                    ? Colors
+                                          .teal // active
+                                    : Colors.grey, // inactive
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -463,81 +459,60 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.delete, color: Colors.grey),
-                          title: Text(
-                            languageProvider.localizedStrings['Clear Cache'] ??
-                                "Clear Cache",
-                            style: GoogleFonts.poppins(color: Colors.grey),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            languageProvider.localizedStrings['System'] ??
+                                "System",
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                        ),
+                        _buildBorderedTile(
+                          icon: Icons.delete,
+                          title:
+                              languageProvider
+                                  .localizedStrings['Clear Cache'] ??
+                              "Clear Cache",
                           onTap: handleClearCache,
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
                         ),
-                        ListTile(
-                          leading: const Icon(
-                            Icons.security,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            languageProvider
-                                    .localizedStrings['Privacy Policy'] ??
-                                "Privacy Policy",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                        _buildBorderedTile(
+                          icon: Icons.security,
+                          title:
+                              languageProvider
+                                  .localizedStrings['Privacy Policy'] ??
+                              "Privacy Policy",
+                          onTap: () {},
                         ),
-                        ListTile(
-                          leading: const Icon(
-                            Icons.description,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            languageProvider
-                                    .localizedStrings['Terms of Service'] ??
-                                "Terms of Service",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                        _buildBorderedTile(
+                          icon: Icons.description,
+                          title:
+                              languageProvider
+                                  .localizedStrings['Terms of Service'] ??
+                              "Terms of Service",
+                          onTap: () {},
                         ),
-
-                        ListTile(
-                          leading: const Icon(
-                            Icons.support,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            languageProvider
-                                    .localizedStrings['Contact Support'] ??
-                                "Contact Support",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                        _buildBorderedTile(
+                          icon: Icons.support,
+                          title:
+                              languageProvider
+                                  .localizedStrings['Contact Support'] ??
+                              "Contact Support",
+                          onTap: () {},
                         ),
-                        ListTile(
-                          leading: const Icon(Icons.logout, color: Colors.grey),
-                          title: Text(
-                            languageProvider.localizedStrings['Log Out'] ??
-                                "Log Out",
-                            style: GoogleFonts.poppins(color: Colors.grey),
-                          ),
+                        // 🔴 Logout with red border
+                        _buildBorderedTile(
+                          icon: Icons.logout,
+                          title:
+                              languageProvider.localizedStrings['Log Out'] ??
+                              "Log Out",
                           onTap: handleLogout,
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.grey,
-                          ),
+                          isLogout: true,
                         ),
                       ],
                     ),
@@ -547,6 +522,33 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBorderedTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool isLogout = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.withOpacity(.3)),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.grey),
+        title: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: Colors.grey,
+            fontWeight: isLogout ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        trailing: Icon(Icons.chevron_right, color: Colors.grey),
+        onTap: onTap,
       ),
     );
   }

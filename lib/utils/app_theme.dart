@@ -22,6 +22,11 @@ class AppTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+  static const LinearGradient greyGradeubt = LinearGradient(
+    colors: [AppTheme.darkBackground, Color(0xFF1A0F0D)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
   static const LinearGradient tealGradient = LinearGradient(
     colors: [tealStart, tealEnd],
