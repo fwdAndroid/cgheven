@@ -1,3 +1,4 @@
+import 'package:cgheven/screens/main/pages/download_pages.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,7 +42,12 @@ Widget buildSearchBox(BuildContext context) {
       ),
       IconButton(
         icon: const Icon(Icons.download, color: Color(0xFF9CA3AF), size: 32),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (builder) => DownloadScreen()),
+          );
+        },
       ),
     ],
   );
