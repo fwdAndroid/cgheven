@@ -1,27 +1,26 @@
-// lib/provider/promo_provider.dart
 import 'package:cgheven/services/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:cgheven/model/promo_model.dart';
 
-class PromoProvider extends ChangeNotifier {
-  final _apiService = AssetApiService();
-  List<PromoModel> promos = [];
-  bool isLoading = false;
-  String? error;
+class PromoProvider with ChangeNotifier {
+  final AssetApiService _apiService = AssetApiService();
+  List<Promo> _promos = [];
+  bool _isLoading = false;
+
+  List<Promo> get promos => _promos;
+  bool get isLoading => _isLoading;
 
   Future<void> fetchPromos() async {
-    isLoading = true;
-    error = null;
+    _isLoading = true;
     notifyListeners();
 
     try {
-      final data = await _apiService.fetchPromos();
-      promos = data.where((p) => p.active).toList();
+      _promos = await _apiService.fetchPromos();
     } catch (e) {
-      error = e.toString();
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      print("Error fetching promos: $e");
     }
+
+    _isLoading = false;
+    notifyListeners();
   }
 }

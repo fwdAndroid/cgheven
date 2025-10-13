@@ -1,40 +1,32 @@
-// lib/model/promo_model.dart
-class PromoModel {
+class Promo {
   final int id;
   final String title;
   final String description;
-  final String bannerUrl;
-  final String? youtubeEmbedUrl;
-  final bool active;
+  final String banner;
 
-  PromoModel({
+  Promo({
     required this.id,
     required this.title,
     required this.description,
-    required this.bannerUrl,
-    this.youtubeEmbedUrl,
-    required this.active,
+    required this.banner,
   });
 
-  factory PromoModel.fromJson(Map<String, dynamic> json) {
-    final banner = json['banner'] ?? {};
-    final descList = json['description'] as List<dynamic>? ?? [];
+  factory Promo.fromJson(Map<String, dynamic> json) {
+    // Extract text from nested "description"
+    final descList = json['description'] as List?;
     String descText = '';
-
-    if (descList.isNotEmpty) {
-      final children = descList[0]['children'] as List<dynamic>?;
+    if (descList != null && descList.isNotEmpty) {
+      final children = descList.first['children'] as List?;
       if (children != null && children.isNotEmpty) {
-        descText = children[0]['text'] ?? '';
+        descText = children.first['text'] ?? '';
       }
     }
 
-    return PromoModel(
+    return Promo(
       id: json['id'],
       title: json['title'] ?? '',
       description: descText,
-      bannerUrl: banner['url'] ?? '',
-      youtubeEmbedUrl: banner['embed_url'],
-      active: json['active'] ?? false,
+      banner: json['banner']?['banner'] ?? '',
     );
   }
 }

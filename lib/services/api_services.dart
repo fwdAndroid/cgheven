@@ -38,7 +38,7 @@ class AssetApiService {
   }
 
   // ----------- Fetch Promos -----------
-  Future<List<PromoModel>> fetchPromos() async {
+  Future<List<Promo>> fetchPromos() async {
     final response = await http.get(
       Uri.parse(promoUrl),
       headers: {
@@ -51,7 +51,7 @@ class AssetApiService {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
-      return data.map((e) => PromoModel.fromJson(e)).toList();
+      return data.map((e) => Promo.fromJson(e)).toList();
     } else {
       throw Exception('Failed to load promos');
     }
