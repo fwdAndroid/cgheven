@@ -1,7 +1,7 @@
-import 'package:cgheven/utils/app_theme.dart';
-import 'package:cgheven/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/gradient_button.dart';
 
 class Mp4Option {
   final String quality;
@@ -29,8 +29,31 @@ class DownloadSelector extends StatefulWidget {
   State<DownloadSelector> createState() => _DownloadSelectorState();
 }
 
-class _DownloadSelectorState extends State<DownloadSelector> {
+class _DownloadSelectorState extends State<DownloadSelector>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = -1;
+  late AnimationController _controller;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _glowAnimation = Tween<double>(
+      begin: 0,
+      end: 10,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _showRewardedSheet(BuildContext context, Mp4Option option) {
     showModalBottomSheet(
@@ -45,7 +68,6 @@ class _DownloadSelectorState extends State<DownloadSelector> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Small handle at top
               Container(
                 width: 50,
                 height: 5,
@@ -55,8 +77,6 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Gift icon
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
@@ -70,8 +90,6 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Title
               Text(
                 "Watch Ad to Download",
                 style: GoogleFonts.poppins(
@@ -81,16 +99,12 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                 ),
               ),
               const SizedBox(height: 8),
-
-              // Subtitle
               Text(
                 "You’re about to download ${option.quality} (${option.size})",
                 style: GoogleFonts.poppins(color: Colors.white70, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-
-              // Rewarded Info Box
               Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 14,
@@ -126,15 +140,11 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Buttons Row
               Row(
                 children: [
-                  // Cancel Button
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        fixedSize: Size(100, 75),
                         side: const BorderSide(color: Color(0xFF374151)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -152,14 +162,12 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                     ),
                   ),
                   const SizedBox(width: 12),
-
-                  // Watch Ad Button (with gradient)
                   Expanded(
                     child: GradientButton(
                       gradient: AppTheme.fireGradient,
                       onPressed: () {
                         Navigator.pop(context);
-                        // TODO: trigger your rewarded ad logic here
+                        // TODO: Trigger rewarded ad logic
                       },
                       child: Text(
                         "Watch Ad & Download",
@@ -184,79 +192,85 @@ class _DownloadSelectorState extends State<DownloadSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1F2937).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF00bcd4).withOpacity(.4),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.titleText,
-              style: GoogleFonts.poppins(
-                color: const Color(0xFF14B8A6),
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+    return AnimatedBuilder(
+      animation: _glowAnimation,
+      builder: (context, _) {
+        return Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1F2937).withOpacity(0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: const Color(0xFF00bcd4).withOpacity(.4),
+              width: 1,
             ),
           ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  widget.titleText,
+                  style: GoogleFonts.poppins(
+                    color: const Color(0xFF14B8A6),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
 
-          // Row of MP4 options
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // equal spacing
-            children: List.generate(widget.options.length, (index) {
-              final option = widget.options[index];
-              final bool isSelected = selectedIndex == index;
+              // --- Option Containers ---
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(widget.options.length, (index) {
+                  final option = widget.options[index];
+                  final bool isSelected = selectedIndex == index;
 
-              // 🎨 Colors per index
-              final innerColor = index == 0
-                  ? const Color(0xFF0C2B31) // 1st container inner
-                  : const Color(0xFF211D1A); // others inner
-              final borderColor = index == 0
-                  ? const Color(0xFF0C2A31) // 1st border
-                  : const Color(0xFF201B18); // others border
+                  final innerColor = index == 0
+                      ? const Color(0xFF0C2B31)
+                      : const Color(0xFF211D1A);
+                  final borderColor = index == 0
+                      ? const Color(0xFF0C2A31)
+                      : const Color(0xFF201B18);
 
-              // ✨ Glow color based on border
-              final glowColor = index == 0
-                  ? const Color(0xFF00BCD4).withOpacity(0.6)
-                  : const Color(0xFFF97316).withOpacity(0.6);
+                  final glowColor = index == 0
+                      ? const Color(0xFF00BCD4).withOpacity(0.8)
+                      : const Color(0xFFF97316).withOpacity(0.8);
 
-              return GestureDetector(
-                onTap: () {
-                  setState(() => selectedIndex = index);
-                  // small delay before showing sheet for glow effect
-                  Future.delayed(const Duration(milliseconds: 200), () {
-                    _showRewardedSheet(context, option);
-                  });
-                },
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Main container
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 105, // same width for all
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => selectedIndex = index);
+                      if (option.isRewarded) {
+                        Future.delayed(const Duration(milliseconds: 200), () {
+                          _showRewardedSheet(context, option);
+                        });
+                      } else {
+                        // Normal download logic here
+                      }
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: 105,
                       height: 150,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                      ), // even spacing
-
+                      margin: const EdgeInsets.symmetric(horizontal: 6),
                       decoration: BoxDecoration(
+                        gradient: isSelected
+                            ? LinearGradient(
+                                colors: [
+                                  glowColor.withOpacity(0.25),
+                                  innerColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                            : null,
                         boxShadow: [
                           if (isSelected)
                             BoxShadow(
                               color: glowColor,
-                              blurRadius: 15,
-                              spreadRadius: 3,
+                              blurRadius: 20 + _glowAnimation.value,
+                              spreadRadius: 3 + _glowAnimation.value / 2,
                               offset: const Offset(0, 0),
                             )
                           else
@@ -266,19 +280,14 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                               offset: const Offset(0, 3),
                             ),
                         ],
-
                         color: innerColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isSelected
                               ? (index == 0
-                                    ? const Color(
-                                        0xFF00BCD4,
-                                      ) // 🔹 cyan border for first
-                                    : const Color(
-                                        0xFFF97316,
-                                      )) // 🔸 orange border for others
-                              : borderColor, // default border
+                                    ? const Color(0xFF00BCD4)
+                                    : const Color(0xFFF97316))
+                              : borderColor,
                           width: 1.5,
                         ),
                       ),
@@ -335,35 +344,13 @@ class _DownloadSelectorState extends State<DownloadSelector> {
                         ],
                       ),
                     ),
-
-                    // 🔴 Top-right circle (only for 2nd and 3rd containers)
-                    if (index != 0)
-                      Positioned(
-                        top: -8,
-                        right: 2,
-                        child: Container(
-                          width: 24,
-                          height: 24,
-                          decoration: const BoxDecoration(
-                            color: Color(0xffF97316),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.info_outline,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            }),
+                  );
+                }),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
