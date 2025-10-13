@@ -269,8 +269,8 @@ class _DownloadSelectorState extends State<DownloadSelector>
                           if (isSelected)
                             BoxShadow(
                               color: glowColor,
-                              blurRadius: 20 + _glowAnimation.value,
-                              spreadRadius: 3 + _glowAnimation.value / 2,
+                              blurRadius: 15 + _glowAnimation.value,
+                              spreadRadius: 1 + _glowAnimation.value / 2,
                               offset: const Offset(0, 0),
                             )
                           else

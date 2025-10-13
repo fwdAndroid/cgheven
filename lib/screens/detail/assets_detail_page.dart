@@ -1,9 +1,8 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/analytics_provider.dart';
-import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/widget/asset_preview_widget.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
-import 'package:cgheven/widget/asset_card.dart';
+import 'package:cgheven/widget/asset_related_screen.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
 import 'package:cgheven/widget/download_selector_widget.dart';
 import 'package:flutter/material.dart';
@@ -357,73 +356,9 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 12,
-                ),
-                child: Text(
-                  "Related Assets",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
 
-              Consumer<AssetProvider>(
-                builder: (context, provider, child) {
-                  final relatedAssets = provider.assets
-                      .where(
-                        (a) =>
-                            a.categorie == widget.asset.categorie &&
-                            a.id != widget.asset.id,
-                      )
-                      .toList();
-
-                  if (relatedAssets.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        "No related assets found.",
-                        style: TextStyle(color: Colors.white54),
-                      ),
-                    );
-                  }
-
-                  return SizedBox(
-                    height: 220, // Adjust height to fit your AssetCard
-                    child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      scrollDirection: Axis.horizontal, // ✅ horizontal scroll
-                      itemCount: relatedAssets.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 16),
-                      itemBuilder: (context, index) {
-                        final asset = relatedAssets[index];
-                        return SizedBox(
-                          width: 180, // ✅ Adjust width as needed
-                          child: AssetCard(
-                            asset: asset,
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AssetDetailScreen(asset: asset),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+              // 🔹 Related Assets Header + Slider
+              RelatedAssetsSection(asset: widget.asset),
 
               const SizedBox(height: 60),
             ],
