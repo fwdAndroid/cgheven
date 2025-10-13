@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  _buildSearchAndDownload(),
+                  buildSearchBox(context),
                   const SizedBox(height: 10),
                   _buildSections(),
 
@@ -295,12 +295,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         return Container(
                           decoration: BoxDecoration(
-                            color: AppTheme.darkBackground.withOpacity(0.5),
-
+                            //    color: AppTheme.darkBackground.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF00BCD4).withOpacity(0.3),
-                            ),
+                            // border: Border.all(
+                            //   color: const Color(0xFF00BCD4).withOpacity(0.3),
+                            // ),
                           ),
                           width: double.infinity,
                           child: Column(
@@ -543,19 +542,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  /// 🔹 Search bar + download icon
-  Widget _buildSearchAndDownload() {
-    return Row(
-      children: [
-        Expanded(child: buildSearchBox(context)),
-        IconButton(
-          icon: const Icon(Icons.download, color: Color(0xFF9CA3AF), size: 32),
-          onPressed: () {},
-        ),
-      ],
     );
   }
 
