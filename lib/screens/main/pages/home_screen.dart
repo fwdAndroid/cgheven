@@ -294,6 +294,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               }).toList();
 
                         return Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.darkBackground.withOpacity(0.5),
+
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFF00BCD4).withOpacity(0.3),
+                            ),
+                          ),
                           width: double.infinity,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       const SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: SizedBox(
+                                        child: Container(
                                           height: 200,
                                           child: ListView.separated(
                                             scrollDirection: Axis.horizontal,

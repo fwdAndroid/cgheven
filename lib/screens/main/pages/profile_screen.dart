@@ -49,9 +49,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        width: double.infinity,
+        height: double.infinity,
+
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
