@@ -1,8 +1,8 @@
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
+import 'package:cgheven/widget/asset_preview_widget.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
-import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/build_stats_widget.dart';
 import 'package:cgheven/widget/download_selector_widget.dart';
@@ -26,7 +26,6 @@ class AssetDetailScreen extends StatefulWidget {
 class _AssetDetailScreenState extends State<AssetDetailScreen> {
   bool isPlaying = false;
   bool isStarred = false;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -164,120 +163,7 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, right: 12, top: 8),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.darkBackground.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: const Color(0xFF00bcd4),
-                      width: 0.3,
-                    ),
-                  ),
-                  child: Stack(
-                    alignment: Alignment
-                        .center, // ✅ ensures play button is perfectly centered
-
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            "https://images.pexels.com/photos/266808/pexels-photo-266808.jpeg?auto=compress&cs=tinysrgb&w=1200",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 12,
-                        left: 12,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF00E676), Color(0xFFFF7043)],
-                            ),
-                          ),
-                          child: const Text(
-                            '✓ Includes Alpha',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPlaying = !isPlaying;
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white24,
-                              border: Border.all(color: Colors.white30),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Icon(
-                              isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 40,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                  child: FractionallySizedBox(
-                                    alignment: Alignment.centerLeft,
-                                    widthFactor: 0.3,
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [Colors.teal, Colors.orange],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Text(
-                                "0:03 / 0:08",
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              AssetPreviewPlayer(videoUrl: widget.asset.previews),
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, right: 12, top: 8),
                 child: Text(
