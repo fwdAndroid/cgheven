@@ -162,7 +162,10 @@ class _AssetDetailScreenState extends State<AssetDetailScreen> {
                   ],
                 ),
               ),
-              AssetPreviewPlayer(videoUrl: widget.asset.previews),
+              AssetPreviewPlayer(
+                videoUrl: widget.asset.previews,
+                green_screen: widget.asset.green_screen,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, right: 12, top: 8),
                 child: Text(

@@ -4,7 +4,13 @@ import 'package:video_player/video_player.dart';
 
 class AssetPreviewPlayer extends StatefulWidget {
   final String videoUrl;
-  const AssetPreviewPlayer({super.key, required this.videoUrl});
+  final String? green_screen;
+
+  const AssetPreviewPlayer({
+    super.key,
+    required this.videoUrl,
+    this.green_screen,
+  });
 
   @override
   State<AssetPreviewPlayer> createState() => _AssetPreviewPlayerState();
@@ -13,17 +19,35 @@ class AssetPreviewPlayer extends StatefulWidget {
 class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
   late VideoPlayerController _controller;
   bool _isPlaying = false;
+  bool _showGreenScreen = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    _initializeController(widget.videoUrl);
+  }
+
+  void _initializeController(String url) {
+    _controller = VideoPlayerController.networkUrl(Uri.parse(url))
       ..initialize().then((_) {
-        setState(() {}); // refresh after init
+        setState(() {});
       })
       ..addListener(() {
         if (mounted) setState(() {});
       });
+  }
+
+  void _toggleVideoSource() {
+    if (widget.green_screen != null && widget.green_screen!.isNotEmpty) {
+      setState(() {
+        _showGreenScreen = !_showGreenScreen;
+        _controller.pause();
+        _controller.dispose();
+        _initializeController(
+          _showGreenScreen ? widget.green_screen! : widget.videoUrl,
+        );
+      });
+    }
   }
 
   @override
@@ -66,40 +90,18 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
           alignment: Alignment.center,
           children: [
             AspectRatio(
-              aspectRatio: isReady ? 16 / 9 : 16 / 9,
+              aspectRatio: isReady ? _controller.value.aspectRatio : 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: isReady
                     ? VideoPlayer(_controller)
                     : const Center(
-                        child: CircularProgressIndicator(color: Colors.teal),
+                        child: CircularProgressIndicator(color: Colors.white24),
                       ),
               ),
             ),
-            Positioned(
-              top: 12,
-              left: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF00E676), Color(0xFFFF7043)],
-                  ),
-                ),
-                child: const Text(
-                  '✓ Includes Alpha',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+
+            // ▶️ Play/Pause button
             GestureDetector(
               onTap: () async {
                 if (_controller.value.isPlaying) {
@@ -112,8 +114,7 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white24,
-                  border: Border.all(color: Colors.white30),
+                  color: Colors.black26,
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Icon(
@@ -123,6 +124,8 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
                 ),
               ),
             ),
+
+            // ⏳ Progress bar
             Positioned(
               bottom: 0,
               left: 0,
@@ -134,18 +137,10 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
                     Expanded(
                       child: Stack(
                         children: [
-                          // Buffered progress
                           FractionallySizedBox(
                             widthFactor: bufferedProgress,
-                            child: Container(
-                              height: 4,
-                              decoration: BoxDecoration(
-                                color: Colors.white24,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
+                            child: Container(height: 4, color: Colors.white24),
                           ),
-                          // Current position
                           FractionallySizedBox(
                             widthFactor: progress,
                             child: Container(
@@ -170,6 +165,30 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
                 ),
               ),
             ),
+
+            // 🟩 Toggle button (only if green_screen exists)
+            if (widget.green_screen != null && widget.green_screen!.isNotEmpty)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: _toggleVideoSource,
+                  child: Text(
+                    _showGreenScreen ? 'Normal Preview' : 'Green Screen',
+                    style: const TextStyle(fontSize: 12, color: Colors.white),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

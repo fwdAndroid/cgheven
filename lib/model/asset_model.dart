@@ -13,6 +13,7 @@ class AssetModel {
   final String? slug;
   final List<String> tags;
   final List<SubcategoryModel> subcategories; // ✅ Added
+  final String? green_screen; // ✅ make it nullable
 
   AssetModel({
     required this.id,
@@ -26,6 +27,7 @@ class AssetModel {
     required this.tags,
     required this.categorie,
     this.slug,
+    this.green_screen,
     required this.subcategories,
   });
 
@@ -39,6 +41,8 @@ class AssetModel {
     return AssetModel(
       id: json['id'] ?? 0,
       subcategories: subcategories,
+
+      green_screen: json['green_screen'], // ✅ null handled automatically
       title: json['Title'] ?? '',
       description:
           (json['Description'] != null && json['Description'].isNotEmpty)
