@@ -50,50 +50,54 @@ class _MainDashboardState extends State<MainDashboard> {
       },
       child: Scaffold(
         body: _screens[_currentIndex],
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(color: Colors.black),
-          child: BottomNavigationBar(
-            backgroundColor: AppTheme.darkBackground.withOpacity(0.6),
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _currentIndex,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
-            selectedItemColor: const Color(0xff25b09f),
-            unselectedItemColor: const Color(0xffd1d5db),
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            items: List.generate(_labels.length, (index) {
-              final isActive = _currentIndex == index;
-              return BottomNavigationBarItem(
-                icon: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  padding: const EdgeInsets.all(8),
-                  decoration: isActive
-                      ? BoxDecoration(
-                          color: const Color(
-                            0xff25b09f,
-                          ).withOpacity(0.15), // faint glow inside
-                          borderRadius: BorderRadius.circular(
-                            12,
-                          ), // 👈 same radius as screenshot
-                        )
-                      : null,
-                  child: Icon(
-                    _icons[index],
-                    size: 20,
-                    color: isActive
-                        ? const Color(0xff25b09f)
-                        : const Color(0xffd1d5db),
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashFactory:
+                NoSplash.splashFactory, // 👈 disables ripple animation
+          ),
+          child: Container(
+            decoration: const BoxDecoration(color: Colors.black),
+            child: BottomNavigationBar(
+              backgroundColor: AppTheme.darkBackground.withOpacity(0.6),
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _currentIndex,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              selectedItemColor: const Color(0xff25b09f),
+              unselectedItemColor: const Color(0xffd1d5db),
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              items: List.generate(_labels.length, (index) {
+                final isActive = _currentIndex == index;
+                return BottomNavigationBarItem(
+                  icon: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    padding: const EdgeInsets.all(8),
+                    decoration: isActive
+                        ? BoxDecoration(
+                            color: const Color(0xff25b09f).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          )
+                        : null,
+                    child: Icon(
+                      _icons[index],
+                      size: 20,
+                      color: isActive
+                          ? const Color(0xff25b09f)
+                          : const Color(0xffd1d5db),
+                    ),
                   ),
-                ),
-                label: _labels[index],
-              );
-            }),
+                  label: _labels[index],
+                );
+              }),
+            ),
           ),
         ),
       ),
