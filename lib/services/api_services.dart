@@ -6,6 +6,8 @@ import 'package:cgheven/model/promo_model.dart';
 import 'package:http/http.dart' as http;
 
 class AssetApiService {
+  static const String baseUrl = 'https://api.cgheven.com/api/assets';
+
   static const String pollUrl = "https://api.cgheven.com/api/polls/";
 
   static const String annoucementUrl =
@@ -113,6 +115,31 @@ class AssetApiService {
       return data.map((e) => AnnouncementModel.fromJson(e)).toList();
     } else {
       throw Exception('Failed to load announcements');
+    }
+  }
+
+  // ----------- Search Assets -----------
+  Future<List<AssetModel>> searchAssets(String query) async {
+    if (query.trim().isEmpty) return [];
+
+    final encodedQuery = Uri.encodeComponent(query.trim());
+    final url = '$baseUrl?filters[Title][\$containsi]=$encodedQuery&populate=*';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": token,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List data = jsonData['data'];
+      return data.map((e) => AssetModel.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to search assets');
     }
   }
 }
