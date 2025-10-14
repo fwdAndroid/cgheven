@@ -1,4 +1,5 @@
 import 'package:cgheven/screens/main/pages/download_pages.dart';
+import 'package:cgheven/screens/main/pages/search_screen.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,10 +19,10 @@ Widget buildSearchBox(BuildContext context) {
           ),
           child: TextField(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const SearchPage()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchScreen()),
+              );
             },
             style: GoogleFonts.poppins(color: Colors.white),
             decoration: InputDecoration(

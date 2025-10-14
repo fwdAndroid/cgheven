@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cgheven/provider/search_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cgheven/provider/search_provider.dart';
+import 'package:cgheven/model/asset_model.dart';
+import 'package:cgheven/widget/asset_card.dart';
+import 'package:cgheven/screens/detail/assets_detail_page.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -12,12 +17,38 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
+  Timer? _debounce;
 
-  void _onSearch() {
+  @override
+  void initState() {
+    super.initState();
+
+    // 🔍 Add listener for auto search
+    _controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
     final query = _controller.text.trim();
-    if (query.isNotEmpty) {
-      context.read<SearchProvider>().search(query);
-    }
+
+    // Cancel the previous timer if user keeps typing
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    // Wait 400ms after typing stops
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (query.isNotEmpty) {
+        context.read<SearchProvider>().search(query);
+      } else {
+        context.read<SearchProvider>().clearResults();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _controller.removeListener(_onTextChanged);
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,82 +57,127 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Assets', style: GoogleFonts.poppins()),
-        backgroundColor: Colors.black,
-      ),
-      backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              onSubmitted: (_) => _onSearch(),
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Search by title...',
-                hintStyle: const TextStyle(color: Colors.white54),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search, color: Colors.white),
-                  onPressed: _onSearch,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white24),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (provider.isLoading)
-              const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              )
-            else if (provider.error != null)
-              Text(
-                'Error: ${provider.error}',
-                style: const TextStyle(color: Colors.red),
-              )
-            else if (provider.results.isEmpty)
-              const Text(
-                'No results found',
-                style: TextStyle(color: Colors.white70),
-              )
-            else
-              Expanded(
-                child: ListView.builder(
-                  itemCount: provider.results.length,
-                  itemBuilder: (context, index) {
-                    final asset = provider.results[index];
-                    return Card(
-                      color: Colors.white10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        title: Text(
-                          asset.title,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Category: ${asset.categorie}\nSubcategories: ${asset.subcategories.map((s) => s.name).join(', ')}',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-          ],
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: const Color(0xFF0B1C24),
+        title: Text(
+          'Search Assets',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
       ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF0B1C24), Color(0xFF1A0F0D)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.darkBackground.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFF00bcd4).withOpacity(.4),
+                    width: 1,
+                  ),
+                ),
+                child: TextField(
+                  controller: _controller,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Search by title...',
+                    hintStyle: const TextStyle(color: Colors.white54),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // 🌀 LOADING / ERROR / RESULTS
+              if (provider.isLoading)
+                const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                )
+              else if (provider.error != null)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Error: ${provider.error}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                )
+              else if (provider.results.isEmpty)
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'No results found',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                )
+              else
+                Expanded(child: _buildGrid(provider.results)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// ✅ Grid Builder Using AssetCard
+  Widget _buildGrid(List<AssetModel> assets) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    const crossAxisCount = 2;
+    const spacing = 16.0;
+    final totalSpacing = spacing * (crossAxisCount + 1);
+    final cardWidth = (screenWidth - totalSpacing - 24) / crossAxisCount;
+    final cardHeight = cardWidth * 0.9;
+    final aspectRatio = cardWidth / cardHeight;
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(top: 12, bottom: 12),
+      itemCount: assets.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: spacing,
+        mainAxisSpacing: spacing,
+        childAspectRatio: aspectRatio,
+      ),
+      itemBuilder: (context, index) {
+        final asset = assets[index];
+        return AssetCard(
+          asset: asset,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => AssetDetailScreen(asset: asset),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

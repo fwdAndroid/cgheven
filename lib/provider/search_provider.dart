@@ -20,16 +20,17 @@ class SearchProvider with ChangeNotifier {
 
     try {
       _results = await AssetApiService().searchAssets(query);
-      print('🔍 Found ${_results.length} results for "$query"');
+      debugPrint('🔍 Found ${_results.length} results for "$query"');
     } catch (e) {
       _error = e.toString();
+      debugPrint('❌ Search error: $_error');
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-  void clear() {
+  void clearResults() {
     _results = [];
     _error = null;
     notifyListeners();
