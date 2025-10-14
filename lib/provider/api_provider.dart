@@ -11,6 +11,7 @@ class AssetProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
+  // ✅ Only fetch VFX assets
   Future<void> getNewAssets() async {
     _isLoading = true;
     _error = null;
@@ -19,7 +20,7 @@ class AssetProvider with ChangeNotifier {
     try {
       final result = await AssetApiService().fetchNewAssets();
 
-      // ✅ Filter: keep assets whose category name is "VFX"
+      // ✅ Filter by lowercase 'vfx'
       _assets = result
           .where((asset) => asset.categorie.toLowerCase() == 'vfx')
           .toList();
@@ -27,7 +28,7 @@ class AssetProvider with ChangeNotifier {
       debugPrint('✅ Loaded ${_assets.length} VFX assets');
     } catch (e) {
       _error = e.toString();
-      debugPrint('❌ Error loading assets: $_error');
+      debugPrint('❌ Error loading VFX assets: $_error');
     }
 
     _isLoading = false;
