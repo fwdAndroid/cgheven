@@ -54,17 +54,17 @@ class _AssetCardState extends State<AssetCard> {
                     ),
 
                     // Gradient Overlay
-                    Positioned.fill(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.transparent, Colors.black87],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Positioned.fill(
+                    //   child: Container(
+                    //     decoration: const BoxDecoration(
+                    //       gradient: LinearGradient(
+                    //         colors: [Colors.transparent, Colors.black87],
+                    //         begin: Alignment.topCenter,
+                    //         end: Alignment.bottomCenter,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
 
                     // NEW badge
                     Positioned(

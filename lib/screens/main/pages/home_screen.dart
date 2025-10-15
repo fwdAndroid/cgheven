@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   _buildSections(),
 
-                  /// 🔹 News Section via AnnouncementProvider
-                  if (activeAssetSection == 'News')
+                  /// 🔹 Updates Section via AnnouncementProvider
+                  if (activeAssetSection == 'Updates')
                     Consumer<AnnouncementProvider>(
                       builder: (context, provider, _) {
                         if (provider.isLoading) {
@@ -402,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// 🔹 Tabs (New, Trending, News)
+  /// 🔹 Tabs (New, Trending, Updates)
   Widget _buildSections() {
     return Container(
       height: 90,
@@ -412,7 +412,9 @@ class _HomeScreenState extends State<HomeScreen> {
         border: Border.all(color: const Color(0xFF00bcd4).withOpacity(.3)),
       ),
       child: Row(
-        children: ['New\n Assets', 'Trending\n Assets', 'News'].map((section) {
+        children: ['New\n Assets', 'Trending\n Assets', 'Updates'].map((
+          section,
+        ) {
           final isActive = activeAssetSection == section;
           return Expanded(
             child: GestureDetector(
@@ -431,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   assetProvider.getNewAssets();
                 } else if (section == 'Trending\n Assets') {
                   await _loadTrendingAssets(assetProvider);
-                } else if (section == 'News') {
+                } else if (section == 'Updates') {
                   announcementProvider.loadAnnouncements();
                 }
               },
