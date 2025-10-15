@@ -90,7 +90,7 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
           alignment: Alignment.center,
           children: [
             AspectRatio(
-              aspectRatio: isReady ? _controller.value.aspectRatio : 1,
+              aspectRatio: _controller.value.aspectRatio,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: isReady
