@@ -1,5 +1,6 @@
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -23,13 +24,13 @@ class _PromoWidgetState extends State<PromoWidget> {
     }
 
     if (promoProvider.promos.isEmpty) {
-      return const Center(child: Text("No promos available"));
+      return const SizedBox.shrink();
     }
 
     final promo = promoProvider.promos.first; // only first promo
     final videoUrl = promo.banner.toString();
     "";
-    final videoId = YoutubePlayer.convertUrlToId(videoUrl ?? '');
+    final videoId = YoutubePlayer.convertUrlToId(videoUrl);
 
     if (videoId != null && _controller == null) {
       _controller = YoutubePlayerController(
@@ -49,6 +50,14 @@ class _PromoWidgetState extends State<PromoWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
+          Text(
+            "🎬 Current Promo",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           if (_controller != null)
             AspectRatio(
               aspectRatio: 16 / 9,
@@ -59,7 +68,7 @@ class _PromoWidgetState extends State<PromoWidget> {
             ),
           const SizedBox(height: 10),
           Text(
-            promo.title ?? "",
+            promo.title,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,

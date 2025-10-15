@@ -2,6 +2,7 @@ import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
+import 'package:cgheven/screens/detail/all_assets_page.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
@@ -232,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         final assetsToShow =
                             activeAssetSection == 'Trending\n Assets'
                             ? _trendingAssets
-                            : provider.assets;
+                            : provider.assets.take(10).toList();
 
                         // ✅ Trending Section
                         if (activeAssetSection == 'Trending\n Assets') {
@@ -306,14 +307,31 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildGrid(assetsToShow),
-                              Text(
-                                "🎬 Current Promo",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                              const SizedBox(height: 10),
+
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => AllAssetsPage(
+                                          assets: provider.assets,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    "View All →",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.tealAccent,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
+
                               const SizedBox(height: 10),
                               PromoWidget(),
                               const SizedBox(height: 10),
