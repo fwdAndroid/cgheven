@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Color(0xFF0B1C24),
       body: Container(
         width: double.infinity,
         height: double.infinity,
