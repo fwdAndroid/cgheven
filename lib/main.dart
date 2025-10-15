@@ -4,6 +4,7 @@ import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/provider/language_provider.dart';
+import 'package:cgheven/provider/pagination_provider.dart';
 import 'package:cgheven/provider/poll_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
 import 'package:cgheven/provider/search_provider.dart';
@@ -33,6 +34,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PollProvider()),
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => PaginatedAssetProvider()),
       ],
 
       child: const MyApp(),

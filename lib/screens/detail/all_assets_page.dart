@@ -1,112 +1,109 @@
-import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/provider/pagination_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:cgheven/model/asset_model.dart';
+import 'package:provider/provider.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class AllAssetsPage extends StatelessWidget {
-  final List<AssetModel> assets;
+class AllAssetsPage extends StatefulWidget {
+  const AllAssetsPage({super.key});
 
-  const AllAssetsPage({super.key, required this.assets});
+  @override
+  State<AllAssetsPage> createState() => _AllAssetsPageState();
+}
+
+class _AllAssetsPageState extends State<AllAssetsPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<PaginatedAssetProvider>(
+      context,
+      listen: false,
+    );
+    provider.fetchInitial();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        provider.fetchMore();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0B1C24),
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        title: const Text(
-          'All VFX Assets',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Color(0xFF0B1C24),
+        title: const Text('All VFX Assets'),
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B1C24), Color(0xFF1A0F0D)],
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppTheme.darkBackground.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: const Color(0xFF00bcd4).withOpacity(.4),
-                    width: 1,
-                  ),
-                ),
-                child: TextField(
-                  style: GoogleFonts.poppins(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Search effects, explosions, magic...',
-                    hintStyle: GoogleFonts.poppins(
-                      color: const Color(0xFF9CA3AF),
-                      fontSize: 14,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color(0xFF9CA3AF),
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                  ),
-                ),
+      body: Consumer<PaginatedAssetProvider>(
+        builder: (context, provider, _) {
+          if (provider.isLoading && provider.assets.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.tealAccent),
+            );
+          }
+
+          if (provider.assets.isEmpty) {
+            return const Center(
+              child: Text(
+                'No assets found.',
+                style: TextStyle(color: Colors.white70),
               ),
-            ),
-            assets.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No assets available.',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height / 1.2,
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 0.9,
-                            ),
-                        itemCount: assets.length,
-                        itemBuilder: (context, index) {
-                          final asset = assets[index];
-                          return AssetCard(
-                            asset: asset,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      AssetDetailScreen(asset: asset),
-                                ),
-                              );
-                            },
-                          );
-                        },
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: GridView.builder(
+              controller: _scrollController,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.9,
+              ),
+              itemCount: provider.hasMore
+                  ? provider.assets.length + 1
+                  : provider.assets.length,
+              itemBuilder: (context, index) {
+                if (index >= provider.assets.length) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(
+                        color: Colors.tealAccent,
                       ),
                     ),
-                  ),
-          ],
-        ),
+                  );
+                }
+
+                final asset = provider.assets[index];
+                return AssetCard(
+                  asset: asset,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AssetDetailScreen(asset: asset),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -142,4 +142,33 @@ class AssetApiService {
       throw Exception('Failed to search assets');
     }
   }
+
+  //Pagnination Wise Results
+  Future<List<AssetModel>> fetchPaginatedAssets({
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    const baseUrl =
+        'https://api.cgheven.com/api/assets?populate=*&sort=createdAt:desc&filters[categorie][Name][\$eq]=VFX';
+
+    final url =
+        '$baseUrl&pagination[page]=$page&pagination[pageSize]=$pageSize';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": token,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List data = jsonData['data'];
+      return data.map((e) => AssetModel.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load assets');
+    }
+  }
 }

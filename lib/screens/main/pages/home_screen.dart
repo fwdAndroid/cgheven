@@ -316,9 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => AllAssetsPage(
-                                          assets: provider.assets,
-                                        ),
+                                        builder: (_) => AllAssetsPage(),
                                       ),
                                     );
                                   },
