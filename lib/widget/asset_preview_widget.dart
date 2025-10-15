@@ -4,12 +4,12 @@ import 'package:video_player/video_player.dart';
 
 class AssetPreviewPlayer extends StatefulWidget {
   final String videoUrl;
-  final String? green_screen;
+  // final String? green_screen;
 
   const AssetPreviewPlayer({
     super.key,
     required this.videoUrl,
-    this.green_screen,
+    // this.green_screen,
   });
 
   @override
@@ -37,18 +37,18 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
       });
   }
 
-  void _toggleVideoSource() {
-    if (widget.green_screen != null && widget.green_screen!.isNotEmpty) {
-      setState(() {
-        _showGreenScreen = !_showGreenScreen;
-        _controller.pause();
-        _controller.dispose();
-        _initializeController(
-          _showGreenScreen ? widget.green_screen! : widget.videoUrl,
-        );
-      });
-    }
-  }
+  // void _toggleVideoSource() {
+  //   if (widget.green_screen != null && widget.green_screen!.isNotEmpty) {
+  //     setState(() {
+  //       _showGreenScreen = !_showGreenScreen;
+  //       _controller.pause();
+  //       _controller.dispose();
+  //       _initializeController(
+  //         _showGreenScreen ? widget.green_screen! : widget.videoUrl,
+  //       );
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -167,28 +167,28 @@ class _AssetPreviewPlayerState extends State<AssetPreviewPlayer> {
             ),
 
             // 🟩 Toggle button (only if green_screen exists)
-            if (widget.green_screen != null && widget.green_screen!.isNotEmpty)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: _toggleVideoSource,
-                  child: Text(
-                    _showGreenScreen ? 'Normal Preview' : 'Green Screen',
-                    style: const TextStyle(fontSize: 12, color: Colors.white),
-                  ),
-                ),
-              ),
+            // if (widget.green_screen != null && widget.green_screen!.isNotEmpty)
+            //   Positioned(
+            //     top: 8,
+            //     right: 8,
+            //     child: ElevatedButton(
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.teal,
+            //         padding: const EdgeInsets.symmetric(
+            //           horizontal: 10,
+            //           vertical: 6,
+            //         ),
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(12),
+            //         ),
+            //       ),
+            //       onPressed: _toggleVideoSource,
+            //       child: Text(
+            //         _showGreenScreen ? 'Normal Preview' : 'Green Screen',
+            //         style: const TextStyle(fontSize: 12, color: Colors.white),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),
