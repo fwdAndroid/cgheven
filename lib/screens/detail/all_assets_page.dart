@@ -76,8 +76,13 @@ class _AllAssetsPageState extends State<AllAssetsPage> {
             );
           }
 
+          final screenWidth = MediaQuery.of(context).size.width;
           final crossAxisCount = getResponsiveCrossAxisCount(context);
-          final spacing = 12.0;
+          const spacing = 16.0;
+          final totalSpacing = spacing * (crossAxisCount + 1);
+          final cardWidth = (screenWidth - totalSpacing - 24) / crossAxisCount;
+          final cardHeight = cardWidth * 0.9;
+          final aspectRatio = cardWidth / cardHeight;
 
           return Padding(
             padding: const EdgeInsets.symmetric(
@@ -96,7 +101,7 @@ class _AllAssetsPageState extends State<AllAssetsPage> {
                       crossAxisCount: crossAxisCount,
                       crossAxisSpacing: spacing,
                       mainAxisSpacing: spacing,
-                      childAspectRatio: 0.85, // consistent card ratio
+                      childAspectRatio: aspectRatio,
                     ),
                     itemCount: provider.hasMore
                         ? provider.assets.length + 1
