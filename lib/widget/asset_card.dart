@@ -29,7 +29,6 @@ class _AssetCardState extends State<AssetCard> {
           side: const BorderSide(color: Color(0xFF00bcd4), width: .3),
         ),
         elevation: 6,
-        shadowColor: Colors.black.withOpacity(0.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
