@@ -29,13 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() {
       Provider.of<AssetProvider>(context, listen: false).getNewAssets();
       Provider.of<PromoProvider>(context, listen: false).fetchPromos();
     });
-    final provider = Provider.of<AssetProvider>(context, listen: false);
-    provider.getNewAssets();
   }
 
   /// ✅ Load trending assets from SharedPreferences (most viewed first)
@@ -281,14 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         // ✅ Default (New Assets)
                         final Set<String> uniqueSubs = {};
-
                         for (final asset in provider.assets) {
-                          if (asset.categorie == 'VFX' &&
-                              asset.subcategories.isNotEmpty) {
+                          if (asset.categorie.toLowerCase() == 'vfx') {
                             for (final sub in asset.subcategories) {
-                              if (sub.name.isNotEmpty) {
-                                uniqueSubs.add(sub.name);
-                              }
+                              uniqueSubs.add(sub.name);
                             }
                           }
                         }
