@@ -12,26 +12,42 @@ class AssetProvider with ChangeNotifier {
   String? get error => _error;
 
   // ✅ Only fetch VFX assets
+  // Future<void> getNewAssets() async {
+  //   _isLoading = true;
+  //   _error = null;
+  //   notifyListeners();
+
+  //   try {
+  //     final result = await AssetApiService().fetchAllVFXAssets();
+
+  //     // ✅ Filter by lowercase 'vfx'
+  //     _assets = result
+  //         .where((asset) => asset.categorie.toLowerCase() == 'vfx')
+  //         .toList();
+
+  //     debugPrint('✅ Loaded ${_assets.length} VFX assets');
+  //   } catch (e) {
+  //     _error = e.toString();
+  //     debugPrint('❌ Error loading VFX assets: $_error');
+  //   }
+
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
+
   Future<void> getNewAssets() async {
     _isLoading = true;
-    _error = null;
     notifyListeners();
 
     try {
-      final result = await AssetApiService().fetchNewAssets();
-
-      // ✅ Filter by lowercase 'vfx'
-      _assets = result
-          .where((asset) => asset.categorie.toLowerCase() == 'vfx')
-          .toList();
-
-      debugPrint('✅ Loaded ${_assets.length} VFX assets');
+      _assets = await AssetApiService()
+          .fetchAllVFXAssets(); // fetch all VFX assets only
+      _error = null;
     } catch (e) {
       _error = e.toString();
-      debugPrint('❌ Error loading VFX assets: $_error');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 }

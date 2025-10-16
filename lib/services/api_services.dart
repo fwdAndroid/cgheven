@@ -18,51 +18,66 @@ class AssetApiService {
 
   static const String token =
       "Bearer 9355813bda7bf9f9e8a89812a95b8ae3e190a7980dc156538093608344b26b637fd66b2a15c765816ec57b86549959bde01542070c2903db06443a5a3e8780bc919382806d8e702e0782827af4b9685e2b1bbf0d1aee7cf8de6d705ccc4b85198bad30ce3d82303b1557aa95b825b4afef2c661d824b9185e515e390955a4ee1";
-  Future<List<AssetModel>> fetchNewAssets() async {
-    const baseUrl =
+  Future<List<AssetModel>> fetchAllVFXAssets() async {
+    const String baseUrl =
         'https://api.cgheven.com/api/assets?populate=*&sort=createdAt:desc&filters[categorie][Name][\$eq]=VFX';
-    const pageSize = 1000;
+
+    const int pageSize = 100; // safer size
     int currentPage = 1;
     bool hasMore = true;
-
     List<AssetModel> allAssets = [];
 
+    print("🔄 Fetching all VFX assets...");
+
     while (hasMore) {
-      final url =
+      final String url =
           '$baseUrl&pagination[page]=$currentPage&pagination[pageSize]=$pageSize';
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          "Authorization": token,
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-      );
+      try {
+        final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            "Authorization": token,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+        );
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final List data = jsonData['data'];
+        if (response.statusCode == 200) {
+          final jsonData = json.decode(response.body);
+          final List data = jsonData['data'];
 
-        if (data.isEmpty) {
-          hasMore = false;
+          if (data.isEmpty) {
+            hasMore = false;
+            break;
+          }
+
+          // Parse and add assets
+          final assets = data.map((e) => AssetModel.fromJson(e)).toList();
+          allAssets.addAll(assets);
+
+          final pagination = jsonData['meta']?['pagination'];
+          if (pagination != null &&
+              pagination['page'] >= pagination['pageCount']) {
+            hasMore = false;
+          } else {
+            currentPage++;
+          }
+
+          print("✅ Page $currentPage fetched (${assets.length} assets)");
         } else {
-          allAssets.addAll(data.map((e) => AssetModel.fromJson(e)).toList());
-          currentPage++;
-        }
-
-        // If total assets are less than page size, stop automatically
-        final pagination = jsonData['meta']?['pagination'];
-        if (pagination != null &&
-            pagination['page'] >= pagination['pageCount']) {
+          print("❌ Failed page $currentPage: ${response.statusCode}");
           hasMore = false;
         }
-      } else {
-        throw Exception('Failed to load assets');
+      } catch (e) {
+        print("⚠️ Error fetching page $currentPage: $e");
+        hasMore = false;
       }
+
+      await Future.delayed(const Duration(milliseconds: 200)); // optional
     }
 
-    print("✅ Total VFX Assets Fetched: ${allAssets.length}");
+    print("🎉 Total VFX assets fetched: ${allAssets.length}");
     return allAssets;
   }
 
