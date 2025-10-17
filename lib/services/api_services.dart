@@ -268,4 +268,29 @@ class AssetApiService {
       );
     }
   }
+
+  // ----------- Fetch Latest Edited Assets -----------
+  Future<List<AssetModel>> fetchLatestEditedAssets({int limit = 10}) async {
+    final url =
+        'https://api.cgheven.com/api/assets?populate=*&sort=updatedAt:desc&pagination[page]=1&pagination[pageSize]=$limit';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": token,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List data = jsonData['data'];
+      print("✅ Latest Edited Assets Fetched: ${data.length}");
+      return data.map((e) => AssetModel.fromJson(e)).toList();
+    } else {
+      print("❌ Failed to fetch latest edited assets: ${response.statusCode}");
+      throw Exception('Failed to load latest edited assets');
+    }
+  }
 }

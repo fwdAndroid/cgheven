@@ -3,6 +3,7 @@ import 'package:cgheven/services/api_services.dart';
 import 'package:flutter/material.dart';
 
 class AssetProvider with ChangeNotifier {
+  // ---------- Existing fields ----------
   List<AssetModel> _assets = [];
   bool _isLoading = false;
   String? _error;
@@ -10,8 +11,36 @@ class AssetProvider with ChangeNotifier {
   List<AssetModel> get assets => _assets;
   bool get isLoading => _isLoading;
   String? get error => _error;
+
   final _apiService = AssetApiService();
-  // ✅ Only fetch VFX assets
+
+  // ---------- New: Latest Edited Assets ----------
+  List<AssetModel> _latestEditedAssets = [];
+  bool _isLoadingLatest = false;
+
+  List<AssetModel> get latestEditedAssets => _latestEditedAssets;
+  bool get isLoadingLatest => _isLoadingLatest;
+
+  // ---------- Fetch Latest Edited Assets ----------
+  Future<void> getLatestEditedAssets({int limit = 10}) async {
+    _isLoadingLatest = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final result = await _apiService.fetchLatestEditedAssets(limit: limit);
+      _latestEditedAssets = result;
+      debugPrint('✅ Loaded ${_latestEditedAssets.length} latest edited assets');
+    } catch (e) {
+      _error = e.toString();
+      debugPrint('❌ Error loading latest edited assets: $_error');
+    }
+
+    _isLoadingLatest = false;
+    notifyListeners();
+  }
+
+  // ---------- Existing: Fetch New Assets ----------
   Future<void> getNewAssets() async {
     _isLoading = true;
     _error = null;
@@ -35,13 +64,13 @@ class AssetProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ✅ Update assets manually
+  // ---------- Update assets manually ----------
   void setAssets(List<AssetModel> newAssets) {
     _assets = newAssets;
     notifyListeners();
   }
 
-  // ✅ Filter by Subcategory (or reset)
+  // ---------- Filter by Category ----------
   Future<void> filterByCategory(String? categoryName) async {
     if (categoryName == null) {
       await getNewAssets(); // reset to all VFX assets
@@ -64,6 +93,7 @@ class AssetProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // ---------- Filter by Subcategory ----------
   Future<void> getAssetsBySubcategory(String subcategoryName) async {
     _isLoading = true;
     _error = null;
