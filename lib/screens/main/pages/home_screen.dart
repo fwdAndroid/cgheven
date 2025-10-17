@@ -3,11 +3,10 @@ import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
 import 'package:cgheven/screens/detail/all_assets_page.dart';
-import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
-import 'package:cgheven/widget/asset_card.dart';
+import 'package:cgheven/widget/grid_widget.dart';
 import 'package:cgheven/widget/promo_widget.dart';
 import 'package:cgheven/widget/search_box_widget.dart';
 import 'package:cgheven/widget/shimmer_widget.dart';
@@ -290,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   )
                                 else
-                                  _buildGrid(_trendingAssets),
+                                  buildGrid(_trendingAssets, context),
                               ],
                             ),
                           );
@@ -326,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildGrid(assetsToShow),
+                              buildGrid(assetsToShow, context),
                               const SizedBox(height: 10),
 
                               Align(
@@ -429,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  _buildGrid(filteredAssets),
+                                  buildGrid(filteredAssets, context),
                                 ],
                               ],
                             ],
@@ -505,44 +504,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }).toList(),
       ),
-    );
-  }
-
-  /// 🔹 Grid layout for displaying assets
-  Widget _buildGrid(List<AssetModel> assets) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    const crossAxisCount = 2;
-    const spacing = 16.0;
-    final totalSpacing = spacing * (crossAxisCount + 1);
-    final cardWidth = (screenWidth - totalSpacing - 24) / crossAxisCount;
-    final cardHeight = cardWidth * 0.9;
-    final aspectRatio = cardWidth / cardHeight;
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(top: 12, bottom: 12),
-      itemCount: assets.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: spacing,
-        mainAxisSpacing: spacing,
-        childAspectRatio: aspectRatio,
-      ),
-      itemBuilder: (context, index) {
-        final asset = assets[index];
-        return AssetCard(
-          asset: asset,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (builder) => AssetDetailScreen(asset: asset),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }
