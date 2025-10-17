@@ -12,6 +12,7 @@ class AssetModel {
   final String categorie;
   final String? slug;
   final List<String> tags;
+  final DateTime createdAt; // ✅ Added field
   final List<SubcategoryModel> subcategories; // ✅ Added
   // final String? green_screen; // ✅ make it nullable
 
@@ -22,6 +23,8 @@ class AssetModel {
     required this.thumbnail,
     required this.publishedAt,
     required this.files,
+    required this.createdAt, // ✅ new
+
     required this.previews,
     required this.isPatreonLocked,
     required this.tags,
@@ -38,7 +41,11 @@ class AssetModel {
             ?.map((s) => SubcategoryModel.fromJson(s))
             .toList() ??
         [];
+
     return AssetModel(
+      createdAt:
+          DateTime.tryParse(json['createdAt'] ?? '') ??
+          DateTime.now(), // ✅ added safely
       id: json['id'] ?? 0,
       subcategories: subcategories,
 
