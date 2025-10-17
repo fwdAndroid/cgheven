@@ -32,13 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final AssetApiService _apiService = AssetApiService();
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     Future.microtask(() {
       Provider.of<AssetProvider>(context, listen: false).getNewAssets();
       Provider.of<PromoProvider>(context, listen: false).fetchPromos();
+      _loadVfxSubcategories();
     });
-    _loadVfxSubcategories();
   }
 
   Future<void> _loadVfxSubcategories() async {
@@ -370,11 +370,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     final isSelected = selectedChip == cat.name;
                                     return GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          selectedChip = isSelected
-                                              ? null
-                                              : cat.name;
-                                        });
+                                        setState(() => selectedChip = cat.name);
+                                        Provider.of<AssetProvider>(
+                                          context,
+                                          listen: false,
+                                        ).getAssetsBySubcategory(cat.name);
                                       },
                                       child: AnimatedContainer(
                                         duration: const Duration(
@@ -429,90 +429,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  _buildGrid(
-                                    Provider.of<AssetProvider>(
-                                          context,
-                                          listen: false,
-                                        ).assets
-                                        .where(
-                                          (asset) => asset.subcategories.any(
-                                            (sub) => sub.name == selectedChip,
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
+                                  _buildGrid(filteredAssets),
                                 ],
                               ],
-                              // if (uniqueSubs.isNotEmpty) ...[
-                              //   Wrap(
-                              //     spacing: 8,
-                              //     runSpacing: 8,
-                              //     children: uniqueSubs.map((sub) {
-                              //       final isSelected = selectedChip == sub;
-                              //       return GestureDetector(
-                              //         onTap: () {
-                              //           setState(() {
-                              //             selectedChip = isSelected
-                              //                 ? null
-                              //                 : sub;
-                              //           });
-                              //         },
-                              //         child: AnimatedContainer(
-                              //           duration: const Duration(
-                              //             milliseconds: 200,
-                              //           ),
-                              //           padding: const EdgeInsets.symmetric(
-                              //             horizontal: 14,
-                              //             vertical: 8,
-                              //           ),
-                              //           decoration: BoxDecoration(
-                              //             gradient: isSelected
-                              //                 ? AppTheme.fireGradient
-                              //                 : null,
-                              //             color: isSelected
-                              //                 ? null
-                              //                 : const Color(
-                              //                     0xFF374151,
-                              //                   ).withOpacity(0.5),
-                              //             borderRadius: BorderRadius.circular(
-                              //               24,
-                              //             ),
-                              //             border: Border.all(
-                              //               color: const Color(
-                              //                 0xFF00bcd4,
-                              //               ).withOpacity(.4),
-                              //             ),
-                              //           ),
-                              //           child: Text(
-                              //             sub,
-                              //             style: GoogleFonts.inter(
-                              //               color: Colors.white,
-                              //               fontSize: 13,
-                              //               fontWeight: FontWeight.w600,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       );
-                              //     }).toList(),
-                              //   ),
-                              //   const SizedBox(height: 20),
-                              //   if (selectedChip != null) ...[
-                              //     Padding(
-                              //       padding: const EdgeInsets.symmetric(
-                              //         vertical: 4,
-                              //       ),
-                              //       child: Text(
-                              //         'Showing results for "$selectedChip"',
-                              //         style: GoogleFonts.inter(
-                              //           color: Colors.white70,
-                              //           fontSize: 14,
-                              //           fontWeight: FontWeight.w600,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     _buildGrid(filteredAssets),
-                              //   ],
-                              // ],
                             ],
                           ),
                         );

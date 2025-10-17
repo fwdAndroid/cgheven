@@ -63,4 +63,24 @@ class AssetProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> getAssetsBySubcategory(String subcategoryName) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final result = await AssetApiService().fetchAssetsBySubcategory(
+        subcategoryName,
+      );
+      _assets = result;
+      print('✅ Loaded ${_assets.length} assets for $subcategoryName');
+    } catch (e) {
+      _error = e.toString();
+      print('❌ Error loading assets by subcategory: $_error');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
 }
