@@ -4,6 +4,8 @@ import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
 import 'package:cgheven/screens/detail/all_assets_page.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
+import 'package:cgheven/services/api_services.dart';
+import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/asset_card.dart';
 import 'package:cgheven/widget/promo_widget.dart';
@@ -25,14 +27,32 @@ class _HomeScreenState extends State<HomeScreen> {
   String activeAssetSection = 'New\n Assets';
   String? selectedChip;
   List<AssetModel> _trendingAssets = [];
+  List<Category> _vfxSubcategories = [];
+  bool _isLoadingSubcats = false;
+  final AssetApiService _apiService = AssetApiService();
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     Future.microtask(() {
       Provider.of<AssetProvider>(context, listen: false).getNewAssets();
       Provider.of<PromoProvider>(context, listen: false).fetchPromos();
     });
+    _loadVfxSubcategories();
+  }
+
+  Future<void> _loadVfxSubcategories() async {
+    setState(() => _isLoadingSubcats = true);
+    try {
+      final result = await _apiService.fetchCategories();
+      setState(() {
+        _vfxSubcategories = result;
+      });
+    } catch (e) {
+      print("❌ Failed to fetch subcategories: $e");
+    } finally {
+      setState(() => _isLoadingSubcats = false);
+    }
   }
 
   /// ✅ Load trending assets from SharedPreferences (most viewed first)
@@ -333,19 +353,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 10),
                               PromoWidget(),
                               const SizedBox(height: 10),
-
-                              if (uniqueSubs.isNotEmpty) ...[
+                              if (_isLoadingSubcats)
+                                const Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.tealAccent,
+                                    ),
+                                  ),
+                                )
+                              else if (_vfxSubcategories.isNotEmpty) ...[
                                 Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
-                                  children: uniqueSubs.map((sub) {
-                                    final isSelected = selectedChip == sub;
+                                  children: _vfxSubcategories.map((cat) {
+                                    final isSelected = selectedChip == cat.name;
                                     return GestureDetector(
                                       onTap: () {
                                         setState(() {
                                           selectedChip = isSelected
                                               ? null
-                                              : sub;
+                                              : cat.name;
                                         });
                                       },
                                       child: AnimatedContainer(
@@ -375,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         child: Text(
-                                          sub,
+                                          cat.name,
                                           style: GoogleFonts.inter(
                                             color: Colors.white,
                                             fontSize: 13,
@@ -401,9 +429,90 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  _buildGrid(filteredAssets),
+                                  _buildGrid(
+                                    Provider.of<AssetProvider>(
+                                          context,
+                                          listen: false,
+                                        ).assets
+                                        .where(
+                                          (asset) => asset.subcategories.any(
+                                            (sub) => sub.name == selectedChip,
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
                                 ],
                               ],
+                              // if (uniqueSubs.isNotEmpty) ...[
+                              //   Wrap(
+                              //     spacing: 8,
+                              //     runSpacing: 8,
+                              //     children: uniqueSubs.map((sub) {
+                              //       final isSelected = selectedChip == sub;
+                              //       return GestureDetector(
+                              //         onTap: () {
+                              //           setState(() {
+                              //             selectedChip = isSelected
+                              //                 ? null
+                              //                 : sub;
+                              //           });
+                              //         },
+                              //         child: AnimatedContainer(
+                              //           duration: const Duration(
+                              //             milliseconds: 200,
+                              //           ),
+                              //           padding: const EdgeInsets.symmetric(
+                              //             horizontal: 14,
+                              //             vertical: 8,
+                              //           ),
+                              //           decoration: BoxDecoration(
+                              //             gradient: isSelected
+                              //                 ? AppTheme.fireGradient
+                              //                 : null,
+                              //             color: isSelected
+                              //                 ? null
+                              //                 : const Color(
+                              //                     0xFF374151,
+                              //                   ).withOpacity(0.5),
+                              //             borderRadius: BorderRadius.circular(
+                              //               24,
+                              //             ),
+                              //             border: Border.all(
+                              //               color: const Color(
+                              //                 0xFF00bcd4,
+                              //               ).withOpacity(.4),
+                              //             ),
+                              //           ),
+                              //           child: Text(
+                              //             sub,
+                              //             style: GoogleFonts.inter(
+                              //               color: Colors.white,
+                              //               fontSize: 13,
+                              //               fontWeight: FontWeight.w600,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       );
+                              //     }).toList(),
+                              //   ),
+                              //   const SizedBox(height: 20),
+                              //   if (selectedChip != null) ...[
+                              //     Padding(
+                              //       padding: const EdgeInsets.symmetric(
+                              //         vertical: 4,
+                              //       ),
+                              //       child: Text(
+                              //         'Showing results for "$selectedChip"',
+                              //         style: GoogleFonts.inter(
+                              //           color: Colors.white70,
+                              //           fontSize: 14,
+                              //           fontWeight: FontWeight.w600,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     _buildGrid(filteredAssets),
+                              //   ],
+                              // ],
                             ],
                           ),
                         );

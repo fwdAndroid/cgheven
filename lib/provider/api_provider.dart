@@ -10,7 +10,7 @@ class AssetProvider with ChangeNotifier {
   List<AssetModel> get assets => _assets;
   bool get isLoading => _isLoading;
   String? get error => _error;
-
+  final _apiService = AssetApiService();
   // ✅ Only fetch VFX assets
   Future<void> getNewAssets() async {
     _isLoading = true;
@@ -29,6 +29,35 @@ class AssetProvider with ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       debugPrint('❌ Error loading VFX assets: $_error');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  // ✅ Update assets manually
+  void setAssets(List<AssetModel> newAssets) {
+    _assets = newAssets;
+    notifyListeners();
+  }
+
+  // ✅ Filter by Subcategory (or reset)
+  Future<void> filterByCategory(String? categoryName) async {
+    if (categoryName == null) {
+      await getNewAssets(); // reset to all VFX assets
+      return;
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await _apiService.fetchAssetsByCategory(categoryName);
+      _assets = result;
+      debugPrint("✅ Filtered ${_assets.length} assets for '$categoryName'");
+    } catch (e) {
+      _error = e.toString();
+      debugPrint("❌ Error filtering by category: $_error");
     }
 
     _isLoading = false;
