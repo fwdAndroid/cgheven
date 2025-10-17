@@ -414,22 +414,62 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }).toList(),
                                 ),
                                 const SizedBox(height: 20),
-                                if (selectedChip != null) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    child: Text(
-                                      'Showing results for "$selectedChip"',
-                                      style: GoogleFonts.inter(
-                                        color: Colors.white70,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  buildGrid(filteredAssets, context),
-                                ],
+                                Consumer<AssetProvider>(
+                                  builder: (context, provider, _) {
+                                    if (selectedChip == null) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    if (provider.isLoading) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.tealAccent,
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    final filteredAssets =
+                                        provider.assetsBySubcategory;
+
+                                    if (filteredAssets.isEmpty) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'No assets found for "$selectedChip".',
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            'Showing results for "$selectedChip"',
+                                            style: GoogleFonts.inter(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        buildGrid(filteredAssets, context),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ],
                             ],
                           ),

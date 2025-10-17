@@ -14,6 +14,9 @@ class AssetProvider with ChangeNotifier {
 
   final _apiService = AssetApiService();
 
+  List<AssetModel> _assetsBySubcategory = [];
+  List<AssetModel> get assetsBySubcategory => _assetsBySubcategory;
+
   // ---------- New: Latest Edited Assets ----------
   List<AssetModel> _latestEditedAssets = [];
   bool _isLoadingLatest = false;
@@ -100,14 +103,16 @@ class AssetProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await AssetApiService().fetchAssetsBySubcategory(
+      final result = await _apiService.fetchAssetsBySubcategory(
         subcategoryName,
       );
-      _assets = result;
-      print('✅ Loaded ${_assets.length} assets for $subcategoryName');
+      _assetsBySubcategory = result;
+      debugPrint(
+        '✅ Loaded ${_assetsBySubcategory.length} assets for $subcategoryName',
+      );
     } catch (e) {
       _error = e.toString();
-      print('❌ Error loading assets by subcategory: $_error');
+      debugPrint('❌ Error loading assets by subcategory: $_error');
     }
 
     _isLoading = false;
