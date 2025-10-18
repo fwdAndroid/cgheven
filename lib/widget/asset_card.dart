@@ -26,7 +26,7 @@ class _AssetCardState extends State<AssetCard> {
         color: AppTheme.darkBackground.withOpacity(0.6),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFF00bcd4), width: .3),
+          side: const BorderSide(color: Color(0xFF00bcd4), width: .6),
         ),
         elevation: 6,
         child: Column(
@@ -68,7 +68,7 @@ class _AssetCardState extends State<AssetCard> {
 
                     // NEW badge
                     Positioned(
-                      top: 8,
+                      top: 6,
                       left: 8,
                       child: Container(
                         padding: const EdgeInsets.symmetric(

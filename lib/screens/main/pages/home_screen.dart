@@ -406,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             border: Border.all(
                                               color: const Color(
                                                 0xFF00bcd4,
-                                              ).withOpacity(.5),
+                                              ).withOpacity(.8),
                                             ),
                                           ),
                                           child: Text(
