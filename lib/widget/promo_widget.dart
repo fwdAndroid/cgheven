@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,7 @@ class PromoWidget extends StatefulWidget {
 }
 
 class _PromoWidgetState extends State<PromoWidget> {
-  YoutubePlayerController? _controller;
+  final Map<int, YoutubePlayerController> _controllers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -27,66 +28,183 @@ class _PromoWidgetState extends State<PromoWidget> {
       return const SizedBox.shrink();
     }
 
-    final promo = promoProvider.promos.first; // only first promo
-    final videoUrl = promo.banner.toString();
-    "";
-    final videoId = YoutubePlayer.convertUrlToId(videoUrl);
+    final promos = promoProvider.promos;
 
-    if (videoId != null && _controller == null) {
-      _controller = YoutubePlayerController(
-        initialVideoId: videoId,
-        flags: const YoutubePlayerFlags(autoPlay: false),
-      );
-    }
+    return SizedBox(
+      height: 340,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: promos.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final promo = promos[index];
+          final bannerUrl = promo.banners.isNotEmpty ? promo.banners.first : "";
+          final videoId = YoutubePlayer.convertUrlToId(bannerUrl);
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppTheme.darkBackground.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF00bcd4).withOpacity(.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          Text(
-            "🎬 Current Promo",
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          // initialize controller only once
+          if (videoId != null && !_controllers.containsKey(index)) {
+            _controllers[index] = YoutubePlayerController(
+              initialVideoId: videoId,
+              flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+            );
+          }
+
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Color(0xFF00bcd4), width: 1),
+              color: const Color(0xFF111110),
             ),
-          ),
-          if (_controller != null)
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: YoutubePlayer(
-                controller: _controller!,
-                showVideoProgressIndicator: true,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Column(
+                children: [
+                  // 🎬 Image or Video
+                  if (videoId != null)
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: YoutubePlayer(
+                        controller: _controllers[index]!,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: Colors.cyanAccent,
+                      ),
+                    )
+                  else if (bannerUrl.isNotEmpty)
+                    Image.network(
+                      bannerUrl,
+                      fit: BoxFit.cover,
+                      height: 180,
+                      width: double.infinity,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          height: 180,
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        );
+                      },
+                      errorBuilder: (_, __, ___) => Container(
+                        height: 180,
+                        color: Colors.black26,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.image_not_supported,
+                          color: Colors.white54,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                  Spacer(),
+                  // 🖤 Title + Description Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff0F1010),
+                          Color(0xFF1A1C1D), // top fade (cool dark gray)
+                          Color(0xFF16120E), // bottom (warm deep brown-black)
+                        ],
+                        //   stops: [0.0, 1.0], // full coverage, no transparency
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.7),
+                          blurRadius: 20,
+                          spreadRadius: 6,
+                          offset: const Offset(0, -4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                promo.title,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.orangeAccent.withOpacity(0.7),
+                                    blurRadius: 2,
+                                    spreadRadius: .9,
+                                    offset: const Offset(0, 0),
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.orange.withOpacity(0.4),
+                                    blurRadius: .9,
+                                    spreadRadius: 1,
+                                    offset: const Offset(0, 0),
+                                  ),
+                                ],
+                                gradient: AppTheme.fireGradient,
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'NEW',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          promo.description.toString(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white.withOpacity(0.85),
+                            fontSize: 14,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          const SizedBox(height: 10),
-          Text(
-            promo.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            promo.description.toString(),
-            style: const TextStyle(color: Colors.white70, fontSize: 16),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 }

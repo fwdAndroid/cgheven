@@ -16,6 +16,7 @@ class PromoProvider with ChangeNotifier {
 
     try {
       _promos = await _apiService.fetchPromos();
+      print("Promo titles: ${_promos.map((p) => p.title).toList()}");
     } catch (e) {
       print("Error fetching promos: $e");
     }

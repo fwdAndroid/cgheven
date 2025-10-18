@@ -350,6 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               const SizedBox(height: 10),
+                              //Promo Api
                               PromoWidget(),
                               const SizedBox(height: 10),
                               if (_isLoadingSubcats)
