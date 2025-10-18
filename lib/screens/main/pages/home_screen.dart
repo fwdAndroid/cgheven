@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
@@ -305,13 +307,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         }
 
-                        final filteredAssets = selectedChip == null
-                            ? <AssetModel>[]
-                            : provider.assets.where((asset) {
-                                return asset.subcategories.any(
-                                  (sub) => sub.name == selectedChip,
-                                );
-                              }).toList();
+                        // final filteredAssets = selectedChip == null
+                        //     ? <AssetModel>[]
+                        //     : provider.assets.where((asset) {
+                        //         return asset.subcategories.any(
+                        //           (sub) => sub.name == selectedChip,
+                        //         );
+                        //       }).toList();
 
                         return Container(
                           decoration: BoxDecoration(
@@ -363,57 +365,64 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               else if (_vfxSubcategories.isNotEmpty) ...[
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: _vfxSubcategories.map((cat) {
-                                    final isSelected = selectedChip == cat.name;
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() => selectedChip = cat.name);
-                                        Provider.of<AssetProvider>(
-                                          context,
-                                          listen: false,
-                                        ).getAssetsBySubcategory(cat.name);
-                                      },
-                                      child: AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 200,
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                          vertical: 8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: isSelected
-                                              ? AppTheme.fireGradient
-                                              : null,
-                                          color: isSelected
-                                              ? null
-                                              : const Color(
-                                                  0xFF374151,
-                                                ).withOpacity(0.5),
-                                          borderRadius: BorderRadius.circular(
-                                            24,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: _vfxSubcategories.map((cat) {
+                                      final isSelected =
+                                          selectedChip == cat.name;
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(
+                                            () => selectedChip = cat.name,
+                                          );
+                                          Provider.of<AssetProvider>(
+                                            context,
+                                            listen: false,
+                                          ).getAssetsBySubcategory(cat.name);
+                                        },
+                                        child: AnimatedContainer(
+                                          duration: const Duration(
+                                            milliseconds: 200,
                                           ),
-                                          border: Border.all(
-                                            color: const Color(
-                                              0xFF00bcd4,
-                                            ).withOpacity(.4),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 8,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            gradient: isSelected
+                                                ? AppTheme.fireGradient
+                                                : null,
+                                            color: isSelected
+                                                ? null
+                                                : const Color(
+                                                    0xFF374151,
+                                                  ).withOpacity(0.5),
+                                            borderRadius: BorderRadius.circular(
+                                              24,
+                                            ),
+                                            border: Border.all(
+                                              color: const Color(
+                                                0xFF00bcd4,
+                                              ).withOpacity(.5),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            cat.name,
+                                            style: GoogleFonts.inter(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
-                                        child: Text(
-                                          cat.name,
-                                          style: GoogleFonts.inter(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
+
                                 const SizedBox(height: 20),
                                 Consumer<AssetProvider>(
                                   builder: (context, provider, _) {
