@@ -52,19 +52,21 @@ class _PromoWidgetState extends State<PromoWidget> {
 
           return Container(
             width: MediaQuery.of(context).size.width * 0.8,
+            height: 340, // keeps consistent card height
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Color(0xFF00bcd4), width: 1),
-              color: const Color(0xFF111110),
+              border: Border.all(color: const Color(0xFF00bcd4), width: 1),
+              color: AppTheme.darkBackground.withOpacity(0.6),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: Column(
+              child: Stack(
                 children: [
-                  // 🎬 Image or Video
+                  // 🎬 Image or Video fills top portion
                   if (videoId != null)
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
+                    Positioned.fill(
+                      top: 0,
+                      bottom: 100, // leave space for title container
                       child: YoutubePlayer(
                         controller: _controllers[index]!,
                         showVideoProgressIndicator: true,
@@ -72,123 +74,115 @@ class _PromoWidgetState extends State<PromoWidget> {
                       ),
                     )
                   else if (bannerUrl.isNotEmpty)
-                    Image.network(
-                      bannerUrl,
-                      fit: BoxFit.cover,
-                      height: 180,
-                      width: double.infinity,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          height: 180,
+                    Positioned.fill(
+                      top: 0,
+                      bottom: 100,
+                      child: Image.network(
+                        bannerUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                        errorBuilder: (_, __, ___) => Container(
+                          color: Colors.black26,
                           alignment: Alignment.center,
-                          child: const CircularProgressIndicator(),
-                        );
-                      },
-                      errorBuilder: (_, __, ___) => Container(
-                        height: 180,
-                        color: Colors.black26,
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.image_not_supported,
-                          color: Colors.white54,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                  Spacer(),
-                  // 🖤 Title + Description Section
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 24,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xff0F1010),
-                          Color(0xFF1A1C1D), // top fade (cool dark gray)
-                          Color(0xFF16120E), // bottom (warm deep brown-black)
-                        ],
-                        //   stops: [0.0, 1.0], // full coverage, no transparency
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.7),
-                          blurRadius: 20,
-                          spreadRadius: 6,
-                          offset: const Offset(0, -4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                promo.title,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.2,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 8),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.orangeAccent.withOpacity(0.7),
-                                    blurRadius: 2,
-                                    spreadRadius: .9,
-                                    offset: const Offset(0, 0),
-                                  ),
-                                  BoxShadow(
-                                    color: Colors.orange.withOpacity(0.4),
-                                    blurRadius: .9,
-                                    spreadRadius: 1,
-                                    offset: const Offset(0, 0),
-                                  ),
-                                ],
-                                gradient: AppTheme.fireGradient,
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                'NEW',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          promo.description.toString(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white.withOpacity(0.85),
-                            fontSize: 14,
-                            height: 1.4,
+                          child: const Icon(
+                            Icons.image_not_supported,
+                            color: Colors.white54,
+                            size: 40,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+
+                  // 🖤 Title + Description (pinned at bottom)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 22,
+                      ),
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xFF1A1C1D), // top fade (cool dark gray)
+                            Color(0xFF16120E), // bottom (warm dark brown-black)
+                          ],
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  promo.title,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.orangeAccent.withOpacity(
+                                        0.7,
+                                      ),
+                                      blurRadius: 2,
+                                      spreadRadius: .9,
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.orange.withOpacity(0.4),
+                                      blurRadius: .9,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                  gradient: AppTheme.fireGradient,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'NEW',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            promo.description.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              color: Colors.white.withOpacity(0.85),
+                              fontSize: 14,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
