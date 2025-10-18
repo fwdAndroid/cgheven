@@ -71,73 +71,82 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(
-      context,
-    ); // Access the provider
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0B1C24), // #0b1c24 at 0%
-              Color(0xFF1A0F0D), // #1a0f0d at 100%
-            ],
+      body: Stack(
+        children: [
+          // 🌈 Layer 1: Rich 3-color gradient background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft, // 135-degree direction
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0B1C24), // cool teal tint (top-left)
+                  Color(0xFF101820), // neutral dark mid-tone
+                  Color(0xFF1A0F0D), // warm brown-black (bottom-right)
+                ],
+                stops: [0.0, 0.5, 1.0],
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Inside build()
-                Container(
-                  height: 60,
-                  alignment: Alignment.center,
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      colors: [
-                        Color(0xFF2A7B9B), // teal-ish
-                        Color(0xFF57C785), // green-ish
-                        Color(0xFFEDDD53), // yellow-ish
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                    child: Text(
-                      languageProvider.localizedStrings['Setting'] ?? "Setting",
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Colors.white, // important! this becomes mask
+
+          // 🌤️ Layer 2: Subtle light overlay for depth
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white.withOpacity(0.03),
+                  Colors.black.withOpacity(0.2),
+                ],
+              ),
+            ),
+          ),
+
+          // 🌟 Foreground UI content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header
+                  Container(
+                    height: 60,
+                    alignment: Alignment.center,
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [
+                          Color(0xFF2A7B9B), // teal-ish
+                          Color(0xFF57C785), // green-ish
+                          Color(0xFFEDDD53), // yellow-ish
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ).createShader(bounds),
+                      child: Text(
+                        languageProvider.localizedStrings['Setting'] ??
+                            "Setting",
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF00bcd4).withOpacity(.4),
-                        width: 1,
-                      ),
-                    ),
+                  // Notifications Section
+                  _buildSectionContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.notifications, color: Colors.teal),
-                            SizedBox(width: 8),
+                            const Icon(Icons.notifications, color: Colors.teal),
+                            const SizedBox(width: 8),
                             Text(
                               languageProvider
                                       .localizedStrings['Notifications'] ??
@@ -165,28 +174,16 @@ class _SettingScreenState extends State<SettingScreen> {
                       ],
                     ),
                   ),
-                ),
 
-                // Downloads
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF00bcd4).withOpacity(.4),
-                        width: 1,
-                      ),
-                    ),
+                  // Downloads Section
+                  _buildSectionContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.download, color: Colors.teal),
-                            SizedBox(width: 8),
+                            const Icon(Icons.download, color: Colors.teal),
+                            const SizedBox(width: 8),
                             Text(
                               languageProvider.localizedStrings['Downloads'] ??
                                   "Downloads",
@@ -221,66 +218,12 @@ class _SettingScreenState extends State<SettingScreen> {
                           value: autoDownloadPreviews,
                           onTap: () => toggleSetting('autoDownloadPreviews'),
                         ),
-
-                        const SizedBox(height: 8),
-                        Text(
-                          languageProvider
-                                  .localizedStrings['Default Download Quality'] ??
-                              "Default Download Quality",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          languageProvider
-                                  .localizedStrings['Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.'] ??
-                              "Sets the default suggestion only. Ad gating still applies for 2K/4K and ProRes formats.",
-                          style: GoogleFonts.poppins(color: Colors.grey),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: ["1K", "2K", "4K"].map((q) {
-                            final selected = defaultQuality == q;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: GradientButton(
-                                gradient: selected
-                                    ? AppTheme.fireGradient
-                                    : AppTheme.greyGradeubt,
-                                onPressed: () => setQuality(q),
-                                child: Text(
-                                  q,
-                                  style: GoogleFonts.poppins(
-                                    color: selected
-                                        ? Colors.white
-                                        : Colors.grey,
-                                    fontWeight: selected
-                                        ? FontWeight.bold
-                                        : FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
                       ],
                     ),
                   ),
-                ),
-                // Subscription
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF00bcd4).withOpacity(.4),
-                        width: 1,
-                      ),
-                    ),
+
+                  // Subscription Section
+                  _buildSectionContainer(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -289,7 +232,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.money, color: Colors.teal),
+                                const Icon(Icons.money, color: Colors.teal),
                                 const SizedBox(width: 8),
                                 Text(
                                   languageProvider
@@ -340,29 +283,18 @@ class _SettingScreenState extends State<SettingScreen> {
                       ],
                     ),
                   ),
-                ),
-                // Language
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF00bcd4).withOpacity(.4),
-                        width: 1,
-                      ),
-                    ),
+
+                  // Language Section
+                  _buildSectionContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.language, color: Colors.teal),
-                            SizedBox(width: 8),
+                            const Icon(Icons.language, color: Colors.teal),
+                            const SizedBox(width: 8),
                             Text(
-                              languageProvider.localizedStrings['Lanuage'] ??
+                              languageProvider.localizedStrings['Language'] ??
                                   "Language",
                               style: GoogleFonts.poppins(
                                 fontSize: 22,
@@ -373,91 +305,22 @@ class _SettingScreenState extends State<SettingScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.grey.withOpacity(.3),
-                            ),
-                          ),
-                          child: ListTile(
-                            onTap: () {
-                              languageProvider.changeLanguage(
-                                'en',
-                              ); // Switch to English
-                            },
-                            trailing: Icon(
-                              languageProvider.currentLanguage == 'en'
-                                  ? Icons.radio_button_checked
-                                  : Icons.radio_button_off,
-                              color: Colors
-                                  .teal, // use teal for active consistency
-                              size: 20,
-                            ),
-                            title: Text(
-                              languageProvider.localizedStrings['English'] ??
-                                  "English",
-                              style: GoogleFonts.poppins(
-                                color: languageProvider.currentLanguage == 'en'
-                                    ? Colors
-                                          .teal // highlight active lang
-                                    : Colors.grey, // inactive lang
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
+                        _buildLanguageTile(
+                          langCode: 'en',
+                          label: 'English',
+                          languageProvider: languageProvider,
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.grey.withOpacity(.3),
-                            ),
-                          ),
-                          child: ListTile(
-                            onTap: () {
-                              languageProvider.changeLanguage(
-                                'ur',
-                              ); // Switch to Urdu
-                            },
-                            trailing: Icon(
-                              languageProvider.currentLanguage == 'ur'
-                                  ? Icons.radio_button_checked
-                                  : Icons.radio_button_off,
-                              color: Colors.teal,
-                              size: 20,
-                            ),
-                            title: Text(
-                              languageProvider.localizedStrings['Urdu'] ??
-                                  "Urdu",
-                              style: GoogleFonts.poppins(
-                                color: languageProvider.currentLanguage == 'ur'
-                                    ? Colors
-                                          .teal // active
-                                    : Colors.grey, // inactive
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
+                        _buildLanguageTile(
+                          langCode: 'ur',
+                          label: 'Urdu',
+                          languageProvider: languageProvider,
                         ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF00bcd4).withOpacity(.4),
-                        width: 1,
-                      ),
-                    ),
+
+                  // System Section
+                  _buildSectionContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -505,7 +368,6 @@ class _SettingScreenState extends State<SettingScreen> {
                               "Contact Support",
                           onTap: () {},
                         ),
-                        // 🔴 Logout with red border
                         _buildBorderedTile(
                           icon: Icons.logout,
                           title:
@@ -517,15 +379,66 @@ class _SettingScreenState extends State<SettingScreen> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 🔹 Helper for reusable section containers
+  Widget _buildSectionContainer({required Widget child}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade900.withOpacity(0.25),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFF00BCD4).withOpacity(.4),
+            width: 1,
+          ),
+        ),
+        child: child,
+      ),
+    );
+  }
+
+  // 🔹 Helper for language options
+  Widget _buildLanguageTile({
+    required String langCode,
+    required String label,
+    required LanguageProvider languageProvider,
+  }) {
+    final isActive = languageProvider.currentLanguage == langCode;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.withOpacity(.3)),
+      ),
+      child: ListTile(
+        onTap: () => languageProvider.changeLanguage(langCode),
+        trailing: Icon(
+          isActive ? Icons.radio_button_checked : Icons.radio_button_off,
+          color: Colors.teal,
+          size: 20,
+        ),
+        title: Text(
+          label,
+          style: GoogleFonts.poppins(
+            color: isActive ? Colors.teal : Colors.grey,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
     );
   }
 
+  // 🔹 Helper for system action tiles
   Widget _buildBorderedTile({
     required IconData icon,
     required String title,
@@ -543,11 +456,11 @@ class _SettingScreenState extends State<SettingScreen> {
         title: Text(
           title,
           style: GoogleFonts.poppins(
-            color: Colors.grey,
+            color: isLogout ? Colors.redAccent : Colors.grey,
             fontWeight: isLogout ? FontWeight.bold : FontWeight.normal,
           ),
         ),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey),
+        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
         onTap: onTap,
       ),
     );
