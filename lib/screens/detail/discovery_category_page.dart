@@ -1,3 +1,6 @@
+import 'package:cgheven/screens/detail/assets_detail_page.dart';
+import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cgheven/model/asset_model.dart';
@@ -19,92 +22,196 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.categoryName),
-        actions: [
-          IconButton(
-            icon: Icon(isGrid ? Icons.list_rounded : Icons.grid_view_rounded),
-            onPressed: () => setState(() => isGrid = !isGrid),
-          ),
-        ],
-      ),
-      body: Consumer<FavouriteProvider>(
-        builder: (context, favProvider, _) {
-          // Get favorites filtered by this category/subcategory
-          final favAssets = favProvider.getFavouritesBySubcategory(
-            widget.categoryName,
-          );
+      body: Stack(
+        children: [
+          buildBackground(),
+          SafeArea(
+            child: Column(
+              children: [
+                _buildHeader(),
 
-          if (favAssets.isEmpty) {
-            return const Center(
-              child: Text(
-                "No favorite assets found",
-                style: TextStyle(color: Colors.white70),
-              ),
-            );
-          }
+                Expanded(
+                  child: Consumer<FavouriteProvider>(
+                    builder: (context, favProvider, _) {
+                      // Get favorites filtered by this category/subcategory
+                      final favAssets = favProvider.getFavouritesBySubcategory(
+                        widget.categoryName,
+                      );
 
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: isGrid
-                ? GridView.builder(
-                    key: const ValueKey("gridView"),
-                    padding: const EdgeInsets.all(12),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 0.85,
-                        ),
-                    itemCount: favAssets.length,
-                    itemBuilder: (context, index) {
-                      final asset = favAssets[index];
-                      return AssetCard(
-                        asset: asset,
-                        isFavorite: true,
-                        onFavoriteToggle: () =>
-                            favProvider.toggleFavourite(asset),
+                      if (favAssets.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            "No favorite assets found",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        );
+                      }
+                      final screenWidth = MediaQuery.of(context).size.width;
+                      const crossAxisCount = 2;
+                      const spacing = 16.0;
+                      final totalSpacing = spacing * (crossAxisCount + 1);
+                      final cardWidth =
+                          (screenWidth - totalSpacing - 24) / crossAxisCount;
+                      final cardHeight = cardWidth * 0.9;
+                      final aspectRatio = cardWidth / cardHeight;
+
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: isGrid
+                            ? GridView.builder(
+                                key: const ValueKey("gridView"),
+                                padding: const EdgeInsets.all(12),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: crossAxisCount,
+                                      crossAxisSpacing: spacing,
+                                      mainAxisSpacing: spacing,
+                                      childAspectRatio: aspectRatio,
+                                    ),
+                                itemCount: favAssets.length,
+                                itemBuilder: (context, index) {
+                                  final asset = favAssets[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (builder) =>
+                                              AssetDetailScreen(asset: asset),
+                                        ),
+                                      );
+                                    },
+                                    child: AssetCard(
+                                      asset: asset,
+                                      isFavorite: true,
+                                      onFavoriteToggle: () =>
+                                          favProvider.toggleFavourite(asset),
+                                    ),
+                                  );
+                                },
+                              )
+                            : ListView.builder(
+                                key: const ValueKey("listView"),
+                                padding: const EdgeInsets.all(8),
+                                itemCount: favAssets.length,
+                                itemBuilder: (context, index) {
+                                  final asset = favAssets[index];
+                                  return _buildAssetTile(asset, favProvider);
+                                },
+                              ),
                       );
                     },
-                  )
-                : ListView.builder(
-                    key: const ValueKey("listView"),
-                    padding: const EdgeInsets.all(8),
-                    itemCount: favAssets.length,
-                    itemBuilder: (context, index) {
-                      final asset = favAssets[index];
-                      return _buildAssetTile(asset, favProvider);
-                    },
                   ),
-          );
-        },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildAssetTile(AssetModel asset, FavouriteProvider favProvider) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(asset.thumbnail, width: 60, fit: BoxFit.cover),
-      ),
-      title: Text(asset.title, style: const TextStyle(color: Colors.white)),
-      subtitle: Text(
-        asset.description,
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: IconButton(
-        icon: Icon(
-          favProvider.isFavourite(asset)
-              ? Icons.favorite
-              : Icons.favorite_border,
-          color: favProvider.isFavourite(asset)
-              ? Colors.redAccent
-              : Colors.white,
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.darkBackground.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFF00bcd4).withOpacity(.8)),
         ),
-        onPressed: () => favProvider.toggleFavourite(asset),
+        child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => AssetDetailScreen(asset: asset),
+              ),
+            );
+          },
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(asset.thumbnail, width: 60, fit: BoxFit.cover),
+          ),
+          title: Text(asset.title, style: const TextStyle(color: Colors.white)),
+          subtitle: Text(
+            "Explore stunning ${widget.categoryName} assets and effects",
+            style: const TextStyle(color: Colors.white),
+          ),
+          trailing: IconButton(
+            icon: Icon(
+              favProvider.isFavourite(asset)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: favProvider.isFavourite(asset)
+                  ? Colors.redAccent
+                  : Colors.white,
+            ),
+            onPressed: () => favProvider.toggleFavourite(asset),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+          ),
+          Text(
+            widget.categoryName,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade900.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.grey.shade800),
+            ),
+            child: Row(
+              children: [
+                _viewButton(true, Icons.grid_view_rounded),
+                _viewButton(false, Icons.list_rounded),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Toggle button
+  Widget _viewButton(bool grid, IconData icon) {
+    final bool active = grid == isGrid;
+    return InkWell(
+      onTap: () => setState(() => isGrid = grid),
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          gradient: active
+              ? const LinearGradient(colors: [Colors.teal, Colors.orange])
+              : null,
+          color: active ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: active
+              ? [BoxShadow(color: Colors.teal.withOpacity(0.3), blurRadius: 10)]
+              : [],
+        ),
+        child: Icon(icon, color: active ? Colors.white : Colors.grey, size: 22),
       ),
     );
   }

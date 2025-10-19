@@ -2,6 +2,7 @@ import 'package:cgheven/screens/detail/discovery_category_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:flutter/material.dart';
 
 class DiscoveryScreen extends StatefulWidget {
@@ -50,7 +51,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          _buildBackground(),
+          buildBackground(),
           SafeArea(
             child: Column(
               children: [
@@ -98,41 +99,6 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  // 🌈 Background
-  Widget _buildBackground() {
-    return Stack(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF111111), Color(0xFF000000), Color(0xFF111111)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              colors: [Colors.teal.withOpacity(0.1), Colors.transparent],
-              radius: 0.7,
-              center: const Alignment(-0.7, -0.6),
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              colors: [Colors.orange.withOpacity(0.1), Colors.transparent],
-              radius: 0.7,
-              center: const Alignment(0.7, 0.8),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
