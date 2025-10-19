@@ -8,6 +8,7 @@ import 'package:cgheven/screens/detail/all_assets_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:cgheven/widget/grid_widget.dart';
 import 'package:cgheven/widget/promo_widget.dart';
 import 'package:cgheven/widget/search_box_widget.dart';
@@ -89,408 +90,404 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0B1C24),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B1C24), Color(0xFF1A0F0D)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  buildSearchBox(context),
-                  const SizedBox(height: 10),
-                  _buildSections(),
+      body: Stack(
+        children: [
+          buildBackground(),
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    buildSearchBox(context),
+                    const SizedBox(height: 10),
+                    _buildSections(),
 
-                  /// 🔹 Updates Section via AnnouncementProvider
-                  if (activeAssetSection == 'Updates')
-                    Consumer<AnnouncementProvider>(
-                      builder: (context, provider, _) {
-                        if (provider.isLoading) {
-                          return const Padding(
-                            padding: EdgeInsets.all(32),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.tealAccent,
+                    /// 🔹 Updates Section via AnnouncementProvider
+                    if (activeAssetSection == 'Updates')
+                      Consumer<AnnouncementProvider>(
+                        builder: (context, provider, _) {
+                          if (provider.isLoading) {
+                            return const Padding(
+                              padding: EdgeInsets.all(32),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.tealAccent,
+                                ),
                               ),
-                            ),
-                          );
-                        }
+                            );
+                          }
 
-                        if (provider.announcements.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text(
-                              "No announcements available.",
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          );
-                        }
+                          if (provider.announcements.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                "No announcements available.",
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                            );
+                          }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  left: 8,
+                                  bottom: 8,
+                                ),
+                                child: Text(
+                                  "📰 Latest Announcements",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              ...provider.announcements.map((a) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 6.0,
+                                  ),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.25),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: const Color(
+                                        0xFF00bcd4,
+                                      ).withOpacity(0.3),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: NetworkImage(
+                                          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              a.title,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              a.content.isNotEmpty
+                                                  ? a.content
+                                                  : "No description available",
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 13,
+                                                height: 1.4,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ],
+                          );
+                        },
+                      )
+                    /// 🔹 Assets (New / Trending)
+                    else
+                      Consumer<AssetProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoading && provider.assets.isEmpty) {
+                            return buildShimmerGrid();
+                          }
+
+                          if (provider.error != null) {
+                            return Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Text(
+                                'Error: ${provider.error}',
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
+                            );
+                          }
+
+                          if (provider.assets.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text(
+                                'No assets found.',
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                            );
+                          }
+
+                          final assetsToShow =
+                              activeAssetSection == 'Trending\n Assets'
+                              ? _trendingAssets
+                              : provider.assets.take(10).toList();
+
+                          // ✅ Trending Section
+                          if (activeAssetSection == 'Trending\n Assets') {
+                            return Container(
+                              width: double.infinity,
                               padding: const EdgeInsets.only(
                                 top: 10,
-                                left: 8,
-                                bottom: 8,
+                                bottom: 20,
                               ),
-                              child: Text(
-                                "📰 Latest Announcements",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            ...provider.announcements.map((a) {
-                              return Container(
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 6.0,
-                                ),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.25),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: const Color(
-                                      0xFF00bcd4,
-                                    ).withOpacity(0.3),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                    ),
+                                    child: Text(
+                                      '🔥 Trending Assets',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 25,
-                                      backgroundImage: NetworkImage(
-                                        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+                                  const SizedBox(height: 8),
+                                  if (_trendingAssets.isEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Text(
+                                        'No trending assets yet. Watch some assets to make them trend!',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.inter(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            a.title,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            a.content.isNotEmpty
-                                                ? a.content
-                                                : "No description available",
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 13,
-                                              height: 1.4,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        );
-                      },
-                    )
-                  /// 🔹 Assets (New / Trending)
-                  else
-                    Consumer<AssetProvider>(
-                      builder: (context, provider, child) {
-                        if (provider.isLoading && provider.assets.isEmpty) {
-                          return buildShimmerGrid();
-                        }
+                                    )
+                                  else
+                                    buildGrid(_trendingAssets, context),
+                                ],
+                              ),
+                            );
+                          }
 
-                        if (provider.error != null) {
-                          return Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Text(
-                              'Error: ${provider.error}',
-                              style: const TextStyle(color: Colors.redAccent),
-                            ),
-                          );
-                        }
+                          // // ✅ Default (New Assets)
+                          // final Set<String> uniqueSubs = {};
+                          // for (final asset in provider.assets) {
+                          //   if (asset.categorie.toLowerCase() == 'vfx') {
+                          //     for (final sub in asset.subcategories) {
+                          //       uniqueSubs.add(sub.name);
+                          //     }
+                          //   }
+                          // }
 
-                        if (provider.assets.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'No assets found.',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          );
-                        }
+                          // final filteredAssets = selectedChip == null
+                          //     ? <AssetModel>[]
+                          //     : provider.assets.where((asset) {
+                          //         return asset.subcategories.any(
+                          //           (sub) => sub.name == selectedChip,
+                          //         );
+                          //       }).toList();
 
-                        final assetsToShow =
-                            activeAssetSection == 'Trending\n Assets'
-                            ? _trendingAssets
-                            : provider.assets.take(10).toList();
-
-                        // ✅ Trending Section
-                        if (activeAssetSection == 'Trending\n Assets') {
                           return Container(
+                            decoration: BoxDecoration(
+                              //    color: AppTheme.darkBackground.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(16),
+                              // border: Border.all(
+                              //   color: const Color(0xFF00BCD4).withOpacity(0.3),
+                              // ),
+                            ),
                             width: double.infinity,
-                            padding: const EdgeInsets.only(top: 10, bottom: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  child: Text(
-                                    '🔥 Trending Assets',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                buildGrid(assetsToShow, context),
+                                const SizedBox(height: 10),
+
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => AllAssetsPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "View All →",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.tealAccent,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                if (_trendingAssets.isEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Text(
-                                      'No trending assets yet. Watch some assets to make them trend!',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.inter(
-                                        color: Colors.white70,
-                                        fontSize: 14,
+
+                                const SizedBox(height: 10),
+                                //Promo Api
+                                PromoWidget(),
+                                const SizedBox(height: 10),
+                                if (_isLoadingSubcats)
+                                  const Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.tealAccent,
                                       ),
                                     ),
                                   )
-                                else
-                                  buildGrid(_trendingAssets, context),
-                              ],
-                            ),
-                          );
-                        }
-
-                        // // ✅ Default (New Assets)
-                        // final Set<String> uniqueSubs = {};
-                        // for (final asset in provider.assets) {
-                        //   if (asset.categorie.toLowerCase() == 'vfx') {
-                        //     for (final sub in asset.subcategories) {
-                        //       uniqueSubs.add(sub.name);
-                        //     }
-                        //   }
-                        // }
-
-                        // final filteredAssets = selectedChip == null
-                        //     ? <AssetModel>[]
-                        //     : provider.assets.where((asset) {
-                        //         return asset.subcategories.any(
-                        //           (sub) => sub.name == selectedChip,
-                        //         );
-                        //       }).toList();
-
-                        return Container(
-                          decoration: BoxDecoration(
-                            //    color: AppTheme.darkBackground.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(16),
-                            // border: Border.all(
-                            //   color: const Color(0xFF00BCD4).withOpacity(0.3),
-                            // ),
-                          ),
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildGrid(assetsToShow, context),
-                              const SizedBox(height: 10),
-
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => AllAssetsPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    "View All →",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.tealAccent,
-                                      fontWeight: FontWeight.w600,
+                                else if (_vfxSubcategories.isNotEmpty) ...[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Wrap(
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: _vfxSubcategories.map((cat) {
+                                        final isSelected =
+                                            selectedChip == cat.name;
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(
+                                              () => selectedChip = cat.name,
+                                            );
+                                            Provider.of<AssetProvider>(
+                                              context,
+                                              listen: false,
+                                            ).getAssetsBySubcategory(cat.name);
+                                          },
+                                          child: AnimatedContainer(
+                                            duration: const Duration(
+                                              milliseconds: 200,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 14,
+                                              vertical: 8,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              gradient: isSelected
+                                                  ? AppTheme.fireGradient
+                                                  : null,
+                                              color: isSelected
+                                                  ? null
+                                                  : const Color(
+                                                      0xFF374151,
+                                                    ).withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                              border: Border.all(
+                                                color: const Color(
+                                                  0xFF00bcd4,
+                                                ).withOpacity(.8),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              cat.name,
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
                                   ),
-                                ),
-                              ),
 
-                              const SizedBox(height: 10),
-                              //Promo Api
-                              PromoWidget(),
-                              const SizedBox(height: 10),
-                              if (_isLoadingSubcats)
-                                const Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.tealAccent,
-                                    ),
-                                  ),
-                                )
-                              else if (_vfxSubcategories.isNotEmpty) ...[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: _vfxSubcategories.map((cat) {
-                                      final isSelected =
-                                          selectedChip == cat.name;
-                                      return GestureDetector(
-                                        onTap: () {
-                                          setState(
-                                            () => selectedChip = cat.name,
-                                          );
-                                          Provider.of<AssetProvider>(
-                                            context,
-                                            listen: false,
-                                          ).getAssetsBySubcategory(cat.name);
-                                        },
-                                        child: AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 200,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                            vertical: 8,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            gradient: isSelected
-                                                ? AppTheme.fireGradient
-                                                : null,
-                                            color: isSelected
-                                                ? null
-                                                : const Color(
-                                                    0xFF374151,
-                                                  ).withOpacity(0.5),
-                                            borderRadius: BorderRadius.circular(
-                                              24,
-                                            ),
-                                            border: Border.all(
-                                              color: const Color(
-                                                0xFF00bcd4,
-                                              ).withOpacity(.8),
+                                  const SizedBox(height: 20),
+                                  Consumer<AssetProvider>(
+                                    builder: (context, provider, _) {
+                                      if (selectedChip == null) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      if (provider.isLoading) {
+                                        return const Padding(
+                                          padding: EdgeInsets.all(20),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.tealAccent,
                                             ),
                                           ),
+                                        );
+                                      }
+
+                                      final filteredAssets =
+                                          provider.assetsBySubcategory;
+
+                                      if (filteredAssets.isEmpty) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(16.0),
                                           child: Text(
-                                            cat.name,
-                                            style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-
-                                const SizedBox(height: 20),
-                                Consumer<AssetProvider>(
-                                  builder: (context, provider, _) {
-                                    if (selectedChip == null) {
-                                      return const SizedBox.shrink();
-                                    }
-
-                                    if (provider.isLoading) {
-                                      return const Padding(
-                                        padding: EdgeInsets.all(20),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.tealAccent,
-                                          ),
-                                        ),
-                                      );
-                                    }
-
-                                    final filteredAssets =
-                                        provider.assetsBySubcategory;
-
-                                    if (filteredAssets.isEmpty) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(
-                                          'No assets found for "$selectedChip".',
-                                          style: GoogleFonts.inter(
-                                            color: Colors.white70,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      );
-                                    }
-
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                          ),
-                                          child: Text(
-                                            'Showing results for "$selectedChip"',
+                                            'No assets found for "$selectedChip".',
                                             style: GoogleFonts.inter(
                                               color: Colors.white70,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                        ),
-                                        buildGrid(filteredAssets, context),
-                                      ],
-                                    );
-                                  },
-                                ),
+                                        );
+                                      }
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                            ),
+                                            child: Text(
+                                              'Showing results for "$selectedChip"',
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white70,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          buildGrid(filteredAssets, context),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
                               ],
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                ],
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

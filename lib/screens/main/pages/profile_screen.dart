@@ -2,6 +2,7 @@ import 'package:cgheven/provider/analytics_provider.dart';
 import 'package:cgheven/provider/poll_provider.dart';
 import 'package:cgheven/screens/tab/community_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,60 +51,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
+      body: Stack(
+        children: [
+          buildBackground(),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        /// 👤 Profile Section
+                        _buildProfileHeader(),
 
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B1C24), Color(0xFF1A0F0D)],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      /// 👤 Profile Section
-                      _buildProfileHeader(),
+                        const SizedBox(height: 20),
 
-                      const SizedBox(height: 20),
+                        /// 📊 Stats
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildStat('127', 'Assets'),
+                            _buildStat('45.2K', 'Downloads'),
+                            _buildStat('8.9K', 'Followers'),
+                          ],
+                        ),
 
-                      /// 📊 Stats
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStat('127', 'Assets'),
-                          _buildStat('45.2K', 'Downloads'),
-                          _buildStat('8.9K', 'Followers'),
-                        ],
-                      ),
+                        const SizedBox(height: 10),
 
-                      const SizedBox(height: 10),
+                        /// 📝 Bio
+                        _buildBio(),
 
-                      /// 📝 Bio
-                      _buildBio(),
+                        /// 🔘 Section Tabs
+                        _buildTabs(),
 
-                      /// 🔘 Section Tabs
-                      _buildTabs(),
-
-                      /// 🗳️ Polls or Announcements
-                      if (activeAssetSection == 'Polls')
-                        _buildPollsSection(context)
-                      else
-                        const CommunityPage(),
-                    ],
+                        /// 🗳️ Polls or Announcements
+                        if (activeAssetSection == 'Polls')
+                          _buildPollsSection(context)
+                        else
+                          const CommunityPage(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:cgheven/provider/language_provider.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:cgheven/widget/gradient_button.dart';
 import 'package:cgheven/widget/gradient_switch.dart';
 import 'package:flutter/material.dart';
@@ -78,34 +79,7 @@ class _SettingScreenState extends State<SettingScreen> {
       body: Stack(
         children: [
           // 🌈 Layer 1: Rich 3-color gradient background
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft, // 135-degree direction
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0B1C24), // cool teal tint (top-left)
-                  Color(0xFF101820), // neutral dark mid-tone
-                  Color(0xFF1A0F0D), // warm brown-black (bottom-right)
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
-          ),
-
-          // 🌤️ Layer 2: Subtle light overlay for depth
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white.withOpacity(0.03),
-                  Colors.black.withOpacity(0.2),
-                ],
-              ),
-            ),
-          ),
+          buildBackground(),
 
           // 🌟 Foreground UI content
           SafeArea(
