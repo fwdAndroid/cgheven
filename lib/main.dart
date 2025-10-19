@@ -23,6 +23,8 @@ void main() async {
     DeviceOrientation.portraitDown, // optional (allows upside-down portrait)
   ]);
 
+  final favProvider = FavouriteProvider();
+  await favProvider.loadFavourites();
   runApp(
     MultiProvider(
       providers: [

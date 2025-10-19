@@ -1,8 +1,8 @@
+import 'package:cgheven/screens/detail/discovery_category_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({super.key});
@@ -200,6 +200,14 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         final c = categories[index];
         final info = defaultInfo[index % defaultInfo.length];
         return _AnimatedCategoryCard(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DiscoveryCategoryPage(categoryName: c.name),
+              ),
+            );
+          },
           name: c.name,
           thumbnail: info["thumbnail"]!,
           description: "Explore stunning ${c.name} assets and effects",
@@ -218,6 +226,14 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         final info = defaultInfo[index % defaultInfo.length];
 
         return _CategoryTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DiscoveryCategoryPage(categoryName: c.name),
+              ),
+            );
+          },
           name: c.name,
           description: "Explore stunning ${c.name} assets and effects",
           imageUrl: info["thumbnail"]!, // 🔥 Same placeholder
@@ -256,11 +272,13 @@ class _CategoryTile extends StatelessWidget {
   final String name;
   final String description;
   final String imageUrl;
+  final VoidCallback onTap; // 🔹 Added
 
   const _CategoryTile({
     required this.name,
     required this.description,
     required this.imageUrl,
+    required this.onTap,
   });
 
   @override
@@ -273,6 +291,7 @@ class _CategoryTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListTile(
+        onTap: onTap,
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.network(
@@ -308,11 +327,13 @@ class _AnimatedCategoryCard extends StatefulWidget {
   final String name;
   final String thumbnail;
   final String description;
+  final VoidCallback onTap; // 🔹 Added
 
   const _AnimatedCategoryCard({
     required this.name,
     required this.thumbnail,
     required this.description,
+    required this.onTap,
   });
 
   @override
@@ -325,6 +346,8 @@ class _AnimatedCategoryCardState extends State<_AnimatedCategoryCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: widget.onTap, // 🔹 Navigate on tap
+
       onTapDown: (_) => setState(() => hovered = true),
       onTapUp: (_) => setState(() => hovered = false),
       onTapCancel: () => setState(() => hovered = false),
@@ -349,21 +372,23 @@ class _AnimatedCategoryCardState extends State<_AnimatedCategoryCard> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // Positioned.fill(
-                //   child: AnimatedOpacity(
-                //     duration: const Duration(milliseconds: 300),
-                //     opacity: hovered ? 0.3 : 0.15,
-                //     child: Container(
-                //       decoration: const BoxDecoration(
-                //         gradient: LinearGradient(
-                //           colors: [Colors.teal, Colors.orange],
-                //           begin: Alignment.topLeft,
-                //           end: Alignment.bottomRight,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                Positioned.fill(
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 300),
+                    opacity: hovered ? 0.3 : 0.15,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+
+                        gradient: LinearGradient(
+                          colors: [Colors.teal, Colors.orange],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 Positioned(
                   right: 20,
                   top: 60,

@@ -6,10 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AssetCard extends StatefulWidget {
-  final AssetModel asset;
+  final AssetModel asset; // ✅ Made optional
+  final bool? isFavorite;
+  final VoidCallback? onFavoriteToggle;
+
   final VoidCallback? onTap;
 
-  const AssetCard({super.key, required this.asset, this.onTap});
+  const AssetCard({
+    super.key,
+    required this.asset,
+    this.onTap,
+    this.isFavorite, // optional
+    this.onFavoriteToggle, // optional
+  });
 
   @override
   State<AssetCard> createState() => _AssetCardState();
@@ -19,6 +28,7 @@ class _AssetCardState extends State<AssetCard> {
   @override
   Widget build(BuildContext context) {
     final asset = widget.asset;
+    final isFavorite = widget.isFavorite ?? false; // default false
 
     return GestureDetector(
       onTap: widget.onTap,

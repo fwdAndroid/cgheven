@@ -297,15 +297,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
 
-                        // ✅ Default (New Assets)
-                        final Set<String> uniqueSubs = {};
-                        for (final asset in provider.assets) {
-                          if (asset.categorie.toLowerCase() == 'vfx') {
-                            for (final sub in asset.subcategories) {
-                              uniqueSubs.add(sub.name);
-                            }
-                          }
-                        }
+                        // // ✅ Default (New Assets)
+                        // final Set<String> uniqueSubs = {};
+                        // for (final asset in provider.assets) {
+                        //   if (asset.categorie.toLowerCase() == 'vfx') {
+                        //     for (final sub in asset.subcategories) {
+                        //       uniqueSubs.add(sub.name);
+                        //     }
+                        //   }
+                        // }
 
                         // final filteredAssets = selectedChip == null
                         //     ? <AssetModel>[]
