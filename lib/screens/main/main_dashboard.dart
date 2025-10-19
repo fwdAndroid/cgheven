@@ -30,7 +30,7 @@ class _MainDashboardState extends State<MainDashboard> {
 
   final List<IconData> _icons = [
     Icons.home_outlined,
-    Icons.favorite,
+    Icons.explore,
     Icons.person,
     Icons.settings,
   ];
