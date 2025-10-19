@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:cgheven/screens/main/pages/favourite_screen.dart';
+import 'package:cgheven/screens/main/pages/discovery_screen.dart';
 import 'package:cgheven/screens/main/pages/home_screen.dart';
 import 'package:cgheven/screens/main/pages/profile_screen.dart';
 import 'package:cgheven/screens/main/pages/setting_screen.dart';
@@ -21,12 +21,12 @@ class _MainDashboardState extends State<MainDashboard> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    FavouriteScreen(),
+    DiscoveryScreen(),
     ProfileScreen(),
     SettingScreen(),
   ];
 
-  final List<String> _labels = ["Home", "Favourite", "CGHEVEN", "Settings"];
+  final List<String> _labels = ["Home", "Discovery", "CGHEVEN", "Settings"];
 
   final List<IconData> _icons = [
     Icons.home_outlined,
