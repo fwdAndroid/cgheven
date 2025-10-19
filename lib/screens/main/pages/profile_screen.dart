@@ -130,9 +130,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontSize: 32,
             fontWeight: FontWeight.bold,
             foreground: Paint()
-              ..shader = const LinearGradient(
-                colors: [Color(0xFF14B8A6), Color(0xFFF97316)],
-              ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+              ..shader = AppTheme.fireGradient.createShader(
+                Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+              ),
           ),
         ),
         const SizedBox(height: 8),

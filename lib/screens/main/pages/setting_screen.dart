@@ -91,15 +91,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     height: 60,
                     alignment: Alignment.center,
                     child: ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [
-                          Color(0xFF2A7B9B), // teal-ish
-                          Color(0xFF57C785), // green-ish
-                          Color(0xFFEDDD53), // yellow-ish
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds),
+                      shaderCallback: (bounds) =>
+                          AppTheme.fireGradient.createShader(bounds),
                       child: Text(
                         languageProvider.localizedStrings['Setting'] ??
                             "Setting",

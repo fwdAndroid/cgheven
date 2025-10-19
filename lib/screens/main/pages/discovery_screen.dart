@@ -135,9 +135,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ShaderMask(
-            shaderCallback: (Rect bounds) => const LinearGradient(
-              colors: [Colors.tealAccent, Colors.orangeAccent],
-            ).createShader(bounds),
+            shaderCallback: (Rect bounds) =>
+                AppTheme.fireGradient.createShader(bounds),
             child: const Text(
               "Categories",
               style: TextStyle(
@@ -218,9 +217,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          gradient: active
-              ? const LinearGradient(colors: [Colors.teal, Colors.orange])
-              : null,
+          gradient: active ? AppTheme.fireGradient : null,
           color: active ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           boxShadow: active
