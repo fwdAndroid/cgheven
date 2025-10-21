@@ -245,7 +245,7 @@ class AssetApiService {
     final encodedName = Uri.encodeComponent(subcategoryName.trim());
 
     final url =
-        'https://api.cgheven.com/api/assets?populate=*&filters[subcategories][Name][\$eq]=$encodedName';
+        'https://api.cgheven.com/api/assets?populate=*&filters[subcategories][Name][\$containsi]=$encodedName';
 
     final response = await http.get(
       Uri.parse(url),

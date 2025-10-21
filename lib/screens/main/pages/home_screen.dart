@@ -400,7 +400,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Provider.of<AssetProvider>(
                                               context,
                                               listen: false,
-                                            ).getAssetsBySubcategory(cat.name);
+                                            ).getAssetsBySubcategory(
+                                              cat.name
+                                                  .replaceAll(
+                                                    RegExp(r'\s*\(.*?\)'),
+                                                    '',
+                                                  )
+                                                  .trim(),
+                                            );
                                           },
                                           child: AnimatedContainerWidget(
                                             text: cat.name,
