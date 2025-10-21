@@ -2,6 +2,7 @@ import 'package:cgheven/screens/auth/registration_screen.dart';
 import 'package:cgheven/screens/main/main_dashboard.dart';
 import 'package:cgheven/services/auth_service.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/buid_background.dart';
 import 'package:cgheven/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,261 +78,241 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.transparent,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft, // 135 degrees = top-left → bottom-right
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0B1C24), // #0b1c24 at 0%
-              Color(0xFF1A0F0D), // #1a0f0d at 100%
-            ],
-          ),
-        ),
-
-        child: Stack(
-          children: [
-            /// Scrollable login form
-            SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 20,
+      body: Stack(
+        children: [
+          /// Scrollable log
+          /// in form
+          buildBackground(),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
                 ),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight:
-                        MediaQuery.of(context).size.height -
-                        MediaQuery.of(context).padding.top -
-                        MediaQuery.of(context).padding.bottom,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        /// Skip button
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: TextButton(
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      /// Skip button
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => MainDashboard(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Skip",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      /// Logo
+                      Image.asset(
+                        "assets/logo.png",
+                        height: 200,
+                        fit: BoxFit.fitHeight,
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Welcome Text
+                      Text(
+                        "Welcome CGHEVEN",
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+
+                      /// Email Field
+                      TextField(
+                        controller: _emailController,
+                        style: GoogleFonts.poppins(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                          hintStyle: GoogleFonts.poppins(color: Colors.white70),
+                          suffixIcon: Icon(Icons.email, color: Colors.white),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      /// Password Field
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        style: GoogleFonts.poppins(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Password",
+                          hintStyle: GoogleFonts.poppins(color: Colors.white70),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.white,
+                            ),
                             onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => MainDashboard(),
-                                ),
-                              );
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
                             },
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      /// Forgot password
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Forgot Password?",
+                            style: GoogleFonts.poppins(color: Colors.white),
+                          ),
+                        ),
+                      ),
+
+                      /// Login button
+                      isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : GradientButton(
+                              gradient: AppTheme.fireGradient,
+
+                              onPressed: _login,
+
+                              child: Center(
+                                child: Text(
+                                  "Login",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                      const SizedBox(height: 16),
+
+                      /// Or continue with
+                      Text(
+                        "Or Continue With",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+
+                      /// Google Sign-In
+                      _buildLoginButton(
+                        onPressed: () {
+                          _googleLogin();
+                        },
+                        backgroundColor: Colors.white,
+                        textColor: AppTheme.darkBackground,
+                        icon: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.fireGradient,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Center(
                             child: Text(
-                              "Skip",
+                              'G',
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
-                                fontSize: 22,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
+                        text: 'Continue with Google',
+                      ),
 
-                        const SizedBox(height: 20),
+                      const Spacer(),
 
-                        /// Logo
-                        Image.asset(
-                          "assets/logo.png",
-                          height: 200,
-                          fit: BoxFit.fitHeight,
-                        ),
-                        const SizedBox(height: 20),
-
-                        /// Welcome Text
-                        Text(
-                          "Welcome CGHEVEN",
-                          style: GoogleFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-
-                        /// Email Field
-                        TextField(
-                          controller: _emailController,
-                          style: GoogleFonts.poppins(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Email",
-                            hintStyle: GoogleFonts.poppins(
-                              color: Colors.white70,
+                      /// Register link
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => RegistrationScreen(),
                             ),
-                            suffixIcon: Icon(Icons.email, color: Colors.white),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        /// Password Field
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          style: GoogleFonts.poppins(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Password",
-                            hintStyle: GoogleFonts.poppins(
-                              color: Colors.white70,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-
-                        /// Forgot password
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "Forgot Password?",
-                              style: GoogleFonts.poppins(color: Colors.white),
-                            ),
-                          ),
-                        ),
-
-                        /// Login button
-                        isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : GradientButton(
-                                gradient: AppTheme.fireGradient,
-
-                                onPressed: _login,
-
-                                child: Center(
-                                  child: Text(
-                                    "Login",
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Don't have an account? ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "Register",
                                     style: GoogleFonts.poppins(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
-                                ),
-                              ),
-                        const SizedBox(height: 16),
-
-                        /// Or continue with
-                        Text(
-                          "Or Continue With",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-
-                        /// Google Sign-In
-                        _buildLoginButton(
-                          onPressed: () {
-                            _googleLogin();
-                          },
-                          backgroundColor: Colors.white,
-                          textColor: AppTheme.darkBackground,
-                          icon: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              gradient: AppTheme.fireGradient,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'G',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          text: 'Continue with Google',
-                        ),
-
-                        const Spacer(),
-
-                        /// Register link
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => RegistrationScreen(),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Center(
-                              child: Text.rich(
-                                TextSpan(
-                                  text: "Don't have an account? ",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: "Register",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

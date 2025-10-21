@@ -30,7 +30,6 @@ class FeatureCard extends StatelessWidget {
           color: AppTheme.tealStart.withOpacity(0.2),
           width: 1,
         ),
-        boxShadow: AppTheme.cardShadow,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +45,6 @@ class FeatureCard extends StatelessWidget {
                 color: AppTheme.fireStart.withOpacity(0.3),
                 width: 1,
               ),
-              boxShadow: AppTheme.fireGlowShadow,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),

@@ -88,15 +88,12 @@ class AnimatedBackground extends StatelessWidget {
     required int delay,
   }) {
     return ClipOval(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                gradient: gradient,
-                borderRadius: BorderRadius.circular(size / 2),
-              ),
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              gradient: gradient,
+              borderRadius: BorderRadius.circular(size / 2),
             ),
           ),
         )

@@ -334,7 +334,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
-                    AppTheme.logoGradient.createShader(bounds),
+                    AppTheme.fireGradient.createShader(bounds),
                 child: Text(
                   'Why Choose CGHEVEN?',
                   style: GoogleFonts.poppins(
@@ -445,7 +445,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
-                    AppTheme.logoGradient.createShader(bounds),
+                    AppTheme.fireGradient.createShader(bounds),
                 child: Text(
                   'How It Works',
                   style: GoogleFonts.poppins(
@@ -490,7 +490,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                   color: AppTheme.tealStart.withOpacity(0.2),
                                   width: 1,
                                 ),
-                                boxShadow: AppTheme.cardShadow,
                               ),
                               child: Row(
                                 children: [
@@ -620,7 +619,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               SizedBox(height: 48),
               ShaderMask(
                 shaderCallback: (bounds) =>
-                    AppTheme.logoGradient.createShader(bounds),
+                    AppTheme.fireGradient.createShader(bounds),
                 child: Text(
                   'Get Started',
                   style: GoogleFonts.poppins(
