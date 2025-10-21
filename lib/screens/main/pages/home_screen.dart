@@ -8,11 +8,14 @@ import 'package:cgheven/screens/detail/all_assets_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
+import 'package:cgheven/widget/animated_container_widget.dart';
 import 'package:cgheven/widget/buid_background.dart';
+import 'package:cgheven/widget/circular_widget.dart';
 import 'package:cgheven/widget/grid_widget.dart';
 import 'package:cgheven/widget/promo_widget.dart';
 import 'package:cgheven/widget/search_box_widget.dart';
 import 'package:cgheven/widget/shimmer_widget.dart';
+import 'package:cgheven/widget/view_all_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -141,21 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 10,
-                                  left: 8,
-                                  bottom: 8,
-                                ),
-                                child: Text(
-                                  "📰 Latest Announcements",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
                               ...provider.announcements.map((a) {
                                 return Container(
                                   margin: const EdgeInsets.symmetric(
@@ -285,6 +273,93 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )
                                   else
                                     buildGrid(_trendingAssets, context),
+                                  ViewAllWidget(),
+                                  const SizedBox(height: 10),
+                                  PromoWidget(),
+                                  const SizedBox(height: 10),
+
+                                  /// 🔹 VFX Subcategories
+                                  if (_isLoadingSubcats)
+                                    const CircularWidget()
+                                  else if (_vfxSubcategories.isNotEmpty) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Wrap(
+                                        spacing: 8,
+                                        runSpacing: 8,
+                                        children: _vfxSubcategories.map((cat) {
+                                          final isSelected =
+                                              selectedChip == cat.name;
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setState(
+                                                () => selectedChip = cat.name,
+                                              );
+                                              Provider.of<AssetProvider>(
+                                                context,
+                                                listen: false,
+                                              ).getAssetsBySubcategory(
+                                                cat.name,
+                                              );
+                                            },
+                                            child: AnimatedContainerWidget(
+                                              text: cat.name,
+                                              isSelected: isSelected,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 20),
+                                    Consumer<AssetProvider>(
+                                      builder: (context, provider, _) {
+                                        if (selectedChip == null)
+                                          return const SizedBox.shrink();
+                                        if (provider.isLoading) {
+                                          return CircularWidget();
+                                        }
+
+                                        final filteredAssets =
+                                            provider.assetsBySubcategory;
+                                        if (filteredAssets.isEmpty) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              'No assets found for "$selectedChip".',
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white70,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          );
+                                        }
+
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                  ),
+                                              child: Text(
+                                                'Showing results for "$selectedChip"',
+                                                style: GoogleFonts.inter(
+                                                  color: Colors.white70,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            buildGrid(filteredAssets, context),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ],
                               ),
                             );
@@ -300,72 +375,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 buildGrid(assetsToShow, context),
                                 const SizedBox(height: 10),
 
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => AllAssetsPage(),
-                                        ),
-                                      );
-                                    },
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Colors.tealAccent,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
-                                      ),
-                                    ),
-                                    child: ShaderMask(
-                                      shaderCallback: (bounds) =>
-                                          LinearGradient(
-                                            colors: [
-                                              Colors.white.withOpacity(0.8),
-                                              Colors.tealAccent.withOpacity(
-                                                0.8,
-                                              ),
-                                              Colors.white.withOpacity(0.6),
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ).createShader(bounds),
-                                      blendMode: BlendMode.srcATop,
-                                      child: Text(
-                                        "View All →",
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          // Keep your color to control tint under glass
-                                          color: Colors.tealAccent,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 8,
-                                              color: Colors.tealAccent
-                                                  .withOpacity(0.5),
-                                              offset: const Offset(0, 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                ViewAllWidget(),
 
                                 const SizedBox(height: 10),
                                 //Promo Api
                                 PromoWidget(),
                                 const SizedBox(height: 10),
                                 if (_isLoadingSubcats)
-                                  const Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.tealAccent,
-                                      ),
-                                    ),
-                                  )
+                                  const CircularWidget()
                                 else if (_vfxSubcategories.isNotEmpty) ...[
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -385,39 +402,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               listen: false,
                                             ).getAssetsBySubcategory(cat.name);
                                           },
-                                          child: AnimatedContainer(
-                                            duration: const Duration(
-                                              milliseconds: 200,
-                                            ),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 14,
-                                              vertical: 8,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: isSelected
-                                                  ? AppTheme.fireGradient
-                                                  : null,
-                                              color: isSelected
-                                                  ? null
-                                                  : const Color(
-                                                      0xFF374151,
-                                                    ).withOpacity(0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
-                                              border: Border.all(
-                                                color: const Color(
-                                                  0xFF00bcd4,
-                                                ).withOpacity(.8),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              cat.name,
-                                              style: GoogleFonts.inter(
-                                                color: Colors.white,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
+                                          child: AnimatedContainerWidget(
+                                            text: cat.name,
+                                            isSelected: isSelected,
                                           ),
                                         );
                                       }).toList(),
