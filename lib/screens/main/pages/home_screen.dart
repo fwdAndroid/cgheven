@@ -261,19 +261,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Text(
-                                      '🔥 Trending Assets',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
                                   const SizedBox(height: 8),
                                   if (_trendingAssets.isEmpty)
                                     Padding(
@@ -293,32 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }
-
-                          // // ✅ Default (New Assets)
-                          // final Set<String> uniqueSubs = {};
-                          // for (final asset in provider.assets) {
-                          //   if (asset.categorie.toLowerCase() == 'vfx') {
-                          //     for (final sub in asset.subcategories) {
-                          //       uniqueSubs.add(sub.name);
-                          //     }
-                          //   }
-                          // }
-
-                          // final filteredAssets = selectedChip == null
-                          //     ? <AssetModel>[]
-                          //     : provider.assets.where((asset) {
-                          //         return asset.subcategories.any(
-                          //           (sub) => sub.name == selectedChip,
-                          //         );
-                          //       }).toList();
-
                           return Container(
                             decoration: BoxDecoration(
-                              //    color: AppTheme.darkBackground.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(16),
-                              // border: Border.all(
-                              //   color: const Color(0xFF00BCD4).withOpacity(0.3),
-                              // ),
                             ),
                             width: double.infinity,
                             child: Column(
@@ -338,11 +302,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       );
                                     },
-                                    child: Text(
-                                      "View All →",
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.tealAccent,
-                                        fontWeight: FontWeight.w600,
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.tealAccent,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
+                                    ),
+                                    child: ShaderMask(
+                                      shaderCallback: (bounds) =>
+                                          LinearGradient(
+                                            colors: [
+                                              Colors.white.withOpacity(0.8),
+                                              Colors.tealAccent.withOpacity(
+                                                0.8,
+                                              ),
+                                              Colors.white.withOpacity(0.6),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ).createShader(bounds),
+                                      blendMode: BlendMode.srcATop,
+                                      child: Text(
+                                        "View All →",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          // Keep your color to control tint under glass
+                                          color: Colors.tealAccent,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 8,
+                                              color: Colors.tealAccent
+                                                  .withOpacity(0.5),
+                                              offset: const Offset(0, 0),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
