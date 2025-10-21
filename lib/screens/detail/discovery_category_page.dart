@@ -1,15 +1,14 @@
+import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/buid_background.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cgheven/model/asset_model.dart';
-import 'package:cgheven/provider/favourite_provider.dart';
 import 'package:cgheven/widget/asset_card.dart';
 
 class DiscoveryCategoryPage extends StatefulWidget {
   final String categoryName;
-
   const DiscoveryCategoryPage({super.key, required this.categoryName});
 
   @override
@@ -18,6 +17,26 @@ class DiscoveryCategoryPage extends StatefulWidget {
 
 class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
   bool isGrid = true;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAssets();
+  }
+
+  Future<void> _fetchAssets() async {
+    final cleanName = widget.categoryName
+        .replaceAll(RegExp(r'\s*\(.*?\)'), '')
+        .trim();
+
+    await Provider.of<AssetProvider>(
+      context,
+      listen: false,
+    ).getAssetsBySubcategory(cleanName);
+
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,79 +48,86 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
             child: Column(
               children: [
                 _buildHeader(),
-
                 Expanded(
-                  child: Consumer<FavouriteProvider>(
-                    builder: (context, favProvider, _) {
-                      // Get favorites filtered by this category/subcategory
-                      final favAssets = favProvider.getFavouritesBySubcategory(
-                        widget.categoryName,
-                      );
-
-                      if (favAssets.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            "No favorite assets found",
-                            style: TextStyle(color: Colors.white70),
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.tealAccent,
                           ),
-                        );
-                      }
-                      final screenWidth = MediaQuery.of(context).size.width;
-                      const crossAxisCount = 2;
-                      const spacing = 16.0;
-                      final totalSpacing = spacing * (crossAxisCount + 1);
-                      final cardWidth =
-                          (screenWidth - totalSpacing - 24) / crossAxisCount;
-                      final cardHeight = cardWidth * 0.9;
-                      final aspectRatio = cardWidth / cardHeight;
+                        )
+                      : Consumer<AssetProvider>(
+                          builder: (context, assetProvider, _) {
+                            final assets = assetProvider.assets;
 
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: isGrid
-                            ? GridView.builder(
-                                key: const ValueKey("gridView"),
-                                padding: const EdgeInsets.all(12),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: crossAxisCount,
-                                      crossAxisSpacing: spacing,
-                                      mainAxisSpacing: spacing,
-                                      childAspectRatio: aspectRatio,
+                            if (assets.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  "No assets found for this category",
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              );
+                            }
+
+                            final screenWidth = MediaQuery.of(
+                              context,
+                            ).size.width;
+                            const crossAxisCount = 2;
+                            const spacing = 16.0;
+                            final totalSpacing = spacing * (crossAxisCount + 1);
+                            final cardWidth =
+                                (screenWidth - totalSpacing - 24) /
+                                crossAxisCount;
+                            final cardHeight = cardWidth * 0.9;
+                            final aspectRatio = cardWidth / cardHeight;
+
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: isGrid
+                                  ? GridView.builder(
+                                      key: const ValueKey("gridView"),
+                                      padding: const EdgeInsets.all(12),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: crossAxisCount,
+                                            crossAxisSpacing: spacing,
+                                            mainAxisSpacing: spacing,
+                                            childAspectRatio: aspectRatio,
+                                          ),
+                                      itemCount: assets.length,
+                                      itemBuilder: (context, index) {
+                                        final asset = assets[index];
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (builder) =>
+                                                    AssetDetailScreen(
+                                                      asset: asset,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: AssetCard(
+                                            asset: asset,
+                                            isFavorite: false,
+                                            onFavoriteToggle: () {},
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : ListView.builder(
+                                      key: const ValueKey("listView"),
+                                      padding: const EdgeInsets.all(8),
+                                      itemCount: assets.length,
+                                      itemBuilder: (context, index) {
+                                        final asset = assets[index];
+                                        return _buildAssetTile(asset);
+                                      },
                                     ),
-                                itemCount: favAssets.length,
-                                itemBuilder: (context, index) {
-                                  final asset = favAssets[index];
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (builder) =>
-                                              AssetDetailScreen(asset: asset),
-                                        ),
-                                      );
-                                    },
-                                    child: AssetCard(
-                                      asset: asset,
-                                      isFavorite: true,
-                                      onFavoriteToggle: () =>
-                                          favProvider.toggleFavourite(asset),
-                                    ),
-                                  );
-                                },
-                              )
-                            : ListView.builder(
-                                key: const ValueKey("listView"),
-                                padding: const EdgeInsets.all(8),
-                                itemCount: favAssets.length,
-                                itemBuilder: (context, index) {
-                                  final asset = favAssets[index];
-                                  return _buildAssetTile(asset, favProvider);
-                                },
-                              ),
-                      );
-                    },
-                  ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
@@ -111,7 +137,7 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
     );
   }
 
-  Widget _buildAssetTile(AssetModel asset, FavouriteProvider favProvider) {
+  Widget _buildAssetTile(AssetModel asset) {
     return Padding(
       padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
       child: Container(
@@ -136,18 +162,7 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
           title: Text(asset.title, style: const TextStyle(color: Colors.white)),
           subtitle: Text(
             "Explore stunning ${widget.categoryName} assets and effects",
-            style: const TextStyle(color: Colors.white),
-          ),
-          trailing: IconButton(
-            icon: Icon(
-              favProvider.isFavourite(asset)
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: favProvider.isFavourite(asset)
-                  ? Colors.redAccent
-                  : Colors.white,
-            ),
-            onPressed: () => favProvider.toggleFavourite(asset),
+            style: const TextStyle(color: Colors.white70),
           ),
         ),
       ),
@@ -161,10 +176,8 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           Text(
             widget.categoryName,
@@ -192,7 +205,6 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
     );
   }
 
-  // Toggle button
   Widget _viewButton(bool grid, IconData icon) {
     final bool active = grid == isGrid;
     return InkWell(
