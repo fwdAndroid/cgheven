@@ -49,6 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final result = await _apiService.fetchCategories();
       setState(() {
         _vfxSubcategories = result;
+        if (_vfxSubcategories.isNotEmpty) {
+          selectedChip =
+              _vfxSubcategories.first.name; // 👈 Preselect first chip
+          // Automatically load its assets
+          Provider.of<AssetProvider>(
+            context,
+            listen: false,
+          ).getAssetsBySubcategory(selectedChip!);
+        }
       });
     } catch (e) {
       print("❌ Failed to fetch subcategories: $e");
