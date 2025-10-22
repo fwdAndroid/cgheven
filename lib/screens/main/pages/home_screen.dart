@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  Center(child: PromoWidget()),
+                                  PromoWidget(),
                                   NextPageWidget(),
                                   const SizedBox(height: 10),
 
