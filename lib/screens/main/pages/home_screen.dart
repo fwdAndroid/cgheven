@@ -210,6 +210,86 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               }).toList(),
+                              PromoWidget(),
+                              NextPageWidget(),
+                              if (_isLoadingSubcats)
+                                const CircularWidget()
+                              else if (_vfxSubcategories.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: _vfxSubcategories.map((cat) {
+                                      final isSelected =
+                                          selectedChip == cat.name;
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(
+                                            () => selectedChip = cat.name,
+                                          );
+                                          Provider.of<AssetProvider>(
+                                            context,
+                                            listen: false,
+                                          ).getAssetsBySubcategory(cat.name);
+                                        },
+                                        child: AnimatedContainerWidget(
+                                          text: cat.name,
+                                          isSelected: isSelected,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 20),
+                                Consumer<AssetProvider>(
+                                  builder: (context, provider, _) {
+                                    if (selectedChip == null)
+                                      return const SizedBox.shrink();
+                                    if (provider.isLoading) {
+                                      return CircularWidget();
+                                    }
+
+                                    final filteredAssets =
+                                        provider.assetsBySubcategory;
+                                    if (filteredAssets.isEmpty) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'No assets found for "$selectedChip".',
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            'Showing results for "$selectedChip"',
+                                            style: GoogleFonts.inter(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        buildGrid(filteredAssets, context),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
                             ],
                           );
                         },
