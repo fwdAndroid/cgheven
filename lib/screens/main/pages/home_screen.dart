@@ -4,7 +4,6 @@ import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
-import 'package:cgheven/screens/detail/all_assets_page.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -12,6 +11,7 @@ import 'package:cgheven/widget/animated_container_widget.dart';
 import 'package:cgheven/widget/buid_background.dart';
 import 'package:cgheven/widget/circular_widget.dart';
 import 'package:cgheven/widget/grid_widget.dart';
+import 'package:cgheven/widget/next_page_widget.dart';
 import 'package:cgheven/widget/promo_widget.dart';
 import 'package:cgheven/widget/search_box_widget.dart';
 import 'package:cgheven/widget/shimmer_widget.dart';
@@ -275,7 +275,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     buildGrid(_trendingAssets, context),
                                   ViewAllWidget(),
                                   const SizedBox(height: 10),
-                                  PromoWidget(),
+                                  //Promo Api
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Latest From CGHEVEN",
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Center(child: PromoWidget()),
+                                  NextPageWidget(),
                                   const SizedBox(height: 10),
 
                                   /// 🔹 VFX Subcategories
@@ -379,7 +392,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 const SizedBox(height: 10),
                                 //Promo Api
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Latest From CGHEVEN",
+                                    style: GoogleFonts.inter(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+
                                 PromoWidget(),
+                                NextPageWidget(),
                                 const SizedBox(height: 10),
                                 if (_isLoadingSubcats)
                                   const CircularWidget()
