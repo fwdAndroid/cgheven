@@ -6,6 +6,7 @@ import 'package:cgheven/widget/gradient_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -21,6 +22,12 @@ class _SettingScreenState extends State<SettingScreen> {
   bool adFree = false;
   String defaultQuality = '2K';
   String language = 'English';
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
 
   void toggleSetting(String key) {
     setState(() {
@@ -317,7 +324,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               languageProvider
                                   .localizedStrings['Privacy Policy'] ??
                               "Privacy Policy",
-                          onTap: () {},
+                          onTap: () {
+                            _launchURL('https://cgheven.com/privacy-policy');
+                          },
                         ),
                         _buildBorderedTile(
                           icon: Icons.description,
@@ -325,7 +334,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               languageProvider
                                   .localizedStrings['Terms of Service'] ??
                               "Terms of Service",
-                          onTap: () {},
+                          onTap: () {
+                            _launchURL('https://cgheven.com/terms-conditions');
+                          },
                         ),
                         _buildBorderedTile(
                           icon: Icons.support,
@@ -333,7 +344,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               languageProvider
                                   .localizedStrings['Contact Support'] ??
                               "Contact Support",
-                          onTap: () {},
+                          onTap: () {
+                            _launchURL('https://cgheven.com/contact-us');
+                          },
                         ),
                         _buildBorderedTile(
                           icon: Icons.logout,
