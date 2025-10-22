@@ -8,23 +8,17 @@ import 'package:http/http.dart' as http;
 
 class AssetApiService {
   static const String baseUrl = 'https://api.cgheven.com/api/assets';
-
   static const String pollUrl = "https://api.cgheven.com/api/polls/";
-
   static const String annoucementUrl =
       "https://api.cgheven.com/api/announcements/";
-  //    'https://api.cgheven.com/api/assets?sort=createdAt:desc';
-
   static const String promoUrl = "https://api.cgheven.com/api/promos/";
-
   static const String subcategoryUrl =
       "https://api.cgheven.com/api/subcategories?populate=*";
 
   static const String token =
       "Bearer 9355813bda7bf9f9e8a89812a95b8ae3e190a7980dc156538093608344b26b637fd66b2a15c765816ec57b86549959bde01542070c2903db06443a5a3e8780bc919382806d8e702e0782827af4b9685e2b1bbf0d1aee7cf8de6d705ccc4b85198bad30ce3d82303b1557aa95b825b4afef2c661d824b9185e515e390955a4ee1";
 
-  //APis
-
+  // ---------------------- FETCH NEW ASSETS ----------------------
   Future<List<AssetModel>> fetchNewAssets() async {
     const baseUrl =
         'https://api.cgheven.com/api/assets?populate=*&sort=createdAt:desc&filters[categorie][Name][\$eq]=VFX';
@@ -38,14 +32,7 @@ class AssetApiService {
       final url =
           '$baseUrl&pagination[page]=$currentPage&pagination[pageSize]=$pageSize';
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          "Authorization": token,
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-      );
+      final response = await http.get(Uri.parse(url), headers: _headers);
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -58,7 +45,6 @@ class AssetApiService {
           currentPage++;
         }
 
-        // If total assets are less than page size, stop automatically
         final pagination = jsonData['meta']?['pagination'];
         if (pagination != null &&
             pagination['page'] >= pagination['pageCount']) {
@@ -73,17 +59,9 @@ class AssetApiService {
     return allAssets;
   }
 
-  // ----------- Fetch Promos -----------
+  // ---------------------- FETCH PROMOS ----------------------
   Future<List<Promo>> fetchPromos() async {
-    final response = await http.get(
-      Uri.parse(promoUrl),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(promoUrl), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -93,13 +71,9 @@ class AssetApiService {
     }
   }
 
-  //Polls
+  // ---------------------- FETCH POLLS ----------------------
   Future<List<PollModel>> fetchPolls() async {
-    final response = await http.get(
-      Uri.parse(pollUrl),
-      headers: {"Authorization": token, "Accept": "application/json"},
-    );
-
+    final response = await http.get(Uri.parse(pollUrl), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -109,13 +83,12 @@ class AssetApiService {
     }
   }
 
-  // ----------- Announcements -----------
+  // ---------------------- FETCH ANNOUNCEMENTS ----------------------
   Future<List<AnnouncementModel>> fetchAnnouncements() async {
     final response = await http.get(
       Uri.parse(annoucementUrl),
-      headers: {"Authorization": token, "Accept": "application/json"},
+      headers: _headers,
     );
-
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -125,22 +98,14 @@ class AssetApiService {
     }
   }
 
-  // ----------- Search Assets -----------
+  // ---------------------- SEARCH ASSETS ----------------------
   Future<List<AssetModel>> searchAssets(String query) async {
     if (query.trim().isEmpty) return [];
 
     final encodedQuery = Uri.encodeComponent(query.trim());
     final url = '$baseUrl?filters[Title][\$containsi]=$encodedQuery&populate=*';
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(url), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -150,7 +115,7 @@ class AssetApiService {
     }
   }
 
-  //Pagnination Wise Results
+  // ---------------------- PAGINATED ASSETS ----------------------
   Future<List<AssetModel>> fetchPaginatedAssets({
     int page = 1,
     int pageSize = 20,
@@ -160,15 +125,7 @@ class AssetApiService {
 
     final url =
         '$baseUrl&pagination[page]=$page&pagination[pageSize]=$pageSize';
-
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
+    final response = await http.get(Uri.parse(url), headers: _headers);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -179,30 +136,19 @@ class AssetApiService {
     }
   }
 
-  //Subcategories of APi
-  // ----------- Fetch Subcategories of a Category -----------
+  // ---------------------- FETCH CATEGORIES ----------------------
   Future<List<Category>> fetchCategories() async {
     const String url = 'https://api.cgheven.com/api/categories?populate=*';
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(url), headers: _headers);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final List<dynamic> items = data['data'];
 
-      // Parse into Category model
       final categories = items
           .map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList();
 
-      // Filter subcategories where parent_category.Name == "VFX"
       final vfxSubcategories = categories
           .where((cat) => cat.parentCategory?.name.toLowerCase() == "vfx")
           .toList();
@@ -213,21 +159,12 @@ class AssetApiService {
     }
   }
 
-  //Comparing
-  // Inside AssetApiService
+  // ---------------------- FETCH BY CATEGORY ----------------------
   Future<List<AssetModel>> fetchAssetsByCategory(String categoryName) async {
     final url =
         'https://api.cgheven.com/api/assets?populate=*&sort=createdAt:desc&filters[categorie][Name][\$eq]=$categoryName';
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(url), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -237,27 +174,15 @@ class AssetApiService {
     }
   }
 
-  // ----------- Fetch Assets by Subcategory Name -----------
+  // ---------------------- FETCH BY SUBCATEGORY ----------------------
   Future<List<AssetModel>> fetchAssetsBySubcategory(
     String subcategoryName,
   ) async {
-    // Encode to handle spaces/special chars safely
     final encodedName = Uri.encodeComponent(subcategoryName.trim());
-
     final url =
-        'https://api.cgheven.com/api/assets?populate=*&'
-        'filters[categorie][Name][\$eq]=VFX&' // ✅ Only fetch assets from parent category "VFX"
-        'filters[subcategories][Name][\$containsi]=$encodedName';
+        'https://api.cgheven.com/api/assets?populate=*&filters[categorie][Name][\$eq]=VFX&filters[subcategories][Name][\$containsi]=$encodedName';
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(url), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -273,20 +198,12 @@ class AssetApiService {
     }
   }
 
-  // ----------- Fetch Latest Edited Assets -----------
+  // ---------------------- FETCH LATEST EDITED ----------------------
   Future<List<AssetModel>> fetchLatestEditedAssets({int limit = 10}) async {
     final url =
         'https://api.cgheven.com/api/assets?populate=*&sort=updatedAt:desc&pagination[page]=1&pagination[pageSize]=$limit';
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "Authorization": token,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    );
-
+    final response = await http.get(Uri.parse(url), headers: _headers);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
@@ -297,4 +214,28 @@ class AssetApiService {
       throw Exception('Failed to load latest edited assets');
     }
   }
+
+  // ---------------------- PRELOAD ALL HOME DATA ----------------------
+  Future<void> preloadAllHomeData() async {
+    try {
+      await Future.wait([
+        fetchNewAssets(),
+        fetchPromos(),
+        fetchPolls(),
+        fetchAnnouncements(),
+        fetchCategories(),
+        fetchLatestEditedAssets(limit: 10),
+      ]);
+      print("✅ All API data preloaded successfully before HomeScreen.");
+    } catch (e) {
+      print("⚠️ API preload failed: $e");
+    }
+  }
+
+  // ---------------------- INTERNAL HEADERS ----------------------
+  Map<String, String> get _headers => {
+    "Authorization": token,
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+  };
 }

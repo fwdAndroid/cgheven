@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cgheven/screens/auth/login_screen.dart';
 import 'package:cgheven/screens/main/main_dashboard.dart';
+import 'package:cgheven/services/app_intializer.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/buid_background.dart';
 import 'package:cgheven/widget/featured_card.dart';
@@ -119,6 +120,15 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Start preloading APIs in the background (won’t block animations)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppInitializer.startPreload(context);
+    });
   }
 
   @override
@@ -726,17 +736,35 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   width: double.infinity,
                   child: GestureDetector(
                     onTapDown: (_) => setState(() => _pressed = true),
-                    onTapUp: (_) {
+                    onTapUp: (_) async {
                       Future.delayed(const Duration(milliseconds: 150), () {
                         setState(() => _pressed = false);
                       });
-                      Navigator.push(
+
+                      // ✅ Wait up to 3 seconds for background preloading (if still running)
+                      await Future.delayed(
+                        const Duration(milliseconds: 300),
+                      ); // UI smoothness
+                      try {
+                        await AppInitializer.ensurePreloaded(
+                          context,
+                          timeout: const Duration(seconds: 3),
+                        );
+                      } catch (e) {
+                        debugPrint('⚠️ Preload skipped or failed: $e');
+                      }
+
+                      // Then go to dashboard
+                      if (!mounted) return;
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (builder) => MainDashboard(),
+                          builder: (builder) =>
+                              const MainDashboard(initialPageIndex: 0),
                         ),
                       );
                     },
+
                     onTapCancel: () => setState(() => _pressed = false),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),

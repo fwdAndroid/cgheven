@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cgheven/screens/onboarding/onboarding_screen.dart';
+import 'package:cgheven/services/app_intializer.dart';
 import 'package:cgheven/widget/buid_background.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppInitializer.startPreload(context);
+    });
     _checkAuth();
   }
 

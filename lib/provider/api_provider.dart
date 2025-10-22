@@ -3,29 +3,45 @@ import 'package:cgheven/services/api_services.dart';
 import 'package:flutter/material.dart';
 
 class AssetProvider with ChangeNotifier {
-  // ---------- Existing fields ----------
   List<AssetModel> _assets = [];
   bool _isLoading = false;
   String? _error;
 
+  // New: mark loaded state for caching
+  bool _isLoaded = false;
+
   List<AssetModel> get assets => _assets;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get isLoaded => _isLoaded;
 
   final _apiService = AssetApiService();
 
   List<AssetModel> _assetsBySubcategory = [];
   List<AssetModel> get assetsBySubcategory => _assetsBySubcategory;
 
-  // ---------- New: Latest Edited Assets ----------
   List<AssetModel> _latestEditedAssets = [];
   bool _isLoadingLatest = false;
+  bool _isLatestLoaded = false;
 
   List<AssetModel> get latestEditedAssets => _latestEditedAssets;
   bool get isLoadingLatest => _isLoadingLatest;
 
-  // ---------- Fetch Latest Edited Assets ----------
-  Future<void> getLatestEditedAssets({int limit = 10}) async {
+  // New: force refresh
+  Future<void> refreshAll() async {
+    _isLoaded = false;
+    _isLatestLoaded = false;
+    await Future.wait([
+      getNewAssets(force: true),
+      getLatestEditedAssets(force: true),
+    ]);
+  }
+
+  Future<void> getLatestEditedAssets({
+    int limit = 10,
+    bool force = false,
+  }) async {
+    if (_isLatestLoaded && !force) return;
     _isLoadingLatest = true;
     _error = null;
     notifyListeners();
@@ -33,6 +49,7 @@ class AssetProvider with ChangeNotifier {
     try {
       final result = await _apiService.fetchLatestEditedAssets(limit: limit);
       _latestEditedAssets = result;
+      _isLatestLoaded = true;
       debugPrint('✅ Loaded ${_latestEditedAssets.length} latest edited assets');
     } catch (e) {
       _error = e.toString();
@@ -43,8 +60,8 @@ class AssetProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ---------- Existing: Fetch New Assets ----------
-  Future<void> getNewAssets() async {
+  Future<void> getNewAssets({bool force = false}) async {
+    if (_isLoaded && !force) return;
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -52,11 +69,11 @@ class AssetProvider with ChangeNotifier {
     try {
       final result = await AssetApiService().fetchNewAssets();
 
-      // ✅ Filter by lowercase 'vfx'
       _assets = result
           .where((asset) => asset.categorie.toLowerCase() == 'vfx')
           .toList();
 
+      _isLoaded = true;
       debugPrint('✅ Loaded ${_assets.length} VFX assets');
     } catch (e) {
       _error = e.toString();
@@ -67,37 +84,13 @@ class AssetProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // ---------- Update assets manually ----------
-  void setAssets(List<AssetModel> newAssets) {
-    _assets = newAssets;
-    notifyListeners();
-  }
-
-  // ---------- Filter by Category ----------
-  Future<void> filterByCategory(String? categoryName) async {
-    if (categoryName == null) {
-      await getNewAssets(); // reset to all VFX assets
+  // keep setAssets, filterByCategory, getAssetsBySubcategory but add guard if wanted
+  Future<void> getAssetsBySubcategory(
+    String subcategoryName, {
+    bool force = false,
+  }) async {
+    if (_assetsBySubcategory.isNotEmpty && !force && subcategoryName == '')
       return;
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      final result = await _apiService.fetchAssetsByCategory(categoryName);
-      _assets = result;
-      debugPrint("✅ Filtered ${_assets.length} assets for '$categoryName'");
-    } catch (e) {
-      _error = e.toString();
-      debugPrint("❌ Error filtering by category: $_error");
-    }
-
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  // ---------- Filter by Subcategory ----------
-  Future<void> getAssetsBySubcategory(String subcategoryName) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
