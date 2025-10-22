@@ -43,7 +43,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
   @override
   void initState() {
     super.initState();
-    _categoriesFuture = AssetApiService().fetchCategories();
+
+    // ✅ Load instantly from cache (already fetched at Splash)
+    final service = AssetApiService();
+    _categoriesFuture = service.fetchCategories();
   }
 
   @override

@@ -741,18 +741,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         setState(() => _pressed = false);
                       });
 
-                      // ✅ Wait up to 3 seconds for background preloading (if still running)
-                      await Future.delayed(
-                        const Duration(milliseconds: 300),
-                      ); // UI smoothness
-                      try {
-                        await AppInitializer.ensurePreloaded(
-                          context,
-                          timeout: const Duration(seconds: 3),
-                        );
-                      } catch (e) {
-                        debugPrint('⚠️ Preload skipped or failed: $e');
-                      }
+                      // // ✅ Wait up to 3 seconds for background preloading (if still running)
+                      // await Future.delayed(
+                      //   const Duration(milliseconds: 300),
+                      // ); // UI smoothness
+                      // try {
+                      //   await AppInitializer.ensurePreloaded(
+                      //     context,
+                      //     timeout: const Duration(seconds: 3),
+                      //   );
+                      // } catch (e) {
+                      //   debugPrint('⚠️ Preload skipped or failed: $e');
+                      // }
 
                       // Then go to dashboard
                       if (!mounted) return;

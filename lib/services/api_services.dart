@@ -17,6 +17,7 @@ class AssetApiService {
 
   static const String token =
       "Bearer 9355813bda7bf9f9e8a89812a95b8ae3e190a7980dc156538093608344b26b637fd66b2a15c765816ec57b86549959bde01542070c2903db06443a5a3e8780bc919382806d8e702e0782827af4b9685e2b1bbf0d1aee7cf8de6d705ccc4b85198bad30ce3d82303b1557aa95b825b4afef2c661d824b9185e515e390955a4ee1";
+  static List<Category>? _cachedCategories;
 
   // ---------------------- FETCH NEW ASSETS ----------------------
   Future<List<AssetModel>> fetchNewAssets() async {
@@ -137,10 +138,20 @@ class AssetApiService {
   }
 
   // ---------------------- FETCH CATEGORIES ----------------------
-  Future<List<Category>> fetchCategories() async {
-    const String url = 'https://api.cgheven.com/api/categories?populate=*';
+  Future<List<Category>> fetchCategories({bool forceRefresh = false}) async {
+    // ✅ Return cached data instantly if available
+    if (!forceRefresh &&
+        _cachedCategories != null &&
+        _cachedCategories!.isNotEmpty) {
+      print(
+        "⚡ Returning cached categories instantly (${_cachedCategories!.length})",
+      );
+      return _cachedCategories!;
+    }
 
+    const String url = 'https://api.cgheven.com/api/categories?populate=*';
     final response = await http.get(Uri.parse(url), headers: _headers);
+
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final List<dynamic> items = data['data'];
@@ -153,6 +164,9 @@ class AssetApiService {
           .where((cat) => cat.parentCategory?.name.toLowerCase() == "vfx")
           .toList();
 
+      // ✅ Cache for instant future use
+      _cachedCategories = vfxSubcategories;
+      print("✅ Categories cached: ${_cachedCategories!.length}");
       return vfxSubcategories;
     } else {
       throw Exception('Failed to load categories');
