@@ -1,5 +1,6 @@
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/screens/detail/assets_detail_page.dart';
+import 'package:cgheven/screens/main/pages/favourite_screen.dart';
 import 'package:cgheven/utils/app_theme.dart';
 import 'package:cgheven/widget/buid_background.dart';
 import 'package:flutter/material.dart';
@@ -179,24 +180,33 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
-          Text(
-            widget.categoryName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+
           Container(
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: Colors.grey.shade900.withOpacity(0.3),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: Colors.grey.shade800),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _viewButton(true, Icons.grid_view_rounded),
                 _viewButton(false, Icons.list_rounded),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => FavouriteScreen(
+                          categoryName: widget.categoryName
+                            ..replaceAll(RegExp(r'\s*\(.*?\)'), '').trim(),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.favorite, color: Colors.red),
+                ),
               ],
             ),
           ),
@@ -211,17 +221,15 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
       onTap: () => setState(() => isGrid = grid),
       borderRadius: BorderRadius.circular(12),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(8),
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          gradient: active
-              ? const LinearGradient(colors: [Colors.teal, Colors.orange])
-              : null,
+          gradient: active ? AppTheme.fireGradient : null,
           color: active ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: active
-              ? [BoxShadow(color: Colors.teal.withOpacity(0.3), blurRadius: 10)]
-              : [],
+          // boxShadow: active
+          //     ? [BoxShadow(color: Colors.teal.withOpacity(0.3), blurRadius: 10)]
+          //     : [],
         ),
         child: Icon(icon, color: active ? Colors.white : Colors.grey, size: 22),
       ),
