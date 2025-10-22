@@ -4,6 +4,7 @@ import 'package:cgheven/model/asset_model.dart';
 import 'package:cgheven/provider/announcement_provider.dart';
 import 'package:cgheven/provider/api_provider.dart';
 import 'package:cgheven/provider/promo_provider.dart';
+import 'package:cgheven/screens/main/main_dashboard.dart';
 import 'package:cgheven/services/api_services.dart';
 import 'package:cgheven/services/eam.dart';
 import 'package:cgheven/utils/app_theme.dart';
@@ -220,7 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Wrap(
                                     spacing: 8,
                                     runSpacing: 8,
-                                    children: _vfxSubcategories.map((cat) {
+                                    children: _vfxSubcategories.take(3).map((
+                                      cat,
+                                    ) {
                                       final isSelected =
                                           selectedChip == cat.name;
                                       return GestureDetector(
@@ -239,6 +242,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       );
                                     }).toList(),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const MainDashboard(
+                                            initialPageIndex: 1,
+                                          ), // 👈 replace with your actual page
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "View All →",
+                                      style: GoogleFonts.inter(
+                                        color: Colors.tealAccent,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
                                   ),
                                 ),
 
@@ -380,30 +406,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Wrap(
                                         spacing: 8,
                                         runSpacing: 8,
-                                        children: _vfxSubcategories.map((cat) {
-                                          final isSelected =
-                                              selectedChip == cat.name;
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setState(
-                                                () => selectedChip = cat.name,
-                                              );
-                                              Provider.of<AssetProvider>(
-                                                context,
-                                                listen: false,
-                                              ).getAssetsBySubcategory(
-                                                cat.name,
-                                              );
-                                            },
-                                            child: AnimatedContainerWidget(
-                                              text: cat.name,
-                                              isSelected: isSelected,
-                                            ),
-                                          );
-                                        }).toList(),
+                                        children: _vfxSubcategories.take(3).map(
+                                          (cat) {
+                                            final isSelected =
+                                                selectedChip == cat.name;
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(
+                                                  () => selectedChip = cat.name,
+                                                );
+                                                Provider.of<AssetProvider>(
+                                                  context,
+                                                  listen: false,
+                                                ).getAssetsBySubcategory(
+                                                  cat.name,
+                                                );
+                                              },
+                                              child: AnimatedContainerWidget(
+                                                text: cat.name,
+                                                isSelected: isSelected,
+                                              ),
+                                            );
+                                          },
+                                        ).toList(),
                                       ),
                                     ),
-
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => const MainDashboard(
+                                                initialPageIndex: 1,
+                                              ), // 👈 replace with your actual page
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          "View All →",
+                                          style: GoogleFonts.inter(
+                                            color: Colors.tealAccent,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     const SizedBox(height: 20),
                                     Consumer<AssetProvider>(
                                       builder: (context, provider, _) {
@@ -495,7 +545,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
-                                      children: _vfxSubcategories.map((cat) {
+                                      children: _vfxSubcategories.take(3).map((
+                                        cat,
+                                      ) {
                                         final isSelected =
                                             selectedChip == cat.name;
                                         return GestureDetector(
@@ -521,6 +573,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         );
                                       }).toList(),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => const MainDashboard(
+                                              initialPageIndex: 1,
+                                            ), // 👈 replace with your actual page
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        "View All →",
+                                        style: GoogleFonts.inter(
+                                          color: Colors.tealAccent,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
                                   ),
 
