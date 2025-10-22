@@ -200,7 +200,8 @@ class _DiscoveryCategoryPageState extends State<DiscoveryCategoryPage> {
                       MaterialPageRoute(
                         builder: (builder) => FavouriteScreen(
                           categoryName: widget.categoryName
-                            ..replaceAll(RegExp(r'\s*\(.*?\)'), '').trim(),
+                              .replaceAll(RegExp(r'\s*\(.*?\)'), '')
+                              .trim(),
                         ),
                       ),
                     );
