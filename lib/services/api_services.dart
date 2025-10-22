@@ -241,11 +241,13 @@ class AssetApiService {
   Future<List<AssetModel>> fetchAssetsBySubcategory(
     String subcategoryName,
   ) async {
-    // Encode the subcategory name to handle spaces or special chars
+    // Encode to handle spaces/special chars safely
     final encodedName = Uri.encodeComponent(subcategoryName.trim());
 
     final url =
-        'https://api.cgheven.com/api/assets?populate=*&filters[subcategories][Name][\$containsi]=$encodedName';
+        'https://api.cgheven.com/api/assets?populate=*&'
+        'filters[categorie][Name][\$eq]=VFX&' // ✅ Only fetch assets from parent category "VFX"
+        'filters[subcategories][Name][\$containsi]=$encodedName';
 
     final response = await http.get(
       Uri.parse(url),
@@ -259,12 +261,14 @@ class AssetApiService {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List data = jsonData['data'];
-      print("✅ Found ${data.length} assets in subcategory $subcategoryName");
+      print(
+        "✅ Found ${data.length} VFX assets in subcategory $subcategoryName",
+      );
       return data.map((e) => AssetModel.fromJson(e)).toList();
     } else {
-      print("❌ Failed to load assets for subcategory: $subcategoryName");
+      print("❌ Failed to load VFX assets for subcategory: $subcategoryName");
       throw Exception(
-        'Failed to load assets for subcategory: $subcategoryName',
+        'Failed to load VFX assets for subcategory: $subcategoryName',
       );
     }
   }
